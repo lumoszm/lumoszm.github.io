@@ -977,6 +977,10 @@ a.mbtn{text-decoration:none;box-sizing:border-box}
 @keyframes pinring{0%{transform:scale(1);opacity:.9}100%{transform:scale(2.1);opacity:0}}
 @media (prefers-reduced-motion:reduce){.pin.just .ph,.pin.just .ph::after{animation:none}}
 
+#cvTabs[hidden]{display:none}
+.cv-comm{padding-top:28px}
+@media (max-width:760px){.cv-comm{padding-top:20px}}
+
 </style>
 </head>
 <body>
@@ -3526,7 +3530,7 @@ function upPublish(){
 
 /* ---------- 城市相册：精选照片 + 旅行者公开的照片，按 风光 / 活动 / 文化 分类 ---------- */
 Object.assign(I18N.zh,{
-  catAll:"全部",cat_scenery:"风光",cat_activity:"活动",cat_culture:"文化",
+  catAll:"全部",cvPhotos:"张照片",cat_scenery:"风光",cat_activity:"活动",cat_culture:"文化",
   cvEmptyLead:function(n){return n+"的相册里还没有照片。";},cvEmptySub:"去过这里吗？把你拍的风光、活动和文化照片分享到这座城市的相册。",cvFirst:"分享第一张照片",
   cvShareHere:function(n){return "分享你在"+n+"拍的照片";},
   cvBy:function(a){return a.join("、")+(a.length>1?" 等人":"")+"分享了这里的照片";},
@@ -3550,7 +3554,7 @@ Object.assign(I18N.zh,{
   ctyN:function(n){return n+" 座城市有照片";},ctyNone:"这里还没有照片。搜索一座城市，成为第一个分享的人。"
 });
 Object.assign(I18N.en,{
-  catAll:"All",cat_scenery:"Scenery",cat_activity:"Activities",cat_culture:"Culture",
+  catAll:"All",cvPhotos:"photos",cat_scenery:"Scenery",cat_activity:"Activities",cat_culture:"Culture",
   cvEmptyLead:function(n){return "The "+n+" album is still empty.";},cvEmptySub:"Been here? Share your photos of its scenery, activities and culture with this city’s album.",cvFirst:"Share the first photo",
   cvShareHere:function(n){return "Share your photos of "+n;},
   cvBy:function(a){return "Shared by "+a.join(", ")+(a.length>1?" and others":"");},
@@ -3593,9 +3597,12 @@ function curPath(a,thumb){
   return CUR.base+(thumb?a[0].replace(/\.jpg$/,"_t.jpg"):a[0]);
 }
 function curItems(id){
-  return ((CUR.p&&CUR.p[id])||[]).map(function(a,i){
+  var list=((CUR.p&&CUR.p[id])||[]).map(function(a,i){
     return {id:"cur:"+id+":"+i,cur:true,kind:"photo",path:curPath(a),thumb:curPath(a,true),category:CATK[a[1]],w:a[2],h:a[3],by:a[4],lic:a[5],src:a[6],via:a[7]||"commons",prof:a[8]||"",city_id:id,is_public:true};
   });
+  var by={},rank=[];
+  list.forEach(function(m){var k=m.category||"";by[k]=(by[k]||0)+1;rank.push(by[k]);});
+  return list.map(function(m,i){return [rank[i],i,m];}).sort(function(a,b){return a[0]-b[0]||a[1]-b[1];}).map(function(x){return x[2];});
 }
 function signFor(items,fields){
   var need=[];
@@ -3657,15 +3664,18 @@ function cvSummary(){
   if(!st){host.innerHTML='<div class="cv-load"><i></i></div>';return;}
   var share='<button type="button" class="cv-share" data-share>'+ICN.plus+esc(cvAll().length?tr("cvShareHere")(nm):tr("cvFirst"))+'</button>';
   if(!cvAll().length){host.innerHTML='<p class="cv-lead">'+esc(tr("cvEmptyLead")(nm))+'</p><p class="cv-lead mute">'+tr("cvEmptySub")+'</p>'+share;return;}
-  var cats=CATS.map(function(c){return '<div><b>'+catCount(c)+'</b><small>'+tr("cat_"+c)+'</small></div>';}).join("");
+  var total=CVC.cur.length+(st.n||0);
+  var cats='<div><b>'+total+'</b><small>'+tr("cvPhotos")+'</small></div>';
   var people=[],seen={};
   CVC.items.forEach(function(m){if(m.author&&!seen[m.user_id]&&people.length<5){seen[m.user_id]=1;people.push(m.author);}});
   host.innerHTML='<div class="cv-stat">'+cats+'</div>'+
     (people.length?'<div class="cv-people"><span class="stack">'+people.map(function(a){return avHTML(a);}).join("")+'</span><span>'+esc(tr("cvBy")(people.slice(0,2).map(uname)))+'</span></div>':"")+
     share;
 }
+/* 城市页不再按风光/活动/文化分类显示（分类标签去掉了，照片混在一起） */
 function cvTabs(){
   var t=$("#cvTabs");if(!t)return;
+  CVC.tab="all";t.innerHTML="";t.hidden=true;return;
   var all=CVC.cur.length+(CVC.stats?CVC.stats.n:0);
   t.innerHTML='<div class="mseg" role="tablist">'+['all'].concat(CATS).map(function(c){
     var n=c==="all"?all:catCount(c);
@@ -3746,7 +3756,7 @@ function lbShow(){
 }
 function lbInfo(){
   var m=LB.list[LB.i];if(!m)return;
-  var city=rowCity(m),cat=m.category?tr("cat_"+m.category):"",h;
+  var city=rowCity(m),cat=m.category&&LB.ctx!=="city"?tr("cat_"+m.category):"",h;
   if(m.cur){
     var us=m.via==="unsplash",q=function(u){return u+(u.indexOf("?")<0?"?":"&")+UTM;};
     h='<div class="lb-au"><span class="av cur" aria-hidden="true">'+ICN.photo+'</span><span><b>'+
