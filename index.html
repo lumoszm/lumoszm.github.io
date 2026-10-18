@@ -334,18 +334,20 @@ body.cvlight #sugg{scrollbar-color:rgba(0,0,0,.2) transparent}
 .cv-body .pending{color:var(--ink3);padding:0}
 .cv-lines{display:flex;flex-direction:column;gap:12px;padding-top:4px}
 .cv-lines i{display:block;height:10px;border-radius:5px;background:#f0f0f3}
-/* 左下角：平面黑白地球（黑框、黑色大陆、白色海洋，不画南极） */
+/* 左下角：回到地球（彩色小地球） */
 .cv-globe{
   position:fixed;z-index:6;left:max(20px,env(safe-area-inset-left,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));
-  width:54px;height:54px;border-radius:50%;padding:0;border:0;cursor:pointer;background:#fff;
+  width:54px;height:54px;border-radius:50%;padding:0;border:0;cursor:pointer;
+  background:#04070C url("data:image/jpeg;base64,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") center/cover no-repeat;
+  box-shadow:0 0 0 2.5px #fff,0 8px 22px rgba(0,0,0,.28);
   opacity:0;transform:scale(.6);transition:opacity .4s ease .15s,transform .6s var(--ease) .1s;
 }
 .cityv.in .cv-globe{opacity:1;transform:none}
 .cityv.in .cv-globe:hover{transform:scale(1.07)}
 .cityv.in .cv-globe:active{transform:scale(.92)}
-.cv-globe canvas,.cv-fly canvas{position:absolute;inset:0;width:100%;height:100%;display:block;border-radius:50%}
-.cv-globe::after,.cv-fly::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #111;pointer-events:none}
-.cv-fly{position:fixed;left:0;top:0;z-index:7;border-radius:50%;background:#fff;pointer-events:none}
+/* 返回时整页淡出，内容同时轻微缩小，像镜头往后退 */
+.cityv.out .cv-wrap,.cityv.out .cv-comm{transform:scale(.97);transition:transform .45s cubic-bezier(.32,.72,0,1)}
+.cityv.out .cv-globe{opacity:0;transform:scale(.6);transition:opacity .2s ease,transform .3s ease}
 @media (max-width:760px){
   .cv-wrap{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "media" "dots" "text";justify-content:stretch;align-content:start;
     padding:calc(66px + env(safe-area-inset-top,0px)) 16px calc(100px + env(safe-area-inset-bottom,0px))}
@@ -356,7 +358,7 @@ body.cvlight #sugg{scrollbar-color:rgba(0,0,0,.2) transparent}
   .cv-text{padding:18px 4px 0}
   .cv-h{font-size:24px}
   .cv-body{font-size:16px}
-  .cv-globe{width:48px;height:48px}
+  .cv-globe{width:50px;height:50px}
 }
 
 /* 设置（弹出卡片） */
@@ -968,6 +970,12 @@ body.fpon #tip{opacity:0!important}
 .mwait{display:flex;align-items:center;gap:10px;margin:18px 0 4px;color:var(--fg2,#a1a1a6);font-size:15px}
 .mwait .spin{width:16px;height:16px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite;flex:none}
 a.mbtn{text-decoration:none;box-sizing:border-box}
+/* 从城市页回来时，刚才那座城市的标记轻轻跳一下 */
+.pin.just .ph{animation:pinjust 1.3s cubic-bezier(.32,.72,0,1)}
+.pin.just .ph::after{content:"";position:absolute;inset:-3px;border-radius:50%;border:2px solid rgba(255,255,255,.9);animation:pinring 1.3s ease-out forwards;pointer-events:none}
+@keyframes pinjust{0%{transform:scale(1)}30%{transform:scale(1.28)}100%{transform:scale(1)}}
+@keyframes pinring{0%{transform:scale(1);opacity:.9}100%{transform:scale(2.1);opacity:0}}
+@media (prefers-reduced-motion:reduce){.pin.just .ph,.pin.just .ph::after{animation:none}}
 
 </style>
 </head>
@@ -1011,8 +1019,7 @@ a.mbtn{text-decoration:none;box-sizing:border-box}
     <div class="cv-text" id="cvText"></div>
   </div>
   <div class="cv-comm" id="cvComm"><div class="cv-tabs" id="cvTabs"></div><div id="cvPh"></div><div id="cvDs" hidden></div></div>
-  <button type="button" class="cv-globe" id="cvGlobe" aria-label="回到地球" data-i18n-aria="backGlobe"><canvas id="cvIcon" aria-hidden="true"></canvas></button>
-  <div class="cv-fly" id="cvFly" hidden aria-hidden="true"><canvas id="cvFlyC"></canvas></div>
+  <button type="button" class="cv-globe" id="cvGlobe" aria-label="回到地球" data-i18n-aria="backGlobe"></button>
 </section>
 <p class="sr" data-i18n="about">ATLAS：转动三维地球，挑一座城市，学一句当地话，看看那里的节日、食物和手艺。</p>
 
@@ -1689,8 +1696,6 @@ var VPm=null,eyeV=[0,0,3],dist=3,zoomEff=1;
 function render(now){
   var W=S.W,H=S.H,raw=(now-S.last)/1000||0.016,dt=Math.min(0.05,raw),dta=Math.min(0.25,raw);S.last=now;
   var t=now/1000;
-  /* 城市页左下角的黑白地球：约 30 帧/秒慢慢转 */
-  if(CV.spin&&BW.ready&&!CV.closing){BW.lon=wrap(BW.lon-14*dta);BW.acc+=dta;if(BW.acc>=1/30){BW.acc=0;bwIcon();}}
   /* 城市页完全盖住地球时不必再画 */
   if(S.covered||(S.pauseGL&&mOn())){requestAnimationFrame(render);return;}
   /* 布局动画 */
@@ -2037,7 +2042,7 @@ function openSheet(html){
   var b=panel.querySelector('[data-act="close"]');if(b)b.focus({preventScroll:true});
 }
 /* ---------- 城市页 ---------- */
-var cityv=null,CV={id:null,origin:null,closing:false,spin:false};
+var cityv=null,CV={id:null,origin:null,closing:false};
 /* 城市照片：以后把真实照片地址（或 data URI）填进对应数组即可。可以放很多张：每次显示其中几张轮播，每轮结束换进一张新的。 */
 var PHOTOS={kyoto:[],venice:[],fez:[],oaxaca:[],rotorua:[]};
 /* 还没有照片时用的示意图：每座城市几组协调的配色，位置和角度随机，所以每张都是新的 */
@@ -2122,88 +2127,6 @@ $("#cvPg").addEventListener("click",function(e){
   var k=+b.getAttribute("data-sl");if(k!==SL.i){slShow(k);slTick();}
 });
 
-/* ---------- 平面黑白地球：城市页左下角的图标，也是返回主页时放大的那颗 ---------- */
-var BW={lv:null,ready:false,lat:20,lon:0,acc:0,iconImg:null,job:null,bigKey:"",bigDone:false};
-function bwLoad(){
-  var img=new Image();
-  img.onload=function(){
-    try{
-      var w=img.naturalWidth,h=img.naturalHeight,c=document.createElement("canvas");c.width=w;c.height=h;
-      var x=c.getContext("2d");x.drawImage(img,0,0);
-      var d=x.getImageData(0,0,w,h).data,m=new Uint8Array(w*h);
-      for(var i=0;i<w*h;i++)m[i]=d[i*4];
-      var lv=[{m:m,w:w,h:h}];
-      while(lv[lv.length-1].w>256){
-        var p=lv[lv.length-1],w2=p.w>>1,h2=p.h>>1,q=new Uint8Array(w2*h2);
-        for(var y=0;y<h2;y++)for(var xx=0;xx<w2;xx++){var o=2*y*p.w+2*xx;q[y*w2+xx]=(p.m[o]+p.m[o+1]+p.m[o+p.w]+p.m[o+p.w+1]+2)>>2;}
-        lv.push({m:q,w:w2,h:h2});
-      }
-      BW.lv=lv;BW.ready=true;
-    }catch(e){BW.ready=false;}
-  };
-  img.src=TEX.land;
-}
-function bwLevel(r){
-  var L=BW.lv[0];
-  for(var i=BW.lv.length-1;i>=0;i--){if(BW.lv[i].w>=2*Math.PI*r*0.9){L=BW.lv[i];break;}}
-  return L;
-}
-/* 与主页相机相同的透视：缩放为 1 时地球在屏幕上的张角 */
-function bwTanA(){return Math.min(.43*S.H,.44*S.W)*2*TANH/S.H;}
-function bwRows(job,y0,y1){
-  var D=job.D,r=D/2,px=job.img.data,L=job.L,M=L.m,MW=L.w,MH=L.h;
-  var sp=Math.sin(job.lat*RAD),cp=Math.cos(job.lat*RAD),lr=job.lon*RAD,tA=job.tanA,d=Math.sqrt(1+tA*tA)/tA,k2=1/(2*Math.PI),INK=17;
-  for(var j=y0;j<y1;j++){
-    var v=(r-(j+0.5))/r;
-    for(var i=0;i<D;i++){
-      var u=(i+0.5-r)/r,q=u*u+v*v,o=(j*D+i)*4,rr=Math.sqrt(q),cov=(1-rr)*r+0.5;
-      if(cov<=0){px[o+3]=0;continue;}
-      var uu=u,vv=v;if(rr>1){uu=u/rr;vv=v/rr;}
-      var wx=uu*tA,wy=vv*tA,il=1/Math.sqrt(wx*wx+wy*wy+1);wx*=il;wy*=il;var wz=-il;
-      var b=d*wz,disc=b*b-d*d+1;if(disc<0)disc=0;var t=-b-Math.sqrt(disc);
-      var x=t*wx,y=t*wy,z=d+t*wz;
-      var sl=y*cp+z*sp;if(sl>1)sl=1;else if(sl<-1)sl=-1;
-      var lat=Math.asin(sl),lon=lr+Math.atan2(x,z*cp-y*sp);
-      var fx=(lon*k2+0.5)*MW-0.5;fx-=Math.floor(fx/MW)*MW;
-      var fy=(0.5-lat/Math.PI)*MH-0.5;if(fy<0)fy=0;else if(fy>MH-1.001)fy=MH-1.001;
-      var ix=fx|0,iy=fy|0,ax=fx-ix,ay=fy-iy,ix1=ix+1<MW?ix+1:0,r0=iy*MW,r1=r0+MW;
-      var m=(M[r0+ix]*(1-ax)+M[r0+ix1]*ax)*(1-ay)+(M[r1+ix]*(1-ax)+M[r1+ix1]*ax)*ay;
-      var a=(m-92)/72;a=a<0?0:a>1?1:a*a*(3-2*a);
-      var c=255-(255-INK)*a;
-      px[o]=px[o+1]=px[o+2]=c;px[o+3]=cov>=1?255:cov*255;
-    }
-  }
-}
-function bwIcon(){
-  var c=$("#cvIcon");if(!c||!BW.ready)return;
-  var D=Math.round((c.clientWidth||54)*Math.min(window.devicePixelRatio||1,2));
-  var x=c.getContext("2d");
-  if(c.width!==D||!BW.iconImg){c.width=c.height=D;BW.iconImg=x.createImageData(D,D);}
-  bwRows({D:D,img:BW.iconImg,L:bwLevel(D/2),lat:BW.lat,lon:BW.lon,tanA:bwTanA()},0,D);
-  x.putImageData(BW.iconImg,0,0);
-}
-/* 返回过渡用的大图：在城市页打开后空闲时分块画好 */
-function bwBigPrep(lat,lon,fast){
-  if(!BW.ready)return;
-  var dpr=Math.min(window.devicePixelRatio||1,2),D=Math.min(fast?760:1280,Math.round(2*Math.min(.43*S.H,.44*S.W)*dpr));
-  var key=[lat.toFixed(3),lon.toFixed(3),S.W,S.H].join();
-  if(BW.bigKey===key&&(BW.job||BW.bigDone))return;
-  var c=$("#cvFlyC");c.width=c.height=D;var x=c.getContext("2d");
-  var job={D:D,img:x.createImageData(D,D),L:bwLevel(D/2),lat:lat,lon:lon,tanA:bwTanA(),y:0,ctx:x};
-  BW.job=job;BW.bigKey=key;BW.bigDone=false;
-  if(fast)return;
-  (function step(){
-    if(BW.job!==job)return;
-    var t0=performance.now();
-    while(job.y<D&&performance.now()-t0<6){var y1=Math.min(D,job.y+12);bwRows(job,job.y,y1);job.y=y1;}
-    if(job.y>=D){x.putImageData(job.img,0,0);BW.job=null;BW.bigDone=true;}else requestAnimationFrame(step);
-  })();
-}
-function bwBigFinish(){
-  var job=BW.job;if(!job)return;
-  bwRows(job,job.y,job.D);job.y=job.D;job.ctx.putImageData(job.img,0,0);BW.job=null;BW.bigDone=true;
-}
-bwLoad();
 
 function cvFill(id){
   var p=place(id);if(!p)return;
@@ -2239,25 +2162,22 @@ function cvRise(els,base){
 }
 function openCity(id){
   if(!cityv)cityv=$("#cityv");
-  if(CV.closing)return;
+  if(CV.closing){CV.pend=id;return;}
   var wasOpen=!cityv.hidden&&!cityv.classList.contains("out");
   if(!sheet.hidden)closeSheet();
   if(typeof closeSugg==="function"&&suggOpen())closeSugg();
   var p=place(id);if(!p)return;
-  CV.id=id;curId=null;setHash("c/"+id);
-  var lat=clamp(p.lat,-70,70);
-  BW.lat=lat;BW.lon=p.lon;
+  CV.id=id;curId=null;cityHash(id,wasOpen);
   if(wasOpen){
     var md=$("#cvMedia");
-    cvFill(id);cvComm(id);slStart(id);bwIcon();
+    cvFill(id);cvComm(id);slStart(id);
     if(!reduced()&&md.animate)md.animate([{opacity:0,transform:"scale(.96)"},{opacity:1,transform:"none"}],{duration:500,easing:"cubic-bezier(.32,.72,0,1)"});
     cvRise([$("#cvHead"),$(".cv-dots"),$("#cvText"),$("#cvComm")],0);
     cityv.scrollTo({top:0,behavior:reduced()?"auto":"smooth"});
     flyTo(p.lat,p.lon,3.2);S.hold=true;
-    setTimeout(function(){if(CV.id===id)bwBigPrep(lat,p.lon);},700);
     return;
   }
-  CV.origin=cvOrigin(id);CV.lastFocus=document.activeElement;
+  CV.origin=cvOrigin(id);CV.lastFocus=document.activeElement;CV.z0=S.zoomT;
   flyTo(p.lat,p.lon,3.2);S.hold=true;
   cvFill(id);cvComm(id);
   document.body.classList.add("cityopen","cvlight");S.sheetOpen=true;
@@ -2267,60 +2187,56 @@ function openCity(id){
   slStart(id);
   cvAnimate(md,CV.origin);
   cvRise([$("#cvHead"),$(".cv-dots"),$("#cvText"),$("#cvComm")],150);
-  CV.spin=true;BW.acc=0;bwIcon();
   clearTimeout(CV.tc);CV.tc=setTimeout(function(){if(CV.id===id&&!CV.closing)S.covered=true;},520);
-  setTimeout(function(){if(CV.id===id&&!CV.closing)bwBigPrep(lat,p.lon);},900);
   setTimeout(function(){var b=$("#cvBack");if(b)b.focus({preventScroll:true});},60);
 }
+/* 打开城市时在浏览历史里加一条，手机上的返回手势/返回键就是回到地球，而不是离开网站。
+   最多只加一条：之后反复开关城市都复用这一条 */
+function cityHash(id,wasOpen){
+  var h="#c/"+id;
+  try{
+    if(wasOpen||location.hash===h||(history.state&&history.state.atlas))history.replaceState({atlas:1},"",h);
+    else history.pushState({atlas:1},"",h);
+  }catch(e){setHash("c/"+id);}
+}
 function cvRestoreFocus(){if(CV.lastFocus&&CV.lastFocus.focus&&document.contains(CV.lastFocus))CV.lastFocus.focus({preventScroll:true});}
-/* 返回：左下角的黑白地球先转回城市所在的位置，再放大飞到主页地球的位置，最后淡成彩色的三维地球 */
+/* 返回：地球先在城市页后面对准这座城市并拉近，画好一帧后城市页淡出，镜头平稳拉远回到全球，
+   刚才那座城市的照片标记轻轻跳一下，告诉你从哪里回来 */
+var CV_Z=2.4,CV_PULL=1.3;
 function closeCity(opt){
   if(!cityv||cityv.hidden||CV.closing||cityv.classList.contains("out"))return;
-  var p=CV.id&&place(CV.id),ic=$("#cvGlobe"),fl=$("#cvFly");
-  CV.id=null;CVC.gen++;CVC.id=null;slStop();clearTimeout(CV.tc);S.covered=false;
+  var id=CV.id,p=id&&place(id),plain=(opt&&opt.plain)||reduced()||!p;
+  CV.pend=null;
+  CV.id=null;CVC.gen++;CVC.id=null;slStop();clearTimeout(CV.tc);
   if(/^#c\//.test(location.hash))setHash(C.fp?"fp/"+C.fp.uid:"");
-  var plain=(opt&&opt.plain)||reduced()||!BW.ready||!p||!fl.animate||ic.offsetWidth===0;
-  if(plain){
-    CV.spin=false;
-    document.body.classList.remove("cityopen","cvlight");S.sheetOpen=false;touch();
-    layerOut(cityv,function(){cityv.classList.remove("scrolled");});
-    cvRestoreFocus();return;
+  CV.closing=true;
+  if(!plain){
+    S.fly=null;S.latV=S.lonV=0;S.spinK=0;S.hold=true;
+    S.lat=clamp(p.lat,-70,70);S.lon=p.lon;S.zoom=S.zoomT=Math.min(CV_Z,zoomMax());
   }
-  CV.closing=true;cityv.classList.add("closing");
-  var lat1=clamp(p.lat,-70,70),lon1=p.lon;
-  if(!(BW.bigKey===[lat1.toFixed(3),lon1.toFixed(3),S.W,S.H].join()&&(BW.job||BW.bigDone)))bwBigPrep(lat1,lon1,true);
-  CV.spin=false;
-  var l0=BW.lon,dl=wrap(lon1-l0),la0=BW.lat,t0=performance.now(),dur=Math.min(560,200+Math.abs(dl)*2.2);
-  requestAnimationFrame(function settle(now){
-    var k=Math.min(1,Math.max(0,(now-t0)/dur)),e=ease(k);
-    BW.lon=l0+dl*e;BW.lat=la0+(lat1-la0)*e;bwIcon();
-    if(k<1)requestAnimationFrame(settle);else grow();
-  });
-  function grow(){
-    bwBigFinish();
-    /* 主页地球先就位：缩放 1、正对这座城市；此时还被白色页面挡着 */
-    S.fly=null;S.lat=lat1;S.lon=lon1;S.zoom=S.zoomT=1;S.latV=S.lonV=0;S.hold=true;S.spinK=0;S.earthHide=true;
-    var L=layout(),R=L.R,a=ic.getBoundingClientRect();
-    var k0={left:a.left+"px",top:a.top+"px",width:a.width+"px",height:a.height+"px"};
-    var k1={left:(L.cx-R)+"px",top:(L.cy-R)+"px",width:(2*R)+"px",height:(2*R)+"px"};
-    fl.style.left=k0.left;fl.style.top=k0.top;fl.style.width=k0.width;fl.style.height=k0.height;fl.style.opacity="";
-    fl.hidden=false;ic.style.visibility="hidden";
-    var an=fl.animate([k0,k1],{duration:780,easing:"cubic-bezier(.55,0,.15,1)",fill:"forwards"});
-    setTimeout(function(){cityv.classList.add("bgout");document.body.classList.remove("cvlight");},240);
-    an.onfinish=function(){
-      S.earthHide=false;
-      document.body.classList.remove("cityopen");S.sheetOpen=false;touch();
-      var f2=fl.animate([{opacity:1},{opacity:0}],{duration:560,delay:80,easing:"ease-in-out",fill:"forwards"});
-      f2.onfinish=done;
-    };
-  }
-  function done(){
-    cityv.hidden=true;cityv.classList.remove("in","closing","bgout","scrolled");
-    fl.hidden=true;if(fl.getAnimations)fl.getAnimations().forEach(function(a){a.cancel();});
-    ic.style.visibility="";
-    var md=$("#cvMedia");if(md.getAnimations)md.getAnimations().forEach(function(a){a.cancel();});
-    CV.closing=false;cvRestoreFocus();
-  }
+  S.covered=false;
+  /* 等地球按新位置至少画出一帧，再揭开城市页，避免露出旧画面 */
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    document.body.classList.remove("cvlight");
+    layerOut(cityv,function(){
+      cityv.classList.remove("scrolled","closing","bgout");
+      var md=$("#cvMedia");if(md.getAnimations)md.getAnimations().forEach(function(a){a.cancel();});
+      CV.closing=false;
+      if(CV.pend){var q=CV.pend;CV.pend=null;openCity(q);}else cvRestoreFocus();
+    });
+    setTimeout(function(){document.body.classList.remove("cityopen");S.sheetOpen=false;touch();},plain?0:160);
+    if(!plain){
+      /* 拉回到打开城市之前的远近（没放大过就是全球视角） */
+      var z1=clamp(CV.z0||1,1,Math.max(1,S.zoomT-0.4));
+      S.fly={t:0,dur:CV_PULL,lat0:S.lat,lon0:S.lon,dl:0,lat1:S.lat,z0:S.zoomT,z1:z1};
+      setTimeout(function(){pinPulse(id);},420);
+    }
+  });});
+}
+function pinPulse(id){
+  var el=document.querySelector('#labels [data-pin="'+id+'"]');if(!el)return;
+  el.classList.remove("just");void el.offsetWidth;el.classList.add("just");
+  clearTimeout(el._pj);el._pj=setTimeout(function(){el.classList.remove("just");},1500);
 }
 $("#cvBack").addEventListener("click",function(){closeCity();});
 $("#cvGlobe").addEventListener("click",function(){closeCity();});
@@ -3708,6 +3624,8 @@ function cvComm(id,keep){
   var g=++CVC.gen;
   if(!keep){CVC.id=id;CVC.items=[];CVC.more=false;CVC.stats=null;CVC.tab="all";}
   CVC.loading=true;CVC.cur=curItems(id);cvTabs();cvGridRender();
+  /* 精选照片不用等社区服务，先放到大图里（社区服务连不上时也有图看） */
+  if(CVC.cur.length)cvHero(id);
   var jobs=[loadCurated()];
   if(cOK())jobs.push(C.sb.rpc("city_stats",{cid:id}),C.sb.from("media").select(MCOLS).eq("city_id",id).eq("is_public",true).order("created_at",{ascending:false}).range(0,PAGE-1));
   Promise.all(jobs).then(function(rs){
@@ -4142,7 +4060,7 @@ function docOpen(k,back){
 }
 
 /* ---------- 地址栏：分享链接 ---------- */
-function setHash(h){try{history.replaceState(null,"",h?"#"+h:location.pathname+location.search);}catch(e){}}
+function setHash(h){try{history.replaceState(history.state,"",h?"#"+h:location.pathname+location.search);}catch(e){}}
 function mediaOpen(id){
   C.sb.from("media").select(MCOLS).eq("id",id).maybeSingle().then(function(r){
     var m=must(r);if(!m){toast(tr("loadErr"));return;}
@@ -4155,6 +4073,8 @@ function mediaOpen(id){
 }
 function route(){
   var h=decodeURIComponent(location.hash.slice(1)),m;
+  /* 浏览器返回到不是城市的地址：关掉城市页，回到地球 */
+  if(!/^c\//.test(h)&&typeof cityv!=="undefined"&&cityv&&!cityv.hidden&&!CV.closing)closeCity({pop:true});
   if(!h)return;
   if((m=/^c\/([\w-]{1,80})$/.exec(h)))openPlace(m[1]);
   else if(!cOK())return;
@@ -4238,7 +4158,7 @@ function texUpgrade(){
   swap(TEX.day,0,false,"tDay").then(function(){return swap(TEX.night,1,true,"tNight");});
 }
 boot();
-if(/[?&]debug\b/.test(location.search)){window.__atlas={S:S,BW:BW,CV:CV,SL:SL,TL:TL,C:C,CVC:CVC,UP:UP,LB:LB,LABS:function(){return LABS;}};var mt=/[?&]tiles=([^&]+)/.exec(location.search);if(mt)TL.src=decodeURIComponent(mt[1]);}
+if(/[?&]debug\b/.test(location.search)){window.__atlas={S:S,CV:CV,SL:SL,TL:TL,C:C,CVC:CVC,UP:UP,LB:LB,LABS:function(){return LABS;}};var mt=/[?&]tiles=([^&]+)/.exec(location.search);if(mt)TL.src=decodeURIComponent(mt[1]);}
 })();
 </script>
 
