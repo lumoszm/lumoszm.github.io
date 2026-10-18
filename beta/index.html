@@ -18,8 +18,8 @@
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://mzttscrmrlxsppknmdvg.supabase.co" crossorigin>
-<link rel="preload" href="tex/day8k.jpg" as="image">
-<link rel="preload" href="tex/night8k.jpg" as="image">
+<link rel="preload" href="tex/day4k.jpg" as="image">
+<link rel="preload" href="tex/night4k.jpg" as="image">
 <style>:root{color-scheme:dark}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
 <title>ATLAS</title>
 <style>
@@ -1066,7 +1066,7 @@ a.mbtn{text-decoration:none;box-sizing:border-box}
 (function(){
 "use strict";
 
-var TEX={day:"tex/day8k.jpg",night:"tex/night8k.jpg",water:"tex/water4k.png",height:"tex/height4k.jpg",sky:"tex/sky4k.jpg",land:"tex/land2k.png"};
+var TEX={day:"tex/day8k.jpg",night:"tex/night8k.jpg",day4:"tex/day4k.jpg",night4:"tex/night4k.jpg",water:"tex/water4k.png",height:"tex/height4k.jpg",sky:"tex/sky4k.jpg",land:"tex/land2k.png"};
 
 /* ---------- 数据 ---------- */
 var CONT=[
@@ -3117,7 +3117,7 @@ function pinSource(){
   var by={},out=[];
   function add(id,img,n,lat,lon,zh,en,cc){
     var p=C.PI[id],q=by[id];
-    if(!q){q=by[id]={id:id,lat:p?p.lat:lat,lon:p?p.lon:lon,name:p?pName(p):(LANG==="en"?en||zh:zh||en),cc:p?p.cc:cc,n:0,img:""};out.push(q);}
+    if(!q){q=by[id]={id:id,lat:p?p.lat:lat,lon:p?p.lon:lon,name:p?pName(p):(LANG==="en"?en||zh:zh||en),cc:p?p.cc:cc,pc:p?(p.pc||3):3,n:0,img:""};out.push(q);}
     q.n+=n;if(!q.img&&img)q.img=img;
   }
   var cur=(typeof CUR!=="undefined"&&CUR.p)||{};
@@ -3127,7 +3127,9 @@ function pinSource(){
     add(id,curPath(s,true),a.length);
   });
   C.ov.forEach(function(o){add(o.city_id,o.cover?pubURL(o.cover):"",o.n,o.clat,o.clng,o.city_zh,o.city_en,o.cc);});
-  out.sort(function(a,b){return b.n-a.n;});
+  /* 重叠时谁优先显示：城市知名度为主，照片多的往前提 */
+  out.forEach(function(q){q.sc=q.pc+0.8*Math.log(1+q.n)/Math.LN2;});
+  out.sort(function(a,b){return b.sc-a.sc||b.n-a.n;});
   return out;
 }
 function commPins(){
@@ -4204,8 +4206,9 @@ function boot(){
   var small=S.small=Math.min(screen.width||9999,screen.height||9999)<760||/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent||"");
   try{initSky();}catch(err){SKY.ok=false;}
   Promise.all([
-    loadTex(TEX.day,0,small?4096:8192,false,function(w,h,im){tileThumb(im);}),
-    loadTex(TEX.night,1,small?4096:8192,true),
+    /* 先用 4K 贴图尽快显示地球；电脑上随后在后台换成 8K */
+    loadTex(TEX.day4||TEX.day,0,TEX.day4||small?4096:8192,false,function(w,h,im){tileThumb(im);}).then(function(t){S.tDay=t;return t;}),
+    loadTex(TEX.night4||TEX.night,1,TEX.day4||small?4096:8192,true).then(function(t){S.tNight=t;return t;}),
     loadTex(TEX.water,2,small?2048:4096,"la"),
     loadTex(TEX.height,3,small?2048:4096,true,function(w,h){S.htx=1/w;S.hty=1/h;}),
     loadTex(TEX.sky,5,small?2048:4096,false,null,true)
@@ -4213,7 +4216,15 @@ function boot(){
     S.ready=true;document.body.classList.remove("loading");
     S.last=performance.now();requestAnimationFrame(render);
     commReady();
+    var cn=navigator.connection||{};
+    if(!small&&TEX.day4&&!cn.saveData&&!/(^|-)2g$/.test(cn.effectiveType||"")&&(gl.getParameter(gl.MAX_TEXTURE_SIZE)||0)>=8192)setTimeout(texUpgrade,1200);
   }).catch(function(){$("#fallback").hidden=false;$("#loading").hidden=true;});
+}
+function texUpgrade(){
+  function swap(src,unit,lum,key){
+    return loadTex(src,unit,8192,lum).then(function(t){var old=S[key];S[key]=t;if(old&&old!==t)gl.deleteTexture(old);}).catch(function(){});
+  }
+  swap(TEX.day,0,false,"tDay").then(function(){return swap(TEX.night,1,true,"tNight");});
 }
 boot();
 if(/[?&]debug\b/.test(location.search)){window.__atlas={S:S,BW:BW,CV:CV,SL:SL,TL:TL,C:C,CVC:CVC,UP:UP,LB:LB,LABS:function(){return LABS;}};var mt=/[?&]tiles=([^&]+)/.exec(location.search);if(mt)TL.src=decodeURIComponent(mt[1]);}
