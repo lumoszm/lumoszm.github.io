@@ -2670,7 +2670,7 @@ Object.assign(I18N.zh,{
   privacy:"隐私政策",terms:"用户协议",rules:"社区规则",dataNote:"地名数据：GeoNames、Wikidata、Natural Earth",
   offline:"社区服务暂时连不上，地球仍可正常浏览",mailNotReady:"登录邮件暂时发不出去：网站的发信服务还在配置中，请过些时候再试",notConf:"社区功能还没有开通",banned:"你的账号已被限制使用",
   landmark:"地标",nature:"自然景观",km:"%s 公里",justNow:"刚刚",
-  E_RATE_HOUR:"一小时内上传太多了，请稍后再试",E_RATE_DAY:"今天上传的数量已经到上限了",E_QUOTA:"你的存储空间已用完（每人 500 MB）",
+  E_RATE_HOUR:"一小时内上传太多了，请稍后再试",E_RATE_DAY:"今天上传的数量已经到上限了",E_QUOTA:"你的存储空间已用完（每人 500 MB）",E_FULL:"网站的存储空间暂时满了，正在扩容，请过几天再上传",
   E_RATE_POST:"发言太频繁了，请稍后再试",E_RATE_REPORT:"今天举报次数太多了",E_FAIL:"操作没有成功，请重试"
 });
 Object.assign(I18N.en,{
@@ -2688,7 +2688,7 @@ Object.assign(I18N.en,{
   privacy:"Privacy Policy",terms:"Terms of Use",rules:"Community Guidelines",dataNote:"Place data: GeoNames, Wikidata, Natural Earth",
   offline:"Community features can’t be reached right now. You can still explore the globe.",mailNotReady:"We couldn’t send the sign-in email — the site’s email service is still being set up. Please try again later.",notConf:"Community features aren’t set up yet",banned:"Your account has been restricted",
   landmark:"Landmark",nature:"Nature",km:"%s km",justNow:"just now",
-  E_RATE_HOUR:"Too many uploads this hour. Please try again later.",E_RATE_DAY:"You’ve reached today’s upload limit.",E_QUOTA:"You’ve used all of your 500 MB storage.",
+  E_RATE_HOUR:"Too many uploads this hour. Please try again later.",E_RATE_DAY:"You’ve reached today’s upload limit.",E_QUOTA:"You’ve used all of your 500 MB storage.",E_FULL:"ATLAS is out of storage for now. Please try uploading again in a few days.",
   E_RATE_POST:"You’re posting too fast. Please wait a moment.",E_RATE_REPORT:"Too many reports today.",E_FAIL:"That didn’t work. Please try again."
 });
 function trf(k){var v=tr(k),a=arguments;return String(v).replace(/%s/g,function(){return a.length>1?a[1]:"";});}
@@ -2746,7 +2746,7 @@ function toast(msg,ms){
 }
 function errText(e){
   var m=String((e&&(e.message||e.error_description||e.msg))||e||"");
-  var k=/ATLAS_(RATE_HOUR|RATE_DAY|QUOTA|RATE_POST|RATE_REPORT)/.exec(m);
+  var k=/ATLAS_(RATE_HOUR|RATE_DAY|QUOTA|FULL|RATE_POST|RATE_REPORT)/.exec(m);
   if(k)return tr("E_"+k[1]);
   if(/not authori[sz]ed|Error sending|sending (magic link|confirmation) email/i.test(m))return tr("mailNotReady");
   if(/rate limit|too many|429|over_.*_limit/i.test(m))return tr("tooMany");
