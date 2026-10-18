@@ -334,17 +334,17 @@ body.cvlight #sugg{scrollbar-color:rgba(0,0,0,.2) transparent}
 .cv-body .pending{color:var(--ink3);padding:0}
 .cv-lines{display:flex;flex-direction:column;gap:12px;padding-top:4px}
 .cv-lines i{display:block;height:10px;border-radius:5px;background:#f0f0f3}
-/* 左下角：回到地球（彩色小地球） */
+/* 左下角：回到地球（平面黑白地球：黑框、黑色大陆、白色海洋） */
 .cv-globe{
   position:fixed;z-index:6;left:max(20px,env(safe-area-inset-left,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));
-  width:54px;height:54px;border-radius:50%;padding:0;border:0;cursor:pointer;
-  background:#04070C url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwQDAwQEBAQFBQQFBwsHBwYGBw4KCggLEA4RERAOEA8SFBoWEhMYEw8QFh8XGBsbHR0dERYgIh8cIhocHRz/2wBDAQUFBQcGBw0HBw0cEhASHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBz/wAARCAB4AHgDASIAAhEBAxEB/8QAHAAAAgMBAQEBAAAAAAAAAAAAAAYDBAUCBwEI/8QANxAAAQQBAgQFAgUDAwUBAAAAAQIDBBEABSEGEjFBEyJRYXGBoQcjMkKRCBTBFVJiNUOSseHw/8QAGgEBAAIDAQAAAAAAAAAAAAAAAwIEAAEFBv/EAC4RAAICAQQBAgMHBQAAAAAAAAECAAMRBBIhMUETUSIyYQUUcYGx0fAjkaHB4f/aAAwDAQACEQMRAD8A/BuGGGLIQz6ASaAs5LGjOSnAhAv3xw0zh1mK2l6UaB3A7nGqoaznoQ3sCdxbh6LJmKASgi+gqzjTpPAbcl9CJs6JAQrq7McKUj6AEn+M0zMjNfls+IlNf9ugb9z1ySA0DKZ8NbSFA8wckqHKkjezdj7Zeoq05JUHJEqWXWd9T13gf+l3RuNIj0jTePtIliPyh4QojrobJugSa60e2N0H+i1mTal8TI8OhXLDKV33tKjt/N/GIegcY69w3qkbWIMxvVpy+VH9xyPMNttoBPId0IcTV7KT7jP0lp/9QAj8Ox9X1HQ4Up9poqlwYGooDzdH9aEq/WggpBGygb2I6bsYIQoxz+ExcsMnM8Z1f+iWcltR07X4khyrDb0ZSCfawSM8Q49/ATibgKSyzq2nKaD4KmXWlc6HK60fUdx1z96xv6peAHdGXMchaszqCE2rT1MJ8YCrBBKgkp3G/wBs/Mv4z/ivD/FXiTTJun6VK07+zZXHCpD4UXUlVpJSBSatXc9RkCyEkWADHvxNlmUZU5n5YnaHKgrUlbagUmiCKI+mZxBBoijnvMhqO428zNZYfDyRTg3cZIPVJ+xHpiBrvCqUqKmqs7pI74P3U2JvrH8+hiLqAG2tETDJpMZyK4ULFe+Q5UIIODLIOYYYYZqbhk0aMuU6EIHXIgCSAOpxz0LTm4EJc19N0eVA/wByz/gdcamr1G56h2PtEu6XpzOmMBakhT1WEkdPnOpj7jpJF/OQyH3WnWSppR8ToT3Ptm/pekt6gpTIcC5ATzFCb2HuegwdZew+TgSFde489xUUhbRKtxZvLsaSpoC6s9+tY0HhVSApTyVUNkA7D5zOnaChqOHkq29R65yTaTzGNTKMkSsxqYZeb/cgKspUf1e2aJ1Xn8VLYDba9+UWSnf1JvF1bFrvmJHNQ22+b+2TsMKRIDMgrbBNGh5h9MgeepH1G8TeY1G2lNvqUqlBSFEXR7j4ObKIelS9NcmtTGIkhCglMdxa1LX60OU7Dr16fGL0z+xSGRHjOo5dip1y+ff0AFemcCR4a1U2lPNvQOx+M3TsawLY2B5Mi9jAHHJmxrbinNO1D/T3ioMuId2TTikAHmWPg9R6G8TF6xIdhu+PICkt+ZBJFhY6V63ebqNRMIF5xQ8NQ5SD+4HqPvnmT6g1JeaB8iFqSk9wAds9eMaZNtR+A9f7z+cp1D1SS3YjQ62zrUc7APgf+WKcmMuK6ULHTNGDLUw4kgkV3Ga2qxUajDElsDnH6gOxwLEFy7h2JYU+mceIpYZ9IIJB6jDOfLM0dFhmZMQkC9xQ989E4g0pwQIcWIgrdaVRCffqf5rMPgGCFv8AjqGzaSv69vucZXJZVrMdkWUhKlEA9elY7uaqwB2eYarvY5/CW5OjlrTGS8RIdbaKlBKd9gDQxr4BhJj6IS4UhcpfjFCr8iTtV9zQ+l5QblhU9TIQQY7SHSoHsq+30xpiMrebD6A31s8xqgM4tjsFK++JfWtS272lfUpkZKy2WbSLQikdMqK0NuU60iTEfjQnPMrnZVZ+m3ocYdC1CMNTkabPiFsSWy+2+iiAoVXlPTb033v1x3GqRIrPkjNupocwAq9r7jKhGBmTxv4iSOFdJfjPwiwCyrZp4tcpSLG59ftlQfg6xqClJ/vmkuLVzKLSv1AdBv098f53EEFMYuRXWUyVAqDTx5QSB6emZcfjyBJ0Yuq5Y8iyhxtlznWSB0Ty9Qete2ExI+WT2V9OIr8T8BoixYelNsoS4lQKXALUtA3Jvt3655dxA3D0+dMQh3nabSUJcPQHpt9caNckvanJkOOvuo5CpLKyoqPybO/piZqMdMppxpY811ZFE/Iy9odE2p5zwCM++Cf5+05estUHgYi+ZzMiA86pkrVDtaL/AHbbYhc5UoqUbUTZPqc9EkPR4jTsUK5pEhCkJSTW/LQPxnnFFJo7EbEZ6O9s4C9Dgf2Er6cdy+wrw3AlR29xeMujvh55TQB8Jzy1il4vOUbVypCfn3zT05Syu0X5RZ+M3U+GwIjrkTjWYZiS1CqBOGbPEjIdjtvjrW/zhlfUpssIEnU25Zu8LuJhQFKJCeYVksGSH9ZU5fk5E7/U5mxr/wBJaCepJ/8AWV7mMxw/FW2koQSvxB2HcZHVj4sfQTKD+sfdfCYkFzW2HA1KjISlKnFkIWAb5OXuTmpwLx/H1t0xXGDEdAv9aVBY70SNs8M1LXJupcqJMtx5CTaUk+VJ9hk2iTnIs1Cm1lJqrHbBGmDVlGOT4itbhtw6n6N1R+FOdZcgviNKjnmbcNk8w9Qex++dL4rchRg3qC1MPpIsttlxtz3FWR8H74hNSXUoVIWpQZseYnr75lahxg0+oMtjxG03d9Pp6/OcmrTWXttQZjWXCvnOI16nr+nTGH0vTHxMbAcbXVoeN7p3AKdjt22xWTILqSRz1sSpXrkbqYzkCNIbXzPurXz2NqFV/nCO5+SAoC9tiN1b+uQ9Jmb01X4upVezI3MZrN6gtqEyA5SUIsAjY79KH83lbVNQbcWXiEtqUkcw9wNzlCdq0SCijXMCas2fiu2JfEEyZNSzIBWll5JRypJo8vf753fsvTPoydRYOSMAZ9+cyrZ/W+AHiU9RmqemrmN7BSrQSeoHTbIZzaFIakIST4otRHQH3ygkmxufjNDTllSlIP6VdfjvlpX9QlT5jldgyPEqIoHex8jNCE6ltZ6m9gfTM7m5yBX1PXNCIhJCQSOZQsb9MjX3xJN1zGJ78/RDe5SThg1/0Z2/X/GGLcoOCfaChxmWtJt/ShykcyCCLzG1zUqZcit2LNE+3pl3hWRztLYvcggfPbMXV2FIkrsd7wblDBX+kSs7SVmON0+4yxAcKHr9shcQW1bGx65I0sJds9CDhIcESbciOOr6qt/h6MyFgkKHMB1CdwL+cXmHSVJSD1NZnma4QpAUQhWyh650075Vm6IG3ziUba/hXqRcFuTHrStTIQ2zuWGFgBIrfNmS+ZkdlTSEJSyoIUbpVfF7j/OKOly23UWlVkmz7H3zXZeKkeYUe4BsHMs0lOouBU7W7yP8/n9f2lbeyAgjIi/qK3pspTLaQEJNFR6dfXNBUBt/TkxXHWzIbbPIoE2mz6fbO3/BYcSebnVdhI6D3zJkypTeolUVkoBWOdxW/N/PQZYusQsyg5YTEDEDHAi6hCvFCaPNdEZoRYqS0R4tE9a3sehyaRpbiHluoSpaXCaPuc6jQH2+ZCm1pUscosV9cOtNpwwjs4IyDIjGjKdbbZCiT1Uo9T8ZZEQMPgJG/pk7GkiK804p4E2AEgdfYHvmk4wXHvy0Ws7WdqyytXBJGDCNnOAYSCGdGUf9yicMi4mUIsduKk7oAB+e+GVtU+19vtEpGVzMXRZhiTEG6BOMWtw0yV+Oj9LiCofPcYmgkEEdRjdos9M2N4CyOdO6b9fT65Gg71NfnxN2DB3RWWgEKB6gWMrmkoVfWqGbE+KqM64kgiz39My3m7G2EykRFOZT6G87SohC/pnJFZ1QDVg2b/jCUmTMnhzlQ3ucWUkUoeoxv0+U28i23UqB7HriNtXvnSFlCgUKKffJo+1g3kQ3rDDEff7QJWl1SjQ6XmbqDn5akMufm32TzVvmAJUt1AKFOKANWDjZoOnSpSEeMCtYFeb9gxq1qVSQNo7J5glGBHk+0q6WiY8SlaQiPX7ut/8A6803oaEEuhZQgbnzb40RdDA/cldmrUKCcsq4XUzEfLjiFE+Wztye/vgWazSWAqwzjGD7/wDIv3S/IbrM84cdjvvBJbcLif3m6AzY0lHIXJDqVAIpQ5j1HbO1MAzfAHmU0KIqxfbKevagmHHEdtQKqokeudZQtS7weBKnLHbiL2tTDLmLN2AcMzySSSepwzkOxdixl5RtGJ8yaNJXFdC0np1yHDNAkHImyMxybWxrkdO4D6RsT39swZkFcdxSSkivXKMaS5FcC0GvbGaNqsbUmw3JFOAUFdxl0Otw54b9YBU19dRWcYvoMhLZ5CAO942v6GogrZKXEf8AE5kvQFoJ2IwnoZexJrYDMTwlHsc+pSmwFWPcZoqjOJ6E5CYyibrC2ESe7MZeF40ZyOpTq0qWNwKofXG+LODTfK0hCQDagkbVnm0N56GSWUgE9epy0h2c9sHFgHqEbDBuoe5uTx7Rqr1qHA5956hpsuO5KSuUvlaT2Sdyci4j19LrnIwnmJ8qEg9cTIESW0Q486UN/wDLOJ+ssQwoM+Z09Vd//mJX9moh3ueJCzXO42KJblT0aVFXzKCpTllavT2xLkyVynStR69MJMlyU4VrN+2Q419/qYUcAQa69vJ7hhhhleLDDDDMmQz6CQbBo4YZkyaETWZMUilEjNhviNh8VJaSr3Io/wA4YY9eodeMw2qU8ycPaW9uCpN+4OffD0zr4qq+BhhltXyOQIBXHmcqe0tne1K+oGQucQx2BUdpIPrVnDDCsvZPlAEmtYPcx5msyZZNqIBzPJJNk2cMMqM7OcsY4UDqfMMMMjNwwwwzJk//2Q==") center/cover no-repeat;
-  box-shadow:0 0 0 2.5px #fff,0 8px 22px rgba(0,0,0,.28);
+  width:54px;height:54px;border-radius:50%;padding:0;border:0;cursor:pointer;background:#fff;
   opacity:0;transform:scale(.6);transition:opacity .4s ease .15s,transform .6s var(--ease) .1s;
 }
 .cityv.in .cv-globe{opacity:1;transform:none}
 .cityv.in .cv-globe:hover{transform:scale(1.07)}
 .cityv.in .cv-globe:active{transform:scale(.92)}
+.cv-globe canvas{position:absolute;inset:0;width:100%;height:100%;display:block;border-radius:50%}
+.cv-globe::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #111;pointer-events:none}
 /* 返回时整页淡出，内容同时轻微缩小，像镜头往后退 */
 .cityv.out .cv-wrap,.cityv.out .cv-comm{transform:scale(.97);transition:transform .45s cubic-bezier(.32,.72,0,1)}
 .cityv.out .cv-globe{opacity:0;transform:scale(.6);transition:opacity .2s ease,transform .3s ease}
@@ -358,7 +358,7 @@ body.cvlight #sugg{scrollbar-color:rgba(0,0,0,.2) transparent}
   .cv-text{padding:18px 4px 0}
   .cv-h{font-size:24px}
   .cv-body{font-size:16px}
-  .cv-globe{width:50px;height:50px}
+  .cv-globe{width:48px;height:48px}
 }
 
 /* 设置（弹出卡片） */
@@ -541,19 +541,6 @@ body.cvlight #acctBtn .av{box-shadow:0 0 0 1.5px rgba(0,0,0,.1)}
 .av{position:relative;flex:none;display:inline-grid;place-items:center;overflow:hidden;border-radius:50%;
   width:32px;height:32px;background:hsl(var(--avh,210) 45% 46%);color:#fff;font:600 14px/1 var(--f-body);text-transform:uppercase;user-select:none}
 .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-/* 右下角“分享照片”按钮 */
-#upBtn{
-  position:fixed;z-index:6;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(22px + env(safe-area-inset-bottom,0px));
-  display:inline-flex;align-items:center;gap:8px;height:50px;padding:0 20px 0 16px;border:0;border-radius:999px;cursor:pointer;
-  background:#fff;color:#000;font:600 15px/1 var(--f-body);letter-spacing:.02em;
-  box-shadow:0 10px 30px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.25);
-  opacity:0;transform:translateY(16px) scale(.9);pointer-events:none;transition:opacity .5s ease 1.2s,transform .7s var(--ease) 1.2s;
-}
-#upBtn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
-.started #upBtn{opacity:1;transform:none;pointer-events:auto}
-#upBtn:active{transform:scale(.94)}
-body.cityopen #upBtn,body.fpon #upBtn{opacity:0;pointer-events:none;transition:opacity .2s}
-@media (max-width:640px){#upBtn{height:52px;width:52px;padding:0;justify-content:center}#upBtn span{display:none}#upBtn svg{width:24px;height:24px}}
 
 /* 地球上的社区相册标记 */
 .pin{display:flex;align-items:center;gap:8px;padding:0;cursor:pointer;z-index:2}
@@ -1023,7 +1010,7 @@ a.mbtn{text-decoration:none;box-sizing:border-box}
     <div class="cv-text" id="cvText"></div>
   </div>
   <div class="cv-comm" id="cvComm"><div class="cv-tabs" id="cvTabs"></div><div id="cvPh"></div><div id="cvDs" hidden></div></div>
-  <button type="button" class="cv-globe" id="cvGlobe" aria-label="回到地球" data-i18n-aria="backGlobe"></button>
+  <button type="button" class="cv-globe" id="cvGlobe" aria-label="回到地球" data-i18n-aria="backGlobe"><canvas id="cvIcon" aria-hidden="true"></canvas></button>
 </section>
 <p class="sr" data-i18n="about">ATLAS：转动三维地球，挑一座城市，学一句当地话，看看那里的节日、食物和手艺。</p>
 
@@ -1055,7 +1042,6 @@ a.mbtn{text-decoration:none;box-sizing:border-box}
 <div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sTitle">
   <div class="panel glass" id="panel"></div>
 </div>
-<button type="button" id="upBtn" aria-label="分享照片" data-i18n-aria="share"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span data-i18n="share">分享照片</span></button>
 <div id="fpbar" class="glass" hidden></div>
 <div id="toast" role="status" aria-live="polite"></div>
 <div class="mdl" id="mdl" hidden><div class="mcard" id="mcard" role="dialog" aria-modal="true" aria-labelledby="mH"></div></div>
@@ -1700,6 +1686,8 @@ var VPm=null,eyeV=[0,0,3],dist=3,zoomEff=1;
 function render(now){
   var W=S.W,H=S.H,raw=(now-S.last)/1000||0.016,dt=Math.min(0.05,raw),dta=Math.min(0.25,raw);S.last=now;
   var t=now/1000;
+  /* 城市页左下角的黑白地球：约 30 帧/秒慢慢转 */
+  if(CV.spin&&BW.ready&&!CV.closing){BW.lon=wrap(BW.lon-14*dta);BW.acc+=dta;if(BW.acc>=1/30){BW.acc=0;bwIcon();}}
   /* 城市页完全盖住地球时不必再画 */
   if(S.covered||(S.pauseGL&&mOn())){requestAnimationFrame(render);return;}
   /* 布局动画 */
@@ -2046,7 +2034,7 @@ function openSheet(html){
   var b=panel.querySelector('[data-act="close"]');if(b)b.focus({preventScroll:true});
 }
 /* ---------- 城市页 ---------- */
-var cityv=null,CV={id:null,origin:null,closing:false};
+var cityv=null,CV={id:null,origin:null,closing:false,spin:false};
 /* 城市照片：以后把真实照片地址（或 data URI）填进对应数组即可。可以放很多张：每次显示其中几张轮播，每轮结束换进一张新的。 */
 var PHOTOS={kyoto:[],venice:[],fez:[],oaxaca:[],rotorua:[]};
 /* 还没有照片时用的示意图：每座城市几组协调的配色，位置和角度随机，所以每张都是新的 */
@@ -2132,6 +2120,68 @@ $("#cvPg").addEventListener("click",function(e){
 });
 
 
+/* ---------- 平面黑白地球：城市页左下角的小图标（慢慢转，正对这座城市） ---------- */
+var BW={lv:null,ready:false,loading:false,lat:20,lon:0,acc:0,iconImg:null};
+function bwLoad(){
+  if(BW.ready||BW.loading)return;BW.loading=true;
+  var img=new Image();
+  img.onload=function(){
+    try{
+      var w=Math.min(1024,img.naturalWidth),h=Math.round(img.naturalHeight*w/img.naturalWidth),c=document.createElement("canvas");c.width=w;c.height=h;
+      var x=c.getContext("2d");x.drawImage(img,0,0,w,h);
+      var d=x.getImageData(0,0,w,h).data,m=new Uint8Array(w*h);
+      for(var i=0;i<w*h;i++)m[i]=d[i*4];
+      var lv=[{m:m,w:w,h:h}];
+      while(lv[lv.length-1].w>256){
+        var p=lv[lv.length-1],w2=p.w>>1,h2=p.h>>1,q=new Uint8Array(w2*h2);
+        for(var y=0;y<h2;y++)for(var xx=0;xx<w2;xx++){var o=2*y*p.w+2*xx;q[y*w2+xx]=(p.m[o]+p.m[o+1]+p.m[o+p.w]+p.m[o+p.w+1]+2)>>2;}
+        lv.push({m:q,w:w2,h:h2});
+      }
+      BW.lv=lv;BW.ready=true;bwIcon();
+    }catch(e){BW.ready=false;}
+  };
+  img.src=TEX.land;
+}
+function bwLevel(r){
+  var L=BW.lv[0];
+  for(var i=BW.lv.length-1;i>=0;i--){if(BW.lv[i].w>=2*Math.PI*r*0.9){L=BW.lv[i];break;}}
+  return L;
+}
+/* 与主页相机相同的透视：缩放为 1 时地球在屏幕上的张角 */
+function bwTanA(){return Math.min(.43*S.H,.44*S.W)*2*TANH/S.H;}
+function bwRows(job,y0,y1){
+  var D=job.D,r=D/2,px=job.img.data,L=job.L,M=L.m,MW=L.w,MH=L.h;
+  var sp=Math.sin(job.lat*RAD),cp=Math.cos(job.lat*RAD),lr=job.lon*RAD,tA=job.tanA,d=Math.sqrt(1+tA*tA)/tA,k2=1/(2*Math.PI),INK=17;
+  for(var j=y0;j<y1;j++){
+    var v=(r-(j+0.5))/r;
+    for(var i=0;i<D;i++){
+      var u=(i+0.5-r)/r,q=u*u+v*v,o=(j*D+i)*4,rr=Math.sqrt(q),cov=(1-rr)*r+0.5;
+      if(cov<=0){px[o+3]=0;continue;}
+      var uu=u,vv=v;if(rr>1){uu=u/rr;vv=v/rr;}
+      var wx=uu*tA,wy=vv*tA,il=1/Math.sqrt(wx*wx+wy*wy+1);wx*=il;wy*=il;var wz=-il;
+      var b=d*wz,disc=b*b-d*d+1;if(disc<0)disc=0;var t=-b-Math.sqrt(disc);
+      var x=t*wx,y=t*wy,z=d+t*wz;
+      var sl=y*cp+z*sp;if(sl>1)sl=1;else if(sl<-1)sl=-1;
+      var lat=Math.asin(sl),lon=lr+Math.atan2(x,z*cp-y*sp);
+      var fx=(lon*k2+0.5)*MW-0.5;fx-=Math.floor(fx/MW)*MW;
+      var fy=(0.5-lat/Math.PI)*MH-0.5;if(fy<0)fy=0;else if(fy>MH-1.001)fy=MH-1.001;
+      var ix=fx|0,iy=fy|0,ax=fx-ix,ay=fy-iy,ix1=ix+1<MW?ix+1:0,r0=iy*MW,r1=r0+MW;
+      var m=(M[r0+ix]*(1-ax)+M[r0+ix1]*ax)*(1-ay)+(M[r1+ix]*(1-ax)+M[r1+ix1]*ax)*ay;
+      var a=(m-92)/72;a=a<0?0:a>1?1:a*a*(3-2*a);
+      var c=255-(255-INK)*a;
+      px[o]=px[o+1]=px[o+2]=c;px[o+3]=cov>=1?255:cov*255;
+    }
+  }
+}
+function bwIcon(){
+  var c=$("#cvIcon");if(!c||!BW.ready)return;
+  var D=Math.round((c.clientWidth||54)*Math.min(window.devicePixelRatio||1,2));
+  var x=c.getContext("2d");
+  if(c.width!==D||!BW.iconImg){c.width=c.height=D;BW.iconImg=x.createImageData(D,D);}
+  bwRows({D:D,img:BW.iconImg,L:bwLevel(D/2),lat:BW.lat,lon:BW.lon,tanA:bwTanA()},0,D);
+  x.putImageData(BW.iconImg,0,0);
+}
+
 function cvFill(id){
   var p=place(id);if(!p)return;
   $("#cvKicker").textContent=pSub(p);
@@ -2172,9 +2222,10 @@ function openCity(id){
   if(typeof closeSugg==="function"&&suggOpen())closeSugg();
   var p=place(id);if(!p)return;
   CV.id=id;curId=null;cityHash(id,wasOpen);
+  bwLoad();BW.lat=clamp(p.lat,-70,70);BW.lon=p.lon;
   if(wasOpen){
     var md=$("#cvMedia");
-    cvFill(id);cvComm(id);slStart(id);
+    cvFill(id);cvComm(id);slStart(id);bwIcon();
     if(!reduced()&&md.animate)md.animate([{opacity:0,transform:"scale(.96)"},{opacity:1,transform:"none"}],{duration:500,easing:"cubic-bezier(.32,.72,0,1)"});
     cvRise([$("#cvHead"),$(".cv-dots"),$("#cvText"),$("#cvComm")],0);
     cityv.scrollTo({top:0,behavior:reduced()?"auto":"smooth"});
@@ -2182,6 +2233,7 @@ function openCity(id){
     return;
   }
   CV.origin=cvOrigin(id);CV.lastFocus=document.activeElement;CV.z0=S.zoomT;
+  CV.spin=true;BW.acc=0;bwIcon();
   flyTo(p.lat,p.lon,3.2);S.hold=true;
   cvFill(id);cvComm(id);
   document.body.classList.add("cityopen","cvlight");S.sheetOpen=true;
@@ -2211,7 +2263,7 @@ function closeCity(opt){
   if(!cityv||cityv.hidden||CV.closing||cityv.classList.contains("out"))return;
   var id=CV.id,p=id&&place(id),plain=(opt&&opt.plain)||reduced()||!p;
   CV.pend=null;
-  CV.id=null;CVC.gen++;CVC.id=null;slStop();clearTimeout(CV.tc);
+  CV.id=null;CVC.gen++;CVC.id=null;slStop();clearTimeout(CV.tc);CV.spin=false;
   if(/^#c\//.test(location.hash))setHash(C.fp?"fp/"+C.fp.uid:"");
   CV.closing=true;
   if(!plain){
@@ -4118,7 +4170,6 @@ document.addEventListener("keydown",function(e){
 /* ---------- 启动 ---------- */
 function commInit(){
   initSB();acctBtnRender();renderAcct();
-  $("#upBtn").addEventListener("click",function(){upStart(null);});
   hitEl.querySelector("span").addEventListener("click",function(){if(S.hit&&S.hit.cid)openPlace(S.hit.cid);});
   if(!cOK())return;
   loadMe();
