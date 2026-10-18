@@ -2895,7 +2895,7 @@ function initSB(){
     if(was!==now||ev==="USER_UPDATED")setTimeout(loadMe,0);
   });
 }
-var meP=null;
+var meP=null,meFails=0;
 function loadMe(){
   if(!cOK())return Promise.resolve(null);
   meP=C.sb.auth.getSession().then(function(r){
@@ -2915,7 +2915,11 @@ function loadMe(){
         return C.me;
       });
     });
-  }).catch(function(){offline();return null;});
+  }).catch(function(){
+    meFails=(meFails||0)+1;
+    if(meFails<3)setTimeout(loadMe,4000*meFails);else offline();
+    return null;
+  });
   return meP;
 }
 function meChanged(){
@@ -3101,16 +3105,23 @@ function saveProfile(fields,avBlob){
 }
 
 /* ---------- 地球上的社区标记 ---------- */
-function loadOverview(){
+/* 跨境网络时好时坏：失败后隔一会儿自动重试，几次都不行才提示 */
+var OV_RETRY=[2500,7000,15000,30000];
+function loadOverview(n){
+  n=n||0;
   if(!cOK())return Promise.resolve();
   return C.sb.rpc("city_overview").then(function(r){
     if(r.error)throw r.error;
+    C.off=false;
     C.ov=(r.data||[]).map(function(o){o.n=+o.n;return o;}).sort(function(a,b){return b.n-a.n||(a.last_at<b.last_at?1:-1);});
     C.ovById={};C.ovCC={};C.ov.forEach(function(o){C.ovById[o.city_id]=o;C.ovCC[o.cc]=(C.ovCC[o.cc]||0)+1;});
     HAS_COUNTRY={};
     Object.keys(C.ovCC).forEach(function(cc){var c=C.CC[cc];if(c){HAS_COUNTRY[c[0]]=true;}});
     refreshPins();
-  }).catch(function(){offline();});
+  }).catch(function(){
+    if(n<OV_RETRY.length)setTimeout(function(){loadOverview(n+1);},OV_RETRY[n]);
+    if(n>=2)offline();
+  });
 }
 /* 地球上的城市标记：精选照片 + 旅行者公开的照片 */
 function pinSource(){
