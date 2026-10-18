@@ -134,7 +134,13 @@ button{font:inherit;color:inherit}
 .pill:hover{background:rgba(255,255,255,.10)}
 .pill:active{transform:scale(.95)}
 .pill svg{flex:none;width:16px;height:16px;filter:drop-shadow(0 0 3px rgba(0,8,20,.9))}
-#dayBtn{opacity:0;pointer-events:none;transition:opacity .8s 1s}
+#dayBtn,#pinBtn{opacity:0;pointer-events:none;transition:opacity .8s 1s}
+.started #pinBtn{opacity:1;pointer-events:auto}
+#pinBtn .off{display:none}
+#pinBtn[aria-pressed="false"] .off{display:inline}
+#pinBtn[aria-pressed="false"]{color:rgba(255,255,255,.72)}
+/* 关掉城市标记：地球上的照片圆圈和小白点都隐藏（看自己的足迹时不受影响） */
+body.nopins:not(.fpon) #labels .pin{opacity:0!important;visibility:hidden;pointer-events:none;transition:opacity .3s,visibility 0s .3s}
 .started #dayBtn{opacity:1;pointer-events:auto}
 #dayBtn[aria-pressed="true"]{color:var(--warm)}
 
@@ -167,7 +173,7 @@ body:not(.loading) #loading{opacity:0}
   text-shadow:0 0 6px rgba(0,8,20,.95);opacity:0;transition:opacity 1s;pointer-events:none;
 }
 #tip.show{opacity:.9}
-@media (max-width:640px){#tip{letter-spacing:.06em;font-size:12px}.pill{padding:8px 8px;font-size:13px}}
+@media (max-width:640px){#tip{letter-spacing:.06em;font-size:12px}.pill{padding:8px 8px;font-size:13px}#pinBtn span{display:none}#pinBtn{padding:8px 10px}}
 
 /* ===== 苹果式玻璃材质 ===== */
 .glass{
@@ -238,7 +244,7 @@ button{-webkit-tap-highlight-color:transparent}
     background:rgba(118,118,128,.36);box-shadow:inset 0 .5px 0 rgba(255,255,255,.18)}
   .top.sopen .search input{display:block}
   .top.sopen .search .clr:not([hidden]){display:grid}
-  .top.sopen #dayBtn,.top.sopen #acctBtn{opacity:0!important;pointer-events:none!important;transition:opacity .15s!important}
+  .top.sopen #dayBtn,.top.sopen #pinBtn,.top.sopen #acctBtn{opacity:0!important;pointer-events:none!important;transition:opacity .15s!important}
   .top.sopen #qCancel{display:inline-flex;position:absolute;right:max(8px,env(safe-area-inset-right,0px));top:calc(14px + env(safe-area-inset-top,0px));color:#0A84FF;text-shadow:none;font-size:16px;letter-spacing:0}
   #sugg{left:16px!important;width:calc(100vw - 32px)!important}
 }
@@ -255,7 +261,7 @@ button{-webkit-tap-highlight-color:transparent}
 .cityv.bgout{background-color:rgba(255,255,255,0)}
 .cityv.closing .cv-wrap,.cityv.closing .cv-back,.cityv.closing .cv-bar{opacity:0!important;transition:opacity .22s ease!important}
 body.cityopen .brand{opacity:0}
-body.cityopen #dayBtn{display:none}
+body.cityopen #dayBtn,body.cityopen #pinBtn{display:none}
 body.cityopen #tip{opacity:0!important}
 body.cityopen #labels,body.cityopen #hit{opacity:0;transition:opacity .3s}
 /* 白色页面上的顶栏控件 */
@@ -967,6 +973,14 @@ a.mbtn{text-decoration:none;box-sizing:border-box}
 #cvTabs[hidden]{display:none}
 .cv-comm{padding-top:28px}
 @media (max-width:760px){.cv-comm{padding-top:20px}}
+/* 足迹栏在白色城市页上换成深色字（在地球上仍是白字） */
+#fpbar{transition:opacity .4s ease,transform .5s var(--ease),color .3s ease,background-color .3s ease}
+#fpbar .fp-a button,#fpbar .fp-t small{transition:color .3s ease,background-color .3s ease}
+body.cvlight #fpbar{color:#1d1d1f}
+body.cvlight #fpbar .fp-t small{color:rgba(60,60,67,.62)}
+body.cvlight #fpbar .fp-a button{background:rgba(0,0,0,.06);color:#1d1d1f}
+body.cvlight #fpbar .fp-a button:hover{background:rgba(0,0,0,.1)}
+body.cvlight #fpbar .fp-a .pub{color:#248A3D}
 
 </style>
 </head>
@@ -990,6 +1004,7 @@ a.mbtn{text-decoration:none;box-sizing:border-box}
       <button type="button" class="clr" id="qClear" hidden aria-label="清除" data-i18n-aria="clear"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 7.5l9 9M16.5 7.5l-9 9"/></svg></button>
     </div>
     <button type="button" class="pill" id="qCancel" data-i18n="cancel">取消</button>
+    <button type="button" class="pill" id="pinBtn" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="7.6"/><circle cx="12" cy="12" r="2.7" fill="currentColor" stroke="none"/><path class="off" d="M4.2 4.2l15.6 15.6"/></svg><span id="pinTxt">隐藏城市</span></button>
     <button type="button" class="pill" id="dayBtn" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg><span id="dayTxt">全球白天</span></button>
     <button type="button" class="pill" id="acctBtn" aria-expanded="false" aria-controls="acct" aria-label="账户"></button>
   </div>
@@ -1117,14 +1132,14 @@ var I18N={
   zh:{globe:"可旋转缩放的三维地球",settings:"设置",language:"语言",about:"ATLAS：转动三维地球，挑一座城市，学一句当地话，看看那里的节日、食物和手艺。",
       start:"点击地球以开始",loading:"正在载入地球…",tip:"拖拽转动 · 滚轮缩放 · 点击地名进入",tipTouch:"拖动转动 · 双指缩放 · 点击地名进入",
       fbTitle:"这台设备打不开三维地球",fbText:"浏览器没有启用 WebGL。请换用最新版的 Chrome、Edge 或 Safari 再打开。",
-      dayOn:"全球白天",dayOff:"昼夜",dayOnT:"让整个地球都处在白天",dayOffT:"恢复昼夜",
+      pinHide:"隐藏城市",pinShow:"显示城市",pinHideT:"隐藏地球上的城市照片标记",pinShowT:"显示地球上的城市照片标记",dayOn:"全球白天",dayOff:"昼夜",dayOnT:"让整个地球都处在白天",dayOffT:"恢复昼夜",
       close:"关闭",prev:"上一个",next:"下一个",fest:"节日",food:"美食",craft:"手艺",tipRow:"入乡随俗",fact:"你知道吗",
       country:"国家",cities:"已收录的城市",pending:"介绍内容整理中。",back:"返回",backGlobe:"回到地球",photoSoon:"示意图 · 照片待添加",local:"当地",localTime:"当地时间",imgNote:"地球影像来源：NASA（Blue Marble、Black Marble、GIBS）",slide:"第 %s 张",about2:"介绍",searchPh:"搜索",searchAria:"搜索国家、城市或地点",clear:"清除",cancel:"取消",noRes:"没有找到相关地点",localDay:"当地时间，白天",localNight:"当地时间，夜晚",sep:"，",
       soon:function(n){return n+"的板块还在筹备中。现在先收录了五座试点城市，再往后会按国家逐步补上。";}},
   en:{globe:"Rotatable, zoomable 3D globe",settings:"Settings",language:"Language",about:"ATLAS: turn the globe, pick a city, learn a local greeting, and discover its festivals, food and crafts.",
       start:"Click the globe to begin",startTouch:"Tap the globe to begin",loading:"Loading the Earth…",tip:"Drag to rotate · Scroll to zoom · Click a name to open",tipTouch:"Drag to rotate · Pinch to zoom · Tap a name to open",
       fbTitle:"This device can’t show the 3D globe",fbText:"WebGL isn’t available in this browser. Please try the latest Chrome, Edge or Safari.",
-      dayOn:"All daylight",dayOff:"Day & night",dayOnT:"Light up the whole globe",dayOffT:"Back to day and night",
+      pinHide:"Hide cities",pinShow:"Show cities",pinHideT:"Hide the city photo markers on the globe",pinShowT:"Show the city photo markers on the globe",dayOn:"All daylight",dayOff:"Day & night",dayOnT:"Light up the whole globe",dayOffT:"Back to day and night",
       close:"Close",prev:"Previous",next:"Next",fest:"Festival",food:"Food",craft:"Craft",tipRow:"Etiquette",fact:"Did you know?",
       country:"Country",cities:"Cities on ATLAS",pending:"Details for this city are on the way.",back:"Back",backGlobe:"Back to the globe",photoSoon:"Placeholder · photos coming soon",local:"Local",localTime:"Local time",imgNote:"Earth imagery: NASA (Blue Marble, Black Marble, GIBS)",slide:"Image %s",about2:"About",searchPh:"Search",searchAria:"Search countries, cities or places",clear:"Clear",cancel:"Cancel",noRes:"No matching places",localDay:"Local time, daytime",localNight:"Local time, night",sep:", ",
       soon:function(n){return "The "+n+" section is still in the works. ATLAS starts with five pilot cities, and more countries will be added over time.";}}
@@ -2576,6 +2591,21 @@ dayBtn.addEventListener("click",function(){
   touch();
 });
 
+/* 城市标记开关：记在本机，下次打开还是同样的设置 */
+var pinBtn=$("#pinBtn");
+S.pinsOff=false;try{S.pinsOff=localStorage.getItem("atlas-pins")==="0";}catch(e){}
+function pinApply(){
+  document.body.classList.toggle("nopins",S.pinsOff);
+  pinBtn.setAttribute("aria-pressed",S.pinsOff?"false":"true");
+  $("#pinTxt").textContent=tr(S.pinsOff?"pinShow":"pinHide");
+  pinBtn.title=tr(S.pinsOff?"pinShowT":"pinHideT");pinBtn.setAttribute("aria-label",pinBtn.title);
+}
+pinBtn.addEventListener("click",function(){
+  S.pinsOff=!S.pinsOff;
+  try{localStorage.setItem("atlas-pins",S.pinsOff?"0":"1");}catch(e){}
+  pinApply();touch();
+});
+pinApply();
 function dayLabel(){
   $("#dayTxt").textContent=tr(S.dayAll?"dayOff":"dayOn");
   dayBtn.title=tr(S.dayAll?"dayOffT":"dayOnT");
@@ -2600,7 +2630,7 @@ function applyLang(){
   Array.prototype.forEach.call(document.querySelectorAll("[data-i18n-ph]"),function(n){n.setAttribute("placeholder",tr(n.getAttribute("data-i18n-ph")));});
   Array.prototype.forEach.call(acct.querySelectorAll("[data-lang]"),function(b){b.setAttribute("aria-checked",b.getAttribute("data-lang")===LANG?"true":"false");});
   var sg=acct.querySelector(".seg");if(sg)sg.style.setProperty("--i",LANG==="en"?1:0);
-  dayLabel();
+  dayLabel();if(typeof pinApply==="function")pinApply();
 }
 function setLang(l){
   if(l===LANG)return;
