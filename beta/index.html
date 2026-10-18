@@ -2651,7 +2651,7 @@ acct.addEventListener("keydown",function(e){
   var b=acct.querySelector('[data-lang="'+nl+'"]');if(b)b.focus();e.preventDefault();
 });
 /* ===================== 旅行社区 ===================== */
-var CFG={url:"https://mzttscrmrlxsppknmdvg.supabase.co".replace(/\/+$/,""),key:"sb_publishable_Q8M9vUf37BwF98xSWlpKwQ_7Ok3PRCy",site:"https://lumoszm.github.io/beta/",mailCode:"0"==="1"};
+var CFG={url:"https://mzttscrmrlxsppknmdvg.supabase.co".replace(/\/+$/,""),key:"sb_publishable_Q8M9vUf37BwF98xSWlpKwQ_7Ok3PRCy",site:"https://lumoszm.github.io/beta/",mailCode:"1"==="1"};
 // 邮件链接的落地页：在网站上就回到当前页面；从下载的文件或别处打开时，回到 ATLAS 网站
 function authReturn(){try{var u=new URL(CFG.site);if(location.origin===u.origin)return location.origin+location.pathname;}catch(e){}return CFG.site||(location.origin+location.pathname);}
 function onSite(){try{return location.origin===new URL(CFG.site).origin;}catch(e){return true;}}
@@ -2663,7 +2663,7 @@ Object.assign(I18N.zh,{
   authH:"登录 ATLAS",authSub:"用邮箱接收验证码，第一次使用会自动注册。",authSubL:"我们会给你的邮箱发一封登录邮件，第一次使用会自动注册。",email:"邮箱",
   agree1:'我已阅读并同意<a href="#" data-doc="terms">《用户协议》</a>和<a href="#" data-doc="privacy">《隐私政策》</a>',
   agree2:"同意把我的账号信息和上传的内容存放在位于新加坡的服务器上",
-  sendCode:"发送登录邮件",sendCodeC:"获取验证码",codeH:"查收邮件",codeSub:"验证码已发到 %s，输入邮件里的数字即可登录。没收到的话，看看垃圾邮件。",linkSub:"登录邮件已发到 %s。请在这台设备上打开邮件，点里面的链接——链接在哪台设备上打开，就在哪台设备上登录。没收到的话，看看垃圾邮件。",linkOff:"链接会打开 ATLAS 网站，并在网站上登录。",linkWait:"等你点链接……",openSite:"打开 ATLAS 网站",linkBad:"这个登录链接已经用过或过期了，请重新获取。",codePh:"数字验证码",verify:"登录",resend:"重新发送",resendIn:"%s 秒后可重新发送",changeEmail:"换个邮箱",
+  sendCode:"发送登录邮件",sendCodeC:"获取验证码",codeH:"查收邮件",codeSub:"验证码已发到 %s，输入邮件里的数字即可登录。没收到的话，看看垃圾邮件。",linkSub:"登录邮件已发到 %s。请在这台设备上打开邮件，点里面的链接——链接在哪台设备上打开，就在哪台设备上登录。没收到的话，看看垃圾邮件。",linkOff:"链接会打开 ATLAS 网站，并在网站上登录。",linkWait:"等你点链接……",openSite:"打开 ATLAS 网站",linkBad:"这个登录链接已经用过或过期了，请重新获取。",codePh:"8 位验证码",verify:"登录",resend:"重新发送",resendIn:"%s 秒后可重新发送",changeEmail:"换个邮箱",
   badEmail:"请输入正确的邮箱地址",needAgree:"请先勾选上面两项",badCode:"验证码不对或已经过期",tooMany:"操作太频繁了，请稍等一会儿再试",netErr:"网络连接失败，请稍后再试",
   setupH:"给自己起个名字",setupSub:"其他旅行者会在你的照片和留言旁看到这个名字。",nick:"昵称",nickPh:"最多 24 个字",done:"完成",changeAv:"更换头像",addAv:"添加头像",
   traveler:"旅行者",myPage:"我的主页",myMap:"我的足迹",admin:"举报处理",signOut:"退出登录",signedOut:"已退出登录",signedIn:"欢迎回来，%s",
@@ -2681,7 +2681,7 @@ Object.assign(I18N.en,{
   authH:"Sign in to ATLAS",authSub:"We’ll email you a code. If you’re new, this also creates your account.",authSubL:"We’ll email you a sign-in link. If you’re new, this also creates your account.",email:"Email",
   agree1:'I have read and agree to the <a href="#" data-doc="terms">Terms of Use</a> and <a href="#" data-doc="privacy">Privacy Policy</a>',
   agree2:"I agree that my account details and uploads are stored on servers in Singapore",
-  sendCode:"Email me a sign-in link",sendCodeC:"Email me a code",codeH:"Check your email",codeSub:"We sent a code to %s. Enter it below to sign in. Check your spam folder if it doesn’t arrive.",linkSub:"We sent a sign-in email to %s. Open it on this device and tap the link — you’ll be signed in on whichever device opens the link. Check your spam folder if it doesn’t arrive.",linkOff:" The link opens the ATLAS website and signs you in there.",linkWait:"Waiting for you to tap the link…",openSite:"Open the ATLAS website",linkBad:"That sign-in link was already used or has expired. Please request a new one.",codePh:"Numeric code",verify:"Sign in",resend:"Resend",resendIn:"Resend in %ss",changeEmail:"Use another email",
+  sendCode:"Email me a sign-in link",sendCodeC:"Email me a code",codeH:"Check your email",codeSub:"We sent a code to %s. Enter it below to sign in. Check your spam folder if it doesn’t arrive.",linkSub:"We sent a sign-in email to %s. Open it on this device and tap the link — you’ll be signed in on whichever device opens the link. Check your spam folder if it doesn’t arrive.",linkOff:" The link opens the ATLAS website and signs you in there.",linkWait:"Waiting for you to tap the link…",openSite:"Open the ATLAS website",linkBad:"That sign-in link was already used or has expired. Please request a new one.",codePh:"8-digit code",verify:"Sign in",resend:"Resend",resendIn:"Resend in %ss",changeEmail:"Use another email",
   badEmail:"Enter a valid email address",needAgree:"Please tick both boxes above",badCode:"That code is wrong or has expired",tooMany:"Too many attempts. Please wait a moment and try again.",netErr:"Couldn’t connect. Please try again later.",
   setupH:"Choose a name",setupSub:"Other travelers will see this next to your photos and posts.",nick:"Name",nickPh:"Up to 24 characters",done:"Done",changeAv:"Change photo",addAv:"Add a photo",
   traveler:"Traveler",myPage:"My profile",myMap:"My travel map",admin:"Reports",signOut:"Sign out",signedOut:"Signed out",signedIn:"Welcome back, %s",
