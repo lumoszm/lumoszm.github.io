@@ -2773,7 +2773,8 @@ function loadPlaces(){
     d.p.forEach(function(f){var o={id:f[0],zh:f[1],en:f[2],lat:f[3],lon:f[4],cc:f[5],tz:d.tz[f[6]]||"UTC",pc:5,k:f[7],alt:f[8]||""};P.push(o);PI[o.id]=o;});
     C.P=P;C.PI=PI;
     placesIntoSearch();
-    if(C.ov.length)refreshPins();
+    /* 地名库到得比照片清单晚时，也要把照片标记画出来（社区服务连不上时尤其如此） */
+    refreshPins();
     return P;
   }).catch(function(e){placesP=null;throw e;});
   return placesP;
