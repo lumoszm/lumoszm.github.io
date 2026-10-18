@@ -3379,9 +3379,8 @@ function upHTML(){
     body+='<div class="up-opts"><label class="fld" style="margin:0"><span>'+tr("upCap")+'</span><textarea id="upCap" maxlength="500" rows="2" placeholder="'+tr("upCapPh")+'">'+esc(UP.cap)+'</textarea></label>'+
       '<div class="fld" style="margin:0"><span>'+tr("upVis")+'</span><div class="mseg" role="radiogroup"><button type="button" role="radio" data-vis="0" aria-checked="'+!UP.pub+'">'+tr("upPriv")+'</button><button type="button" role="radio" data-vis="1" aria-checked="'+UP.pub+'">'+tr("upPub")+'</button></div>'+
       '<small>'+tr(UP.pub?"upPubNote":"upPrivNote")+'</small></div>'+
-      (UP.pub?'<div class="fld" style="margin:0"><span>'+tr("upCat")+'</span><div class="mseg" role="radiogroup">'+CATS.map(function(c){return '<button type="button" role="radio" data-cat="'+c+'" aria-checked="'+(UP.cat===c)+'">'+tr("cat_"+c)+'</button>';}).join("")+'</div></div>':"")+
       '<button type="button" class="mbtn sec sm" id="upMore" style="align-self:flex-start">'+ICN.plus.replace("<svg",'<svg width="16" height="16" style="fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round"')+tr("upAdd")+'</button></div>';
-    var needCat=UP.pub&&!UP.cat;
+    var needCat=false;  /* 不再让用户选分类 */
     foot='<button type="button" class="mbtn" id="upGo"'+(!ready.length||need||prepn||needCat?" disabled":"")+'>'+(prepn?'<i class="spin"></i>':tr("upGo")(ready.length))+'</button>'+(need?'<p class="mnote">'+tr("upNeedCity")+'</p>':needCat?'<p class="mnote">'+tr("upNeedCat")+'</p>':"");
   }else if(UP.phase==="up"){
     var dn=UP.items.filter(function(it){return it.st==="done";}).length,tot=UP.items.filter(function(it){return !it.err;}).length;
@@ -3505,7 +3504,7 @@ function upPublish(){
       .then(function(){
         return C.sb.from("media").insert({id:it.id,kind:it.kind,path:path,thumb:thumb,w:it.w,h:it.h,dur:it.kind==="video"?it.dur||null:null,
           city_id:it.cityId,city_zh:(p.zh||"").slice(0,80),city_en:(p.en||"").slice(0,80),cc:p.cc||"",clat:p.lat,clng:p.lon,
-          taken_at:it.taken||null,caption:cap,is_public:UP.pub,category:UP.pub?UP.cat:null});
+          taken_at:it.taken||null,caption:cap,is_public:UP.pub,category:UP.pub?(UP.cat||"scenery"):null});
       }).then(function(r){
         if(r.error)throw r.error;
         it.st="done";it.prog=1;
@@ -3756,7 +3755,7 @@ function lbShow(){
 }
 function lbInfo(){
   var m=LB.list[LB.i];if(!m)return;
-  var city=rowCity(m),cat=m.category&&LB.ctx!=="city"?tr("cat_"+m.category):"",h;
+  var city=rowCity(m),cat="",h;  /* 不再显示分类 */
   if(m.cur){
     var us=m.via==="unsplash",q=function(u){return u+(u.indexOf("?")<0?"?":"&")+UTM;};
     h='<div class="lb-au"><span class="av cur" aria-hidden="true">'+ICN.photo+'</span><span><b>'+
@@ -3794,7 +3793,7 @@ $("#lbIn").addEventListener("click",function(e){
     if(m.is_public&&!m.hidden)items.push({t:tr("copyLink"),fn:function(){copyText(location.origin+location.pathname+"#m/"+m.id);}});
     if(mine){
       if(m.is_public)items.push({t:tr("makePriv"),fn:function(){setVis(m,false);}});
-      else items.push({t:tr("makePub"),fn:function(){catMenu(b,function(c){setVis(m,true,c);});}});
+      else items.push({t:tr("makePub"),fn:function(){setVis(m,true,m.category||"scenery");}});
       items.push({hr:1});items.push({t:tr("del"),red:true,fn:function(){delMedia(m);}});
     }else{
       items.push({t:tr("report"),fn:function(){reportMenu(b,"media",m.id,true);}});
