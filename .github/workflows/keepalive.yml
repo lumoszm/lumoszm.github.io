@@ -1,0 +1,48 @@
+# ATLAS 保活与体检：每两天自动运行一次。
+# 1. 检查网站首页、数据库、登录服务是否正常；任何一项失败，GitHub 会给仓库主人发邮件。
+# 2. 每次检查都会访问数据库，防止 Supabase 免费版因 7 天无人访问而自动暂停。
+# 3. 用户上传超过 700 MB（免费版上限 1 GB）时报错提醒。
+# 4. 仓库 40 天没有改动时自动提交一次空记录，防止 GitHub 停用这个定时任务。
+name: ATLAS keep-alive
+on:
+  schedule:
+    - cron: "23 1 */2 * *"   # UTC 01:23，北京时间 09:23
+  workflow_dispatch:
+permissions:
+  contents: write
+env:
+  SB_URL: https://mzttscrmrlxsppknmdvg.supabase.co
+  SB_KEY: sb_publishable_Q8M9vUf37BwF98xSWlpKwQ_7Ok3PRCy
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: 网站首页
+        run: curl -fsS --retry 3 --retry-delay 30 -o /dev/null -w "HTTP %{http_code}\n" https://lumoszm.github.io/
+      - name: 数据库（同时防止暂停）
+        run: |
+          set -e
+          body=$(curl -fsS --retry 5 --retry-delay 60 --retry-all-errors -X POST "$SB_URL/rest/v1/rpc/atlas_health" \
+                 -H "apikey: $SB_KEY" -H "Content-Type: application/json" -d '{}')
+          echo "$body"
+          bytes=$(echo "$body" | python3 -c 'import json,sys;print(json.load(sys.stdin)["bytes"])')
+          echo "用户上传已用：$((bytes/1024/1024)) MB（全站上限 900 MB）"
+          if [ "$bytes" -gt $((700*1024*1024)) ]; then
+            echo "::error::用户上传已超过 700 MB，快到 Supabase 免费版上限了：需要升级 Supabase 或清理存储。"
+            exit 1
+          fi
+      - name: 登录服务
+        run: curl -fsS --retry 5 --retry-delay 60 --retry-all-errors -o /dev/null -w "HTTP %{http_code}\n" "$SB_URL/auth/v1/health" -H "apikey: $SB_KEY"
+      - uses: actions/checkout@v4
+      - name: 防止定时任务被停用
+        run: |
+          last=$(git log -1 --format=%ct)
+          if [ $(( $(date +%s) - last )) -gt $(( 40 * 86400 )) ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit --allow-empty -m "keep-alive"
+            git push
+          else
+            echo "最近 40 天内有改动，不需要提交"
+          fi
