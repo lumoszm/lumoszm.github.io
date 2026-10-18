@@ -3,10 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="ATLAS：转动三维地球，打开一座城市，看旅行者分享的照片和短视频，也把你的旅程留在地球上。">
-<meta property="og:title" content="ATLAS">
-<meta property="og:description" content="ATLAS：转动三维地球，打开一座城市，看旅行者分享的照片和短视频，也把你的旅程留在地球上。">
+<meta name="description" content="ATLAS：转动三维地球，打开一座城市，看那里的风光、活动和文化照片，也可以建立只属于自己的旅行地图册。">
 <meta name="theme-color" content="#04070C">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ATLAS">
+<meta property="og:title" content="ATLAS · 三维地球旅行相册">
+<meta property="og:description" content="ATLAS：转动三维地球，打开一座城市，看那里的风光、活动和文化照片，也可以建立只属于自己的旅行地图册。">
+<meta property="og:url" content="https://lumoszm.github.io/beta/">
+<meta property="og:image" content="https://lumoszm.github.io/beta/icons/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://mzttscrmrlxsppknmdvg.supabase.co" crossorigin>
 <link rel="preload" href="tex/day8k.jpg" as="image">
 <link rel="preload" href="tex/night8k.jpg" as="image">
@@ -954,6 +964,10 @@ body.fpon #tip{opacity:0!important}
 .cv-tabs .mseg{min-width:0}
 .cv-tabs .mseg button{padding:6px 14px}
 @media (max-width:760px){.cv-tabs .mseg button{padding:6px 10px;font-size:13.5px}}
+
+.mwait{display:flex;align-items:center;gap:10px;margin:18px 0 4px;color:var(--fg2,#a1a1a6);font-size:15px}
+.mwait .spin{width:16px;height:16px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite;flex:none}
+a.mbtn{text-decoration:none;box-sizing:border-box}
 
 </style>
 </head>
@@ -2637,16 +2651,19 @@ acct.addEventListener("keydown",function(e){
   var b=acct.querySelector('[data-lang="'+nl+'"]');if(b)b.focus();e.preventDefault();
 });
 /* ===================== 旅行社区 ===================== */
-var CFG={url:"https://mzttscrmrlxsppknmdvg.supabase.co".replace(/\/+$/,""),key:"sb_publishable_Q8M9vUf37BwF98xSWlpKwQ_7Ok3PRCy"};
+var CFG={url:"https://mzttscrmrlxsppknmdvg.supabase.co".replace(/\/+$/,""),key:"sb_publishable_Q8M9vUf37BwF98xSWlpKwQ_7Ok3PRCy",site:"https://lumoszm.github.io/beta/",mailCode:"0"==="1"};
+// 邮件链接的落地页：在网站上就回到当前页面；从下载的文件或别处打开时，回到 ATLAS 网站
+function authReturn(){try{var u=new URL(CFG.site);if(location.origin===u.origin)return location.origin+location.pathname;}catch(e){}return CFG.site||(location.origin+location.pathname);}
+function onSite(){try{return location.origin===new URL(CFG.site).origin;}catch(e){return true;}}
 var C={sb:null,session:null,me:null,ov:[],ovById:{},signed:{},liked:{},P:null,PI:{},CC:{},TZ:[],fp:null,off:false};
 Object.assign(I18N.zh,{
   about:"ATLAS：转动三维地球，打开一座城市，看旅行者分享的照片和短视频，也把你的旅程留在地球上。",
   tip:"拖拽转动 · 滚轮缩放 · 点击照片或地名进入",tipTouch:"拖动转动 · 双指缩放 · 点击照片或地名进入",
   share:"分享照片",photo:"照片",account:"账户",signIn:"登录",
-  authH:"登录 ATLAS",authSub:"用邮箱接收验证码，第一次使用会自动注册。",email:"邮箱",
+  authH:"登录 ATLAS",authSub:"用邮箱接收验证码，第一次使用会自动注册。",authSubL:"我们会给你的邮箱发一封登录邮件，第一次使用会自动注册。",email:"邮箱",
   agree1:'我已阅读并同意<a href="#" data-doc="terms">《用户协议》</a>和<a href="#" data-doc="privacy">《隐私政策》</a>',
   agree2:"同意把我的账号信息和上传的内容存放在位于新加坡的服务器上",
-  sendCode:"发送登录邮件",codeH:"查收邮件",codeSub:"登录邮件已发到 %s。点邮件里的链接就能登录；如果邮件里是一串数字验证码，在下面输入即可。没收到的话，看看垃圾邮件。",codePh:"数字验证码",verify:"登录",resend:"重新发送",resendIn:"%s 秒后可重新发送",changeEmail:"换个邮箱",
+  sendCode:"发送登录邮件",sendCodeC:"获取验证码",codeH:"查收邮件",codeSub:"验证码已发到 %s，输入邮件里的数字即可登录。没收到的话，看看垃圾邮件。",linkSub:"登录邮件已发到 %s。请在这台设备上打开邮件，点里面的链接——链接在哪台设备上打开，就在哪台设备上登录。没收到的话，看看垃圾邮件。",linkOff:"链接会打开 ATLAS 网站，并在网站上登录。",linkWait:"等你点链接……",openSite:"打开 ATLAS 网站",linkBad:"这个登录链接已经用过或过期了，请重新获取。",codePh:"数字验证码",verify:"登录",resend:"重新发送",resendIn:"%s 秒后可重新发送",changeEmail:"换个邮箱",
   badEmail:"请输入正确的邮箱地址",needAgree:"请先勾选上面两项",badCode:"验证码不对或已经过期",tooMany:"操作太频繁了，请稍等一会儿再试",netErr:"网络连接失败，请稍后再试",
   setupH:"给自己起个名字",setupSub:"其他旅行者会在你的照片和留言旁看到这个名字。",nick:"昵称",nickPh:"最多 24 个字",done:"完成",changeAv:"更换头像",addAv:"添加头像",
   traveler:"旅行者",myPage:"我的主页",myMap:"我的足迹",admin:"举报处理",signOut:"退出登录",signedOut:"已退出登录",signedIn:"欢迎回来，%s",
@@ -2661,10 +2678,10 @@ Object.assign(I18N.en,{
   about:"ATLAS: spin the globe, open a city, browse photos and short videos shared by travelers, and leave your own journeys on the map.",
   tip:"Drag to rotate · Scroll to zoom · Click a photo or name to open",tipTouch:"Drag to rotate · Pinch to zoom · Tap a photo or name to open",
   share:"Share photos",photo:"Photo",account:"Account",signIn:"Sign in",
-  authH:"Sign in to ATLAS",authSub:"We’ll email you a code. If you’re new, this also creates your account.",email:"Email",
+  authH:"Sign in to ATLAS",authSub:"We’ll email you a code. If you’re new, this also creates your account.",authSubL:"We’ll email you a sign-in link. If you’re new, this also creates your account.",email:"Email",
   agree1:'I have read and agree to the <a href="#" data-doc="terms">Terms of Use</a> and <a href="#" data-doc="privacy">Privacy Policy</a>',
   agree2:"I agree that my account details and uploads are stored on servers in Singapore",
-  sendCode:"Email me a sign-in link",codeH:"Check your email",codeSub:"We sent an email to %s. Tap the link in it to sign in — or, if it contains a numeric code, enter it below. Check your spam folder if it doesn’t arrive.",codePh:"Numeric code",verify:"Sign in",resend:"Resend",resendIn:"Resend in %ss",changeEmail:"Use another email",
+  sendCode:"Email me a sign-in link",sendCodeC:"Email me a code",codeH:"Check your email",codeSub:"We sent a code to %s. Enter it below to sign in. Check your spam folder if it doesn’t arrive.",linkSub:"We sent a sign-in email to %s. Open it on this device and tap the link — you’ll be signed in on whichever device opens the link. Check your spam folder if it doesn’t arrive.",linkOff:" The link opens the ATLAS website and signs you in there.",linkWait:"Waiting for you to tap the link…",openSite:"Open the ATLAS website",linkBad:"That sign-in link was already used or has expired. Please request a new one.",codePh:"Numeric code",verify:"Sign in",resend:"Resend",resendIn:"Resend in %ss",changeEmail:"Use another email",
   badEmail:"Enter a valid email address",needAgree:"Please tick both boxes above",badCode:"That code is wrong or has expired",tooMany:"Too many attempts. Please wait a moment and try again.",netErr:"Couldn’t connect. Please try again later.",
   setupH:"Choose a name",setupSub:"Other travelers will see this next to your photos and posts.",nick:"Name",nickPh:"Up to 24 characters",done:"Done",changeAv:"Change photo",addAv:"Add a photo",
   traveler:"Traveler",myPage:"My profile",myMap:"My travel map",admin:"Reports",signOut:"Sign out",signedOut:"Signed out",signedIn:"Welcome back, %s",
@@ -2865,6 +2882,7 @@ document.addEventListener("pointerdown",function(e){if(popEl&&!popEl.contains(e.
 window.addEventListener("resize",closePop);
 
 /* ---------- 账户 ---------- */
+var fromLink=/(^|[#&])(access_token|error_code)=/.test(location.hash||"")?(/error_code=/.test(location.hash)?"bad":"ok"):"";
 function initSB(){
   if(!window.supabase||!/^https?:\/\//.test(CFG.url)||!CFG.key||CFG.key.indexOf("@@")===0)return;
   try{
@@ -2882,7 +2900,9 @@ function loadMe(){
   if(!cOK())return Promise.resolve(null);
   meP=C.sb.auth.getSession().then(function(r){
     var s=r.data&&r.data.session;C.session=s;
-    if(!s){C.me=null;C.liked={};meChanged();return null;}
+    if(!s){C.me=null;C.liked={};meChanged();
+      if(fromLink){fromLink="";if(/error_code=/.test(location.hash))try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}setTimeout(function(){if(!mOn()){authOpen();aErr(tr("linkBad"));}},600);}
+      return null;}
     return C.sb.from("profiles").select("*").eq("id",s.user.id).maybeSingle().then(function(q){
       C.me=q.data||{id:s.user.id,name:""};meChanged();
       /* 在另一个页面点了邮件里的链接登录：发送邮件前已经勾选过同意，这里补记 */
@@ -2891,6 +2911,7 @@ function loadMe(){
       var p2=need&&pend&&Date.now()-pend<3*3600e3?consentSave().then(function(){try{localStorage.removeItem("atlas-consent");}catch(e){}}):Promise.resolve();
       return p2.then(function(){
         if(mOn("auth")&&(A.step==="code"||A.step==="email")&&!A.busy){if(C.me.terms_at&&C.me.xborder_at)authAfter();else authStep("agree");}
+        else if(fromLink==="ok"&&!mOn()){fromLink="";if(!C.me.terms_at||!C.me.xborder_at||!C.me.name)authOpen();else toast(trf("signedIn",uname(C.me)),2200);}
         return C.me;
       });
     });
@@ -2958,11 +2979,14 @@ function authHTML(){
       '<label class="chk"><input type="checkbox" id="aAg2"'+(A.ag2?" checked":"")+'><span>'+tr("agree2")+'</span></label>';
     if(A.step==="agree")return mx()+'<h2 id="mH">'+tr("authH")+'</h2><p class="msub">'+esc(C.session&&C.session.user?C.session.user.email:"")+'</p><form id="aForm" novalidate>'+ag+
       '<button class="mbtn" id="aGo">'+tr("done")+'</button><p class="merr" id="aErr"></p></form>';
-    return mx()+'<h2 id="mH">'+tr("authH")+'</h2><p class="msub">'+tr("authSub")+'</p>'+
+    return mx()+'<h2 id="mH">'+tr("authH")+'</h2><p class="msub">'+tr(CFG.mailCode?"authSub":"authSubL")+'</p>'+
       '<form id="aForm" novalidate><label class="fld"><span>'+tr("email")+'</span><input id="aEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" autofocus value="'+esc(A.email)+'" placeholder="name@example.com"></label>'+
-      ag+'<button class="mbtn" id="aGo">'+tr("sendCode")+'</button><p class="merr" id="aErr"></p></form>';
+      ag+'<button class="mbtn" id="aGo">'+tr(CFG.mailCode?"sendCodeC":"sendCode")+'</button><p class="merr" id="aErr"></p></form>';
   }
   if(A.step==="code"){
+    if(!CFG.mailCode)return mx()+'<h2 id="mH">'+tr("codeH")+'</h2><p class="msub">'+trf("linkSub",'<b>'+esc(A.email)+'</b>')+(onSite()?'':tr("linkOff"))+'</p>'+
+      '<form id="aForm" novalidate>'+(onSite()?'<p class="mwait"><i class="spin"></i>'+tr("linkWait")+'</p>':'<a class="mbtn sec" style="margin-top:16px" href="'+esc(CFG.site)+'" target="_blank" rel="noopener">'+tr("openSite")+'</a>')+'<p class="merr" id="aErr"></p>'+
+      '<div class="mrow"><button type="button" class="mlink" id="aResend"></button><button type="button" class="mlink" id="aBack">'+tr("changeEmail")+'</button></div></form>';
     return mx()+'<h2 id="mH">'+tr("codeH")+'</h2><p class="msub">'+trf("codeSub",'<b>'+esc(A.email)+'</b>')+'</p>'+
       '<form id="aForm" novalidate><input id="aCode" class="code" inputmode="numeric" autocomplete="one-time-code" maxlength="10" pattern="[0-9]*" placeholder="'+tr("codePh")+'" aria-label="'+tr("codePh")+'">'+
       '<button class="mbtn" id="aGo">'+tr("verify")+'</button><p class="merr" id="aErr"></p>'+
@@ -2989,11 +3013,11 @@ function coolTick(){
 }
 function sendCode(){
   aBusy(true);aErr("");
-  return C.sb.auth.signInWithOtp({email:A.email,options:{shouldCreateUser:true,emailRedirectTo:location.origin+location.pathname}}).then(function(r){
-    aBusy(false,tr(A.step==="code"?"verify":"sendCode"));
+  return C.sb.auth.signInWithOtp({email:A.email,options:{shouldCreateUser:true,emailRedirectTo:authReturn()}}).then(function(r){
+    aBusy(false,tr(A.step==="code"?"verify":CFG.mailCode?"sendCodeC":"sendCode"));
     if(r.error){aErr(errText(r.error));return false;}
     A.cool=Date.now()+60000;return true;
-  },function(e){aBusy(false,tr("sendCode"));aErr(errText(e));return false;});
+  },function(e){aBusy(false,tr(CFG.mailCode?"sendCodeC":"sendCode"));aErr(errText(e));return false;});
 }
 function consentSave(){
   return C.sb.from("profiles").update({terms_at:new Date().toISOString(),xborder_at:new Date().toISOString()}).eq("id",C.session.user.id).select().single().then(function(r){
@@ -3019,6 +3043,7 @@ mcard.addEventListener("submit",function(e){
     if(A.step==="agree"){aBusy(true);consentSave().then(function(){aBusy(false,tr("done"));authAfter();},function(er){aBusy(false,tr("done"));aErr(errText(er));});return;}
     sendCode().then(function(ok){if(ok){try{localStorage.setItem("atlas-consent",String(Date.now()));}catch(e){}authStep("code");}});
   }else if(A.step==="code"){
+    if(!$("#aCode"))return;
     var c=($("#aCode").value||"").replace(/\D/g,"");
     if(c.length<6){aErr(tr("badCode"));return;}
     aBusy(true);aErr("");
