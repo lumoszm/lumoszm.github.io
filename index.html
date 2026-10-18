@@ -112,7 +112,7 @@ button{font:inherit;color:inherit}
 .ui{position:fixed;z-index:5;pointer-events:none}
 .ui>*{pointer-events:auto}
 .top{
-  inset:0 0 auto 0;
+  inset:0 0 auto 0;transition:opacity .45s ease;
   display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
   padding-top:calc(14px + env(safe-area-inset-top,0px));
   padding-left:max(16px,env(safe-area-inset-left,0px));
@@ -130,12 +130,12 @@ button{font:inherit;color:inherit}
   color:#fff;font:500 14px/1 var(--f-body);letter-spacing:.08em;cursor:pointer;
   text-shadow:0 0 8px rgba(0,8,20,.95),0 1px 3px rgba(0,8,20,.9);
 }
-.pill{border-radius:999px;transition:background-color .25s,transform .2s var(--ease)}
+.pill{border-radius:999px;white-space:nowrap;transition:background-color .25s,transform .2s var(--ease)}
 .pill:hover{background:rgba(255,255,255,.10)}
 .pill:active{transform:scale(.95)}
 .pill svg{flex:none;width:16px;height:16px;filter:drop-shadow(0 0 3px rgba(0,8,20,.9))}
-#dayBtn,#pinBtn{opacity:0;pointer-events:none;transition:opacity .8s 1s}
-.started #pinBtn{opacity:1;pointer-events:auto}
+#dayBtn,#pinBtn,#xpBtn{opacity:0;pointer-events:none;transition:opacity .8s 1s}
+.started #pinBtn,.started #xpBtn{opacity:1;pointer-events:auto}
 #pinBtn .off{display:none}
 #pinBtn[aria-pressed="false"] .off{display:inline}
 #pinBtn[aria-pressed="false"]{color:rgba(255,255,255,.72)}
@@ -173,7 +173,12 @@ body:not(.loading) #loading{opacity:0}
   text-shadow:0 0 6px rgba(0,8,20,.95);opacity:0;transition:opacity 1s;pointer-events:none;
 }
 #tip.show{opacity:.9}
-@media (max-width:640px){#tip{letter-spacing:.06em;font-size:12px}.pill{padding:8px 8px;font-size:13px}#pinBtn span{display:none}#pinBtn{padding:8px 10px}}
+@media (max-width:640px){#tip{letter-spacing:.06em;font-size:12px}.pill{padding:8px 8px;font-size:13px}#pinBtn span,#xpBtn span{display:none}#pinBtn,#xpBtn{padding:8px 10px}}
+/* 窄屏手机：顶栏按钮多了，收紧间距，保证“全球白天”不折行 */
+@media (max-width:430px){.brand{letter-spacing:.3em}.tr{gap:0}.pill{padding:8px 7px}#pinBtn,#xpBtn{padding:8px 8px}.search{margin-right:0}}
+@media (max-width:380px){.brand{letter-spacing:.24em;font-size:20px}}
+@media (max-width:374px){#dayBtn span{display:none}#dayBtn{padding:8px 8px}}
+@media (max-width:400px){html[lang="en"] #dayBtn span{display:none}html[lang="en"] #dayBtn{padding:8px 8px}}
 
 /* ===== 苹果式玻璃材质 ===== */
 .glass{
@@ -244,7 +249,7 @@ button{-webkit-tap-highlight-color:transparent}
     background:rgba(118,118,128,.36);box-shadow:inset 0 .5px 0 rgba(255,255,255,.18)}
   .top.sopen .search input{display:block}
   .top.sopen .search .clr:not([hidden]){display:grid}
-  .top.sopen #dayBtn,.top.sopen #pinBtn,.top.sopen #acctBtn{opacity:0!important;pointer-events:none!important;transition:opacity .15s!important}
+  .top.sopen #dayBtn,.top.sopen #pinBtn,.top.sopen #xpBtn,.top.sopen #acctBtn{opacity:0!important;pointer-events:none!important;transition:opacity .15s!important}
   .top.sopen #qCancel{display:inline-flex;position:absolute;right:max(8px,env(safe-area-inset-right,0px));top:calc(14px + env(safe-area-inset-top,0px));color:#0A84FF;text-shadow:none;font-size:16px;letter-spacing:0}
   #sugg{left:16px!important;width:calc(100vw - 32px)!important}
 }
@@ -261,7 +266,7 @@ button{-webkit-tap-highlight-color:transparent}
 .cityv.bgout{background-color:rgba(255,255,255,0)}
 .cityv.closing .cv-wrap,.cityv.closing .cv-back,.cityv.closing .cv-bar{opacity:0!important;transition:opacity .22s ease!important}
 body.cityopen .brand{opacity:0}
-body.cityopen #dayBtn,body.cityopen #pinBtn{display:none}
+body.cityopen #dayBtn,body.cityopen #pinBtn,body.cityopen #xpBtn{display:none}
 body.cityopen #tip{opacity:0!important}
 body.cityopen #labels,body.cityopen #hit{opacity:0;transition:opacity .3s}
 /* 白色页面上的顶栏控件 */
@@ -982,6 +987,94 @@ body.cvlight #fpbar .fp-a button{background:rgba(0,0,0,.06);color:#1d1d1f}
 body.cvlight #fpbar .fp-a button:hover{background:rgba(0,0,0,.1)}
 body.cvlight #fpbar .fp-a .pub{color:#248A3D}
 
+/* ===== 沉浸体验（全屏电影式：照片 + 环境声，没有文字） ===== */
+body.xpon .top,body.xpon #labels,body.xpon #hit,body.xpon #tip,body.xpon #fpbar,body.xpon #start{opacity:0!important;pointer-events:none!important}
+.xp{position:fixed;inset:0;z-index:58;overflow:hidden;background:#000;color:#fff;color-scheme:dark;outline:0;
+  touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
+  opacity:0;transition:opacity .6s ease,background-color .4s ease}
+.xp.in{opacity:1}
+.xp.out{opacity:0;transition:opacity .8s ease}
+.xp.fly{background:transparent}
+.xp.idle{cursor:none}
+.xp-l{position:absolute;inset:0;opacity:0;pointer-events:none}
+.xp-l img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;will-change:transform;-webkit-user-drag:none;pointer-events:none}
+.xp-l.bob{animation:xpbob 5.2s ease-in-out infinite}
+.xp.paused .xp-l{animation-play-state:paused}
+@keyframes xpbob{0%,100%{transform:translateY(-.55%) rotate(-.22deg)}50%{transform:translateY(.55%) rotate(.22deg)}}
+.xp-vig{position:absolute;inset:0;z-index:3;pointer-events:none;transition:opacity .8s ease;
+  background:radial-gradient(ellipse 120% 100% at 50% 50%,transparent 60%,rgba(0,0,0,.30) 100%),linear-gradient(180deg,rgba(0,0,0,.34),transparent 16%,transparent 86%,rgba(0,0,0,.18))}
+.xp.fly .xp-vig{opacity:0}
+.xp-blk{position:absolute;inset:0;z-index:4;background:#000;pointer-events:none;opacity:0}
+.xp-ui{position:absolute;inset:0;z-index:6;pointer-events:none;transition:opacity .6s ease}
+.xp-ui>*{pointer-events:auto}
+.xp.idle .xp-ui{opacity:0}
+.xp.idle .xp-ui>*{pointer-events:none}
+.xp-prog{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));left:max(14px,env(safe-area-inset-left,0px));right:max(14px,env(safe-area-inset-right,0px));display:flex;gap:4px;pointer-events:none!important}
+.xp-prog i{flex:1;height:2.5px;border-radius:2px;background:rgba(255,255,255,.28);overflow:hidden;box-shadow:0 0 3px rgba(0,0,0,.25)}
+.xp-prog b{display:block;height:100%;background:#fff;transform:scaleX(0);transform-origin:0 50%}
+.xp-btns{position:absolute;top:calc(22px + env(safe-area-inset-top,0px));right:max(10px,env(safe-area-inset-right,0px));display:flex;gap:8px}
+.xp-b{width:42px;height:42px;border:0;border-radius:50%;padding:0;display:grid;place-items:center;cursor:pointer;color:#fff;
+  background:rgba(18,18,20,.30);-webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%);
+  box-shadow:inset 0 .5px 0 rgba(255,255,255,.22);transition:background-color .2s,transform .2s var(--ease)}
+.xp-b[hidden]{display:none}
+.xp-b:hover{background:rgba(18,18,20,.5)}
+.xp-b:active{transform:scale(.92)}
+.xp-b svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.xp-b svg .f{fill:#fff;stroke:none}
+.xp-info{position:absolute;left:max(10px,env(safe-area-inset-left,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));width:36px;height:36px;background:rgba(18,18,20,.22)}
+.xp-info svg{width:18px;height:18px}
+.xp-cred{position:absolute;left:max(10px,env(safe-area-inset-left,0px));bottom:calc(58px + env(safe-area-inset-bottom,0px));max-width:min(340px,calc(100vw - 20px));
+  padding:9px 14px;border-radius:14px;font:500 13px/1.5 var(--f-body);color:rgba(255,255,255,.92);
+  background:rgba(18,18,20,.55);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+.xp-cred[hidden]{display:none}
+.xp-cred a{color:#fff;text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(255,255,255,.45)}
+.xp-go{position:absolute;z-index:7;left:50%;top:50%;width:86px;height:86px;margin:-43px 0 0 -43px;border:0;border-radius:50%;padding:0;display:grid;place-items:center;cursor:pointer;
+  background:rgba(255,255,255,.18);-webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 12px 40px rgba(0,0,0,.35);transition:transform .25s var(--ease),background-color .2s}
+.xp-go:hover{background:rgba(255,255,255,.26)}
+.xp-go:active{transform:scale(.93)}
+.xp-go[hidden]{display:none}
+.xp-go svg{width:34px;height:34px;margin-left:5px;fill:#fff}
+.xp-spin{position:absolute;z-index:5;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;opacity:0;transition:opacity .3s;pointer-events:none}
+.xp-spin.on{opacity:.85}
+.xp-spin i{display:block;width:100%;height:100%;border-radius:50%;border:2.4px solid rgba(255,255,255,.9);border-right-color:transparent;animation:spin .9s linear infinite}
+@media (prefers-reduced-motion:reduce){.xp-l.bob{animation:none}}
+
+/* 体验列表 */
+.xpl{padding:28px 24px 26px}
+.xpl h2{padding-right:40px}
+.xpl .msub{margin-bottom:20px}
+.xpl-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.xpc{position:relative;display:block;width:100%;aspect-ratio:4/3;border:0;border-radius:18px;padding:0;overflow:hidden;cursor:pointer;background:#10161c;color:#fff;text-align:left;
+  box-shadow:0 10px 30px rgba(0,0,0,.25);transition:transform .35s var(--ease)}
+.xpc:hover{transform:translateY(-2px)}
+.xpc:active{transform:scale(.98)}
+.xpc-ph,.xpc-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.xpc-ph img{transition:transform 1.2s var(--ease)}
+.xpc:hover .xpc-ph img{transform:scale(1.04)}
+.xpc::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.62))}
+.xpc-t{position:absolute;left:16px;right:70px;bottom:14px;z-index:1;display:flex;flex-direction:column;gap:3px}
+.xpc-t b{font:700 22px/1.15 var(--f-display);letter-spacing:-.01em}
+.xpc-t small{font:500 13px/1.3 var(--f-body);color:rgba(255,255,255,.8)}
+.xpc-go,.cvx-go{position:absolute;right:14px;bottom:14px;z-index:1;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.22);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:inset 0 .5px 0 rgba(255,255,255,.35)}
+.xpc-go svg,.cvx-go svg{width:20px;height:20px;margin-left:3px;fill:#fff}
+
+/* 城市页里的体验入口 */
+.cv-xp{margin:6px 0 26px}
+.cv-xp[hidden]{display:none}
+.cvx{position:relative;display:block;width:100%;height:clamp(180px,26vw,280px);border:0;border-radius:20px;padding:0;overflow:hidden;cursor:pointer;background:#10161c;color:#fff;text-align:left;
+  transition:transform .35s var(--ease)}
+.cvx:active{transform:scale(.985)}
+.cvx img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:45% 72%;transition:transform 1.4s var(--ease)}
+.cvx:hover img{transform:scale(1.03)}
+.cvx::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.5),rgba(0,0,0,.08) 60%),linear-gradient(180deg,transparent 50%,rgba(0,0,0,.35))}
+.cvx-t{position:absolute;left:22px;bottom:20px;right:80px;z-index:1;display:flex;flex-direction:column;gap:4px}
+.cvx-t b{font:700 clamp(22px,2.6vw,30px)/1.15 var(--f-display);letter-spacing:-.01em}
+.cvx-t small{font:500 13.5px/1.3 var(--f-body);color:rgba(255,255,255,.82)}
+.cvx-go{right:20px;bottom:20px;width:52px;height:52px}
+@media (max-width:640px){.cvx{border-radius:16px}.cvx-t{left:16px;bottom:16px}.cvx-go{right:16px;bottom:16px;width:46px;height:46px}}
+
 </style>
 </head>
 <body>
@@ -1004,6 +1097,7 @@ body.cvlight #fpbar .fp-a .pub{color:#248A3D}
       <button type="button" class="clr" id="qClear" hidden aria-label="清除" data-i18n-aria="clear"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 7.5l9 9M16.5 7.5l-9 9"/></svg></button>
     </div>
     <button type="button" class="pill" id="qCancel" data-i18n="cancel">取消</button>
+    <button type="button" class="pill" id="xpBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="5.2" width="17.6" height="13.6" rx="3.4"/><path d="M10.4 9.3v5.4l4.4-2.7z" fill="currentColor" stroke-width="1.3"/></svg><span data-i18n="xpBtn">体验</span></button>
     <button type="button" class="pill" id="pinBtn" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="7.6"/><circle cx="12" cy="12" r="2.7" fill="currentColor" stroke="none"/><path class="off" d="M4.2 4.2l15.6 15.6"/></svg><span id="pinTxt">隐藏城市</span></button>
     <button type="button" class="pill" id="dayBtn" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg><span id="dayTxt">全球白天</span></button>
     <button type="button" class="pill" id="acctBtn" aria-expanded="false" aria-controls="acct" aria-label="账户"></button>
@@ -1024,7 +1118,7 @@ body.cvlight #fpbar .fp-a .pub{color:#248A3D}
     <div class="cv-dots"><div class="cv-pg" id="cvPg"></div><span class="cv-soon" id="cvSoon"></span></div>
     <div class="cv-text" id="cvText"></div>
   </div>
-  <div class="cv-comm" id="cvComm"><div class="cv-tabs" id="cvTabs"></div><div id="cvPh"></div><div id="cvDs" hidden></div></div>
+  <div class="cv-comm" id="cvComm"><div class="cv-xp" id="cvXp" hidden></div><div class="cv-tabs" id="cvTabs"></div><div id="cvPh"></div><div id="cvDs" hidden></div></div>
   <button type="button" class="cv-globe" id="cvGlobe" aria-label="回到地球" data-i18n-aria="backGlobe"><canvas id="cvIcon" aria-hidden="true"></canvas></button>
 </section>
 <p class="sr" data-i18n="about">ATLAS：转动三维地球，挑一座城市，学一句当地话，看看那里的节日、食物和手艺。</p>
@@ -1132,14 +1226,14 @@ var I18N={
   zh:{globe:"可旋转缩放的三维地球",settings:"设置",language:"语言",about:"ATLAS：转动三维地球，挑一座城市，学一句当地话，看看那里的节日、食物和手艺。",
       start:"点击地球以开始",loading:"正在载入地球…",tip:"拖拽转动 · 滚轮缩放 · 点击地名进入",tipTouch:"拖动转动 · 双指缩放 · 点击地名进入",
       fbTitle:"这台设备打不开三维地球",fbText:"浏览器没有启用 WebGL。请换用最新版的 Chrome、Edge 或 Safari 再打开。",
-      pinHide:"隐藏城市",pinShow:"显示城市",pinHideT:"隐藏地球上的城市照片标记",pinShowT:"显示地球上的城市照片标记",dayOn:"全球白天",dayOff:"昼夜",dayOnT:"让整个地球都处在白天",dayOffT:"恢复昼夜",
+      xpBtn:"体验",xpBtnT:"沉浸体验",pinHide:"隐藏城市",pinShow:"显示城市",pinHideT:"隐藏地球上的城市照片标记",pinShowT:"显示地球上的城市照片标记",dayOn:"全球白天",dayOff:"昼夜",dayOnT:"让整个地球都处在白天",dayOffT:"恢复昼夜",
       close:"关闭",prev:"上一个",next:"下一个",fest:"节日",food:"美食",craft:"手艺",tipRow:"入乡随俗",fact:"你知道吗",
       country:"国家",cities:"已收录的城市",pending:"介绍内容整理中。",back:"返回",backGlobe:"回到地球",photoSoon:"示意图 · 照片待添加",local:"当地",localTime:"当地时间",imgNote:"地球影像来源：NASA（Blue Marble、Black Marble、GIBS）",slide:"第 %s 张",about2:"介绍",searchPh:"搜索",searchAria:"搜索国家、城市或地点",clear:"清除",cancel:"取消",noRes:"没有找到相关地点",localDay:"当地时间，白天",localNight:"当地时间，夜晚",sep:"，",
       soon:function(n){return n+"的板块还在筹备中。现在先收录了五座试点城市，再往后会按国家逐步补上。";}},
   en:{globe:"Rotatable, zoomable 3D globe",settings:"Settings",language:"Language",about:"ATLAS: turn the globe, pick a city, learn a local greeting, and discover its festivals, food and crafts.",
       start:"Click the globe to begin",startTouch:"Tap the globe to begin",loading:"Loading the Earth…",tip:"Drag to rotate · Scroll to zoom · Click a name to open",tipTouch:"Drag to rotate · Pinch to zoom · Tap a name to open",
       fbTitle:"This device can’t show the 3D globe",fbText:"WebGL isn’t available in this browser. Please try the latest Chrome, Edge or Safari.",
-      pinHide:"Hide cities",pinShow:"Show cities",pinHideT:"Hide the city photo markers on the globe",pinShowT:"Show the city photo markers on the globe",dayOn:"All daylight",dayOff:"Day & night",dayOnT:"Light up the whole globe",dayOffT:"Back to day and night",
+      xpBtn:"Experiences",xpBtnT:"Immersive experiences",pinHide:"Hide cities",pinShow:"Show cities",pinHideT:"Hide the city photo markers on the globe",pinShowT:"Show the city photo markers on the globe",dayOn:"All daylight",dayOff:"Day & night",dayOnT:"Light up the whole globe",dayOffT:"Back to day and night",
       close:"Close",prev:"Previous",next:"Next",fest:"Festival",food:"Food",craft:"Craft",tipRow:"Etiquette",fact:"Did you know?",
       country:"Country",cities:"Cities on ATLAS",pending:"Details for this city are on the way.",back:"Back",backGlobe:"Back to the globe",photoSoon:"Placeholder · photos coming soon",local:"Local",localTime:"Local time",imgNote:"Earth imagery: NASA (Blue Marble, Black Marble, GIBS)",slide:"Image %s",about2:"About",searchPh:"Search",searchAria:"Search countries, cities or places",clear:"Clear",cancel:"Cancel",noRes:"No matching places",localDay:"Local time, daytime",localNight:"Local time, night",sep:", ",
       soon:function(n){return "The "+n+" section is still in the works. ATLAS starts with five pilot cities, and more countries will be added over time.";}}
@@ -2630,14 +2724,14 @@ function applyLang(){
   Array.prototype.forEach.call(document.querySelectorAll("[data-i18n-ph]"),function(n){n.setAttribute("placeholder",tr(n.getAttribute("data-i18n-ph")));});
   Array.prototype.forEach.call(acct.querySelectorAll("[data-lang]"),function(b){b.setAttribute("aria-checked",b.getAttribute("data-lang")===LANG?"true":"false");});
   var sg=acct.querySelector(".seg");if(sg)sg.style.setProperty("--i",LANG==="en"?1:0);
-  dayLabel();if(typeof pinApply==="function")pinApply();
+  dayLabel();if(typeof pinApply==="function")pinApply();if(typeof xpLabel==="function")xpLabel();
 }
 function setLang(l){
   if(l===LANG)return;
   LANG=l;try{localStorage.setItem("atlas-lang",l);}catch(e){}
   applyLang();buildLabels();
   if(suggOpen())renderSugg();
-  if(cityv&&!cityv.hidden&&CV.id){cvFill(CV.id);slDotsBuild();cvSummary();cvTabs();cvGridRender();}
+  if(cityv&&!cityv.hidden&&CV.id){cvFill(CV.id);slDotsBuild();cvSummary();cvTabs();cvGridRender();if(typeof xpCity==="function")xpCity(CV.id);}
   acctBtnRender();renderAcct();if(C.fp)fpBar();if(lbOn())lbInfo();if(mOn("up"))upRefresh();else if(mOn("pf")&&PF.st)pfRender();
   if(!sheet.hidden){
     if(curId)showSheet(cityHTML(byId(curId)),0);else if(curCountry)showSheet(countryHTML(curCountry),0);
@@ -3714,6 +3808,7 @@ function cvComm(id,keep){
   CVC.loading=true;CVC.cur=curItems(id);cvTabs();cvGridRender();
   /* 精选照片不用等社区服务，先放到大图里（社区服务连不上时也有图看） */
   if(CVC.cur.length)cvHero(id);
+  xpCity(id);
   var jobs=[loadCurated()];
   if(cOK())jobs.push(C.sb.rpc("city_stats",{cid:id}),C.sb.from("media").select(MCOLS).eq("city_id",id).eq("is_public",true).order("created_at",{ascending:false}).range(0,PAGE-1));
   Promise.all(jobs).then(function(rs){
@@ -4164,6 +4259,9 @@ function mediaOpen(id){
 }
 function route(){
   var h=decodeURIComponent(location.hash.slice(1)),m;
+  /* 体验播放中按了返回：退出体验，回到原来的画面 */
+  if(XP.on&&!/^x\//.test(h)){xpClose();return;}
+  if((m=/^x\/(\w{1,20})$/.exec(h))){if(!XP.on&&XPS[m[1]])xpOpen(m[1],{poster:true});return;}
   /* 浏览器返回到不是城市的地址：关掉城市页，回到地球 */
   if(!/^c\//.test(h)&&typeof cityv!=="undefined"&&cityv&&!cityv.hidden&&!CV.closing)closeCity({pop:true});
   if(!h)return;
@@ -4211,6 +4309,610 @@ function commReady(){
   if(location.hash.length>2){startApp();setTimeout(route,reduced()?0:900);}
 }
 
+/* ---------- 沉浸体验：电影式旅程。只有真实照片和环境声，不放文字 ----------
+   照片：Unsplash（按规定直接用它的图片地址，并在 ⓘ 里注明摄影师）
+   声音：不下载音频文件，在浏览器里按真实海浪的层次实时合成（远处浪涌、浪头拍下、白沫退去、贴着板的水声、水下变闷） */
+Object.assign(I18N.zh,{
+  xpH:"沉浸体验",xpSub:"真实照片和现场环境声，建议戴上耳机。",xpMin:"约 1 分钟",xpCity:"沉浸体验 · 约 1 分钟",
+  xp_surf:"冲浪",xp_surf_w:"夏威夷 · 瓦胡岛",xp_surf_c:"在瓦胡岛冲浪",
+  xpClose:"退出体验",xpPause:"暂停",xpPlay:"继续",xpMute:"关闭声音",xpUnmute:"打开声音",xpInfo:"照片作者",xpStart:"开始",xpPhoto:"摄影",xpPrev:"上一幕",xpNext:"下一幕"
+});
+Object.assign(I18N.en,{
+  xpH:"Immersive experiences",xpSub:"Real photographs and live ambient sound. Best with headphones.",xpMin:"About 1 min",xpCity:"Immersive experience · 1 min",
+  xp_surf:"Surfing",xp_surf_w:"Oʻahu, Hawaiʻi",xp_surf_c:"Surf Oʻahu",
+  xpClose:"Exit",xpPause:"Pause",xpPlay:"Play",xpMute:"Mute",xpUnmute:"Sound on",xpInfo:"Photo credits",xpStart:"Start",xpPhoto:"Photo",xpPrev:"Previous",xpNext:"Next"
+});
+
+/* 每一幕：u 图片地址，w/h 尺寸，by/pf 摄影师，f 画面重点（裁切和推近都对准这里），d 秒数，
+   kb 镜头 [起始放大, 起始平移x%, y%, 结束放大, x%, y%]，tr 转场，bob 随浪起伏，a 声音 */
+var XU="https://images.unsplash.com/",XQ="?ixid=M3wxMTA1OTI1fDB8MXxhbGx8fHx8fHx8fHwxNzkyMzI4OT";
+var XPS={
+  surf:{lat:21.47,lon:-157.98,cities:["g5856195","p-hawaii"],cover:9,fly:{bed:.12,wind:.6},sc:[
+    /* 清晨，从空中落到威基基 */
+    {u:"photo-1507876466758-bc54f384809c"+XQ+"E1fA&ixlib=rb-4.1.0",w:5970,h:2865,by:"AussieActive",pf:"@aussieactive",f:[38,40],d:6.5,kb:[1,0,0,1.1,0,0],tr:"fade",a:{bed:.3,wind:.5,wv:[7,.25,.15]}},
+    {u:"photo-1679166408049-307d146a160e"+XQ+"E1fA&ixlib=rb-4.1.0",w:3988,h:2832,by:"Nils Huenerfuerst",pf:"@nhuenerfuerst",f:[28,68],d:6.5,kb:[1.03,0,0,1.12,0,0],tr:"fade",a:{bed:.26,wind:.1,wv:[8,.55,.9],lap:.12}},
+    /* 沙滩边锁着的冲浪板，走上防波堤 */
+    {u:"photo-1641699578456-bb62f1634926"+XQ+"E2fA&ixlib=rb-4.1.0",w:4496,h:3000,by:"Sergio Smirnoff",pf:"@ssmirnoff",f:[50,50],d:5.5,kb:[1.1,3,0,1.1,-3,0],tr:"fade",a:{bed:.26,wind:.14,wv:[9,.32,.35]}},
+    {u:"photo-1569820163081-5b4c329bbcfc"+XQ+"E2fA&ixlib=rb-4.1.0",w:6000,h:4000,by:"Philip Davis",pf:"@philipsdavis",f:[52,56],d:5.5,kb:[1,0,0,1.1,0,0],tr:"fade",a:{bed:.32,wind:.2,wv:[6.5,.55,.75],lap:.4}},
+    /* 压着板钻过浪底，再浮上来 */
+    {u:"photo-1760039894319-a819e4fb3aed"+XQ+"E5fA&ixlib=rb-4.1.0",w:5184,h:3456,by:"Digital Reach",pf:"@digitalreachmarketing",f:[40,60],d:4.5,kb:[1.12,0,2,1.16,0,-2],tr:"plunge",a:{under:1,bed:.45,wv:[3,.7,.6],bub:.6}},
+    {u:"photo-1492915344817-d1d913ee1394"+XQ+"E2fA&ixlib=rb-4.1.0",w:6000,h:4000,by:"Brandon Kawamura",pf:"@brandonkawamura",f:[50,45],d:7,kb:[1.06,0,0,1.1,0,0],tr:"surface",bob:1,a:{bed:.32,wind:.12,wv:[10,.34,.3],lap:.55}},
+    {u:"photo-1621573523533-0dfea4edd20f"+XQ+"E3fA&ixlib=rb-4.1.0",w:5464,h:3640,by:"Daniel Lee",pf:"@laniel",f:[50,50],d:6,kb:[1.06,0,0,1.12,0,0],tr:"fade",bob:1,a:{bed:.38,wind:.18,wv:[8,.45,.5],lap:.35,pad:.45}},
+    /* 午后，岛北岸：大浪立起来 */
+    {u:"photo-1616141893496-fbc65370493e"+XQ+"E3fA&ixlib=rb-4.1.0",w:6720,h:4480,by:"Matt Paul Catalano",pf:"@mattpaul",f:[80,45],d:5,kb:[1,0,0,1.16,0,0],tr:"black",a:{bed:.5,wind:.3,wv:[9,.3,.3],lap:.25,roar:.6,rr:4.6,big:4.75,bigS:.8}},
+    {u:"photo-1732919258486-06af4080a565"+XQ+"E3fA&ixlib=rb-4.1.0",w:3364,h:2243,by:"Jonathan Caliguire",pf:"@joncaliguire",f:[62,50],d:4.5,kb:[1.12,4,0,1.12,-4,0],tr:"cut",a:{bed:.5,wind:.35,roar:.45,roarF:900,hiss:.45}},
+    {u:"photo-1760755796187-7ca5c3eef80b"+XQ+"E4fA&ixlib=rb-4.1.0",w:5472,h:3648,by:"byronetmedia",pf:"@byronetmedia",f:[45,66],d:5,kb:[1.04,0,0,1.18,0,0],tr:"cut",a:{bed:.55,roar:.6,roarF:700,hol:.45,hiss:.3}},
+    /* 升到空中，傍晚走回岸上 */
+    {u:"photo-1518765996826-22975ec64cf4"+XQ+"E5fA&ixlib=rb-4.1.0",w:5472,h:3648,by:"Colton Jones",pf:"@colt10jordan",f:[50,50],d:6,kb:[1.14,0,0,1,0,0],tr:"fade",a:{bed:.3,wind:.5,wv:[8,.3,.12]}},
+    {u:"photo-1636353990836-b20b196dd41e"+XQ+"E5fA&ixlib=rb-4.1.0",w:3897,h:2463,by:"Vlad D",pf:"@hiking_corgi",f:[47,58],d:8,kb:[1,0,0,1.08,0,0],tr:"fade",a:{bed:.28,wind:.1,wv:[8,.55,.85],lap:.1}}
+  ]}
+};
+var XIC={
+  x:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>',
+  pause:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 5.8v12.4M15.4 5.8v12.4" style="stroke-width:2.6"/></svg>',
+  play:'<svg viewBox="0 0 24 24" aria-hidden="true"><path class="f" d="M8 5.3v13.4L18.8 12z"/></svg>',
+  snd:'<svg viewBox="0 0 24 24" aria-hidden="true"><path class="f" d="M4 9.4h3.2L12 5.3v13.4l-4.8-4.1H4z"/><path d="M15.4 9.2a4 4 0 0 1 0 5.6M18 6.6a7.6 7.6 0 0 1 0 10.8"/></svg>',
+  mute:'<svg viewBox="0 0 24 24" aria-hidden="true"><path class="f" d="M4 9.4h3.2L12 5.3v13.4l-4.8-4.1H4z"/><path d="M15.6 9.6l4.8 4.8M20.4 9.6l-4.8 4.8"/></svg>',
+  info:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.4"/><circle class="f" cx="12" cy="7.9" r="1.15"/></svg>',
+  go:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.3v13.4L18.8 12z"/></svg>'
+};
+var XP={on:false,id:null,d:null,i:-1,el:null,lay:[],front:0,anims:[],paused:false,pby:null,from:"globe",gen:0,
+  imgs:[],ok:[],src:[],tm:0,idle:0,mute:false,pushed:false,prevHash:"",z0:1,run:false,ended:false,poster:false,lock:null,cur:null};
+try{XP.mute=localStorage.getItem("atlas-xp-mute")==="1";}catch(e){}
+
+/* ---------- 声音引擎 ---------- */
+var XA=null;
+function xaBuffers(ctx){
+  var sr=ctx.sampleRate;
+  /* 循环播放的噪声：结尾和开头交叉淡化，接缝处不会“咔”一声 */
+  function mk(sec,gen){
+    var n=Math.floor(sr*sec),m=Math.floor(sr*.08),b=ctx.createBuffer(1,n,sr),t=new Float32Array(n+m);gen(t,n+m);
+    for(var i=0;i<m;i++){var k=i/m;t[i]=t[i]*k+t[n+i]*(1-k);}
+    b.getChannelData(0).set(t.subarray(0,n));return b;
+  }
+  return {
+    white:mk(3,function(d,n){for(var i=0;i<n;i++)d[i]=Math.random()*2-1;}),
+    pink:mk(7,function(d,n){var b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;for(var i=0;i<n;i++){var w=Math.random()*2-1;b0=.99886*b0+w*.0555179;b1=.99332*b1+w*.0750759;b2=.969*b2+w*.153852;b3=.8665*b3+w*.3104856;b4=.55*b4+w*.5329522;b5=-.7616*b5-w*.016898;d[i]=(b0+b1+b2+b3+b4+b5+b6+w*.5362)*.11;b6=w*.115926;}}),
+    brown:mk(7,function(d,n){var l=0;for(var i=0;i<n;i++){l=(l+.02*(Math.random()*2-1))/1.02;d[i]=l*3.5;}}),
+    /* 白沫里气泡破裂的细碎声：稀疏的随机脉冲 */
+    crk:mk(3,function(d,n){for(var i=0;i<n;i++){d[i]=Math.random()<.04?(Math.random()*2-1)*(.25+.75*Math.random()):0;}})
+  };
+}
+function xaMake(c,B){
+  var A={ctx:c,B:B,nodes:[],P:{},G:{},ev:null,on:false,timer:0};
+  function link(){for(var i=0;i<arguments.length-1;i++)arguments[i].connect(arguments[i+1]);return arguments[arguments.length-1];}
+  function nd(n){A.nodes.push(n);return n;}
+  function bq(type,f,q){var b=c.createBiquadFilter();b.type=type;b.frequency.value=f;if(q!=null)b.Q.value=q;return b;}
+  function gn(v){var g=c.createGain();g.gain.value=v||0;return g;}
+  function pn(p){if(c.createStereoPanner){var s=c.createStereoPanner();s.pan.value=p||0;return s;}return gn(1);}
+  function to(param,v,k){var t=c.currentTime;try{param.cancelScheduledValues(t);param.setValueAtTime(param.value,t);}catch(e){}param.setTargetAtTime(v,t,k);}
+  A.start=function(){
+    var now=c.currentTime,G=A.G={};A.nodes=[];
+    function loop(b,rate){var s=nd(c.createBufferSource());s.buffer=b;s.loop=true;if(rate)s.playbackRate.value=rate;s.start(now,Math.random()*b.duration*.9);return s;}
+    G.out=nd(gn(0));G.out.connect(c.destination);
+    var lim=nd(c.createDynamicsCompressor());lim.threshold.value=-5;lim.knee.value=0;lim.ratio.value=20;lim.attack.value=.002;lim.release.value=.12;lim.connect(G.out);
+    var comp=nd(c.createDynamicsCompressor());comp.threshold.value=-18;comp.knee.value=12;comp.ratio.value=3;comp.attack.value=.03;comp.release.value=.4;
+    var pre=nd(gn(.85));link(comp,pre,lim);
+    G.dry=comp;
+    G.lp=nd(bq("lowpass",18000,.6));G.lp.connect(comp);
+    G.bus=nd(gn(1));G.bus.connect(G.lp);
+    /* 远处连成一片的浪涌，随涌浪慢慢起伏 */
+    G.bed=nd(gn(0));G.bed.connect(G.bus);
+    link(loop(B.brown),nd(bq("lowpass",170,.5)),G.bed);
+    link(loop(B.pink,.5),nd(bq("lowpass",420,.5)),nd(gn(.55)),G.bed);
+    var lfo=nd(c.createOscillator());lfo.frequency.value=.075;var ld=nd(gn(.07));link(lfo,ld,G.bed.gain);lfo.start(now);
+    /* 风：带通噪声，频率和大小随阵风变化 */
+    G.windF=nd(bq("bandpass",480,.7));G.gust=nd(gn(1));G.wind=nd(gn(0));
+    link(loop(B.pink),G.windF,G.gust,G.wind,G.bus);
+    /* 大浪逼近的轰鸣 + 浪管里空洞的共鸣 + 板下溅起的水雾 */
+    G.roarF=nd(bq("lowpass",700,.6));G.roar=nd(gn(0));G.roarM=nd(gn(1));link(loop(B.pink),G.roarF,G.roarM,G.roar,G.bus);
+    var rl=nd(c.createOscillator());rl.frequency.value=.31;var rd=nd(gn(.28));link(rl,rd,G.roarM.gain);rl.start(now);
+    link(loop(B.brown),nd(bq("lowpass",260,.5)),nd(gn(.9)),G.roar);
+    G.hol=nd(gn(0));link(loop(B.pink),nd(bq("bandpass",380,3)),G.hol,G.bus);
+    G.hiss=nd(gn(0));link(loop(B.white),nd(bq("bandpass",3200,.6)),nd(gn(.35)),G.hiss,G.bus);
+    link(loop(B.crk),nd(bq("highpass",2400,.7)),nd(gn(.9)),G.hiss);
+    var t=now+.2;A.ev={w:t+.3,l:t+.4,b:t,p:t+.3,g:t,s:t,side:1,n:0};A.P={};A.on=true;
+  };
+  /* 一道浪：先是涌起的低鸣，浪头拍下时最亮最响，然后白沫退去、只剩细碎的嘶嘶声 */
+  A.wave=function(t,size,near,pan){
+    var s=c.createBufferSource(),f=bq("lowpass",260,.6),g=gn(0),up=.9+Math.random()*.9,T=t+up,ttl=up+7;
+    s.buffer=B.pink;
+    f.frequency.setValueAtTime(260,t);f.frequency.linearRampToValueAtTime(500+700*near,T-.1);f.frequency.linearRampToValueAtTime(1300+2700*near,T+.12);f.frequency.setTargetAtTime(380+420*near,T+.35,1.3);
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(size*.22,T-.25);g.gain.linearRampToValueAtTime(size,T+.12);g.gain.setTargetAtTime(0,T+.4,.8+1.5*near);
+    var z=c.createBufferSource(),h=bq("highpass",1800+1800*near,.7),g2=gn(0);z.buffer=B.crk;
+    g2.gain.setValueAtTime(0,T);g2.gain.linearRampToValueAtTime(size*(.25+.9*near),T+.45);g2.gain.setTargetAtTime(0,T+.9,1.1+2*near);
+    var p=pn(pan);link(s,f,g,p);link(z,h,g2,p);p.connect(A.G.bus);
+    s.start(t,Math.random()*5);z.start(t,Math.random()*2);s.stop(t+ttl);z.stop(t+ttl);
+    s.onended=function(){try{p.disconnect();}catch(e){}};
+  };
+  /* 水拍在板边上 */
+  A.lap=function(t,amt,pan){
+    var s=c.createBufferSource(),f=bq("bandpass",380+Math.random()*900,1.1),g=gn(0),a=.03+Math.random()*.05,p=pn(pan);s.buffer=B.pink;
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(amt*(.4+.6*Math.random()),t+a);g.gain.setTargetAtTime(0,t+a,.07+Math.random()*.12);
+    link(s,f,g,p,A.G.bus);s.start(t,Math.random()*6);s.stop(t+1);
+    s.onended=function(){try{p.disconnect();}catch(e){}};
+  };
+  /* 水下的气泡（不经过“变闷”的滤波，就在耳边） */
+  A.bub=function(t,amt){
+    var o=c.createOscillator(),g=gn(0),f0=300+Math.random()*1100;o.type="sine";
+    o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f0*(1.4+Math.random()*.8),t+.07);
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(amt*(.3+.7*Math.random()),t+.006);g.gain.setTargetAtTime(0,t+.012,.025);
+    link(o,g,A.G.dry);o.start(t);o.stop(t+.25);
+    o.onended=function(){try{g.disconnect();}catch(e){}};
+  };
+  /* 手划水：入水的一声轻响，接着往后推水 */
+  A.pad=function(t,amt,pan){
+    var s=c.createBufferSource(),f=bq("bandpass",1500+Math.random()*700,.9),g=gn(0),p=pn(pan);s.buffer=B.white;
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(amt*.45,t+.015);g.gain.setTargetAtTime(0,t+.02,.06);
+    var s2=c.createBufferSource(),f2=bq("bandpass",520+Math.random()*200,1.2),g2=gn(0);s2.buffer=B.pink;
+    g2.gain.setValueAtTime(0,t+.03);g2.gain.linearRampToValueAtTime(amt,t+.16);g2.gain.setTargetAtTime(0,t+.2,.14);
+    link(s,f,g,p);link(s2,f2,g2,p);p.connect(A.G.bus);
+    s.start(t,Math.random()*2);s2.start(t,Math.random()*6);s.stop(t+.6);s2.stop(t+1.2);
+    s2.onended=function(){try{p.disconnect();}catch(e){}};
+  };
+  /* 板下溅起的水雾，一阵一阵的 */
+  A.spray=function(t,amt,pan){
+    var s=c.createBufferSource(),f=bq("bandpass",2400+Math.random()*2600,.7),g=gn(0),p=pn(pan),a=.04+Math.random()*.08;s.buffer=B.white;
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(amt*(.5+.5*Math.random()),t+a);g.gain.setTargetAtTime(0,t+a,.18+Math.random()*.3);
+    link(s,f,g,p,A.G.bus);s.start(t,Math.random()*2);s.stop(t+2);
+    s.onended=function(){try{p.disconnect();}catch(e){}};
+  };
+  /* 大浪砸下：低沉的一下闷响 + 宽频的轰塌 + 久久不散的白沫 */
+  A.big=function(t,size){
+    var p=gn(1);p.connect(A.G.bus);
+    var s=c.createBufferSource(),f=bq("lowpass",300,.6),g=gn(0);s.buffer=B.brown;
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(size*1.4,t+.08);g.gain.setTargetAtTime(0,t+.15,1.4);
+    var s2=c.createBufferSource(),f2=bq("lowpass",5000,.5),g2=gn(0);s2.buffer=B.pink;
+    f2.frequency.setValueAtTime(5000,t);f2.frequency.setTargetAtTime(700,t+.2,1.2);
+    g2.gain.setValueAtTime(0,t);g2.gain.linearRampToValueAtTime(size,t+.06);g2.gain.setTargetAtTime(0,t+.25,1.6);
+    var s3=c.createBufferSource(),f3=bq("highpass",2200,.7),g3=gn(0);s3.buffer=B.crk;
+    g3.gain.setValueAtTime(0,t+.1);g3.gain.linearRampToValueAtTime(size*.9,t+.6);g3.gain.setTargetAtTime(0,t+1,2.2);
+    link(s,f,g,p);link(s2,f2,g2,p);link(s3,f3,g3,p);
+    s.start(t,Math.random()*5);s2.start(t,Math.random()*5);s3.start(t,Math.random()*2);s.stop(t+8);s2.stop(t+9);s3.stop(t+10);
+    s3.onended=function(){try{p.disconnect();}catch(e){}};
+  };
+  /* 换一幕：各层声音平滑地过渡到这一幕的设定 */
+  A.set=function(P,fast){
+    if(!A.on)return;
+    var G=A.G,t=c.currentTime,k=fast?.1:.6;A.P=P||{};P=A.P;
+    to(G.bed.gain,(P.bed||0)*.45,k);to(G.wind.gain,(P.wind||0)*.8,k);to(G.hiss.gain,(P.hiss||0)*.35,k);to(G.hol.gain,P.hol||0,k);
+    if(P.rr){
+      try{G.roar.gain.cancelScheduledValues(t);G.roar.gain.setValueAtTime(G.roar.gain.value,t);G.roarF.frequency.cancelScheduledValues(t);G.roarF.frequency.setValueAtTime(260,t);}catch(e){}
+      G.roar.gain.linearRampToValueAtTime(P.roar||0,t+P.rr);G.roarF.frequency.exponentialRampToValueAtTime(1500,t+P.rr);
+    }else{to(G.roar.gain,P.roar||0,k);to(G.roarF.frequency,P.roarF||800,k);}
+    to(G.lp.frequency,P.under?340:18000,P.under?.05:.2);
+    if(P.wv){var nx=t+.2+Math.random()*.5;if(A.ev.w>nx+P.wv[0]*.5)A.ev.w=nx;}
+    if(P.big!=null)A.big(t+P.big,P.bigS||1);
+  };
+  /* 每 0.2 秒往后排 0.7 秒的声音事件 */
+  A.tick=function(){
+    if(!A.on)return;
+    var t=c.currentTime,ah=t+.7,P=A.P,e=A.ev,G=A.G;
+    /* 浪是一组一组来的：一组 2~4 道，组和组之间安静一会儿 */
+    if(P.wv){while(e.w<ah){
+      if(e.n<=0)e.n=2+Math.floor(Math.random()*3);
+      A.wave(Math.max(e.w,t+.02),P.wv[1]*1.7*(.7+.5*Math.random()),P.wv[2],(Math.random()*2-1)*.55);
+      e.n--;e.w+=e.n>0?P.wv[0]*(.55+.35*Math.random()):P.wv[0]*(1.3+.9*Math.random());
+    }}else e.w=Math.max(e.w,t);
+    if(P.hiss){while(e.s<ah){A.spray(Math.max(e.s,t+.02),P.hiss*.6,(Math.random()*2-1)*.6);e.s+=.25+Math.random()*.8;}}else e.s=Math.max(e.s,t);
+    if(P.lap){while(e.l<ah){A.lap(Math.max(e.l,t+.02),P.lap*.5,(Math.random()*2-1)*.7);e.l+=.18+Math.random()*.9;}}else e.l=Math.max(e.l,t);
+    if(P.bub){while(e.b<ah){A.bub(Math.max(e.b,t+.02),P.bub*.35);e.b+=.015+Math.random()*Math.random()*.35;}}else e.b=Math.max(e.b,t);
+    if(P.pad){while(e.p<ah){A.pad(Math.max(e.p,t+.02),P.pad*.6,e.side*.35);e.side=-e.side;e.p+=.75+Math.random()*.3;}}else e.p=Math.max(e.p,t);
+    if(t>e.g){e.g=t+.9+Math.random()*1.6;G.windF.frequency.setTargetAtTime(260+Math.random()*560,t,.9);G.gust.gain.setTargetAtTime(.55+Math.random()*.8,t,.7);}
+  };
+  A.vol=function(v,k){if(A.on)to(A.G.out.gain,v,k||.3);};
+  A.stop=function(){
+    if(!A.on)return;A.on=false;
+    var nodes=A.nodes;A.nodes=[];
+    nodes.forEach(function(n){try{if(n.stop)n.stop();}catch(e){}try{n.disconnect();}catch(e){}});
+  };
+  return A;
+}
+/* 必须在点击里调用（浏览器只允许用户操作后出声） */
+function xaInit(){
+  try{
+    if(!XA){
+      var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;
+      var c=new AC();XA=xaMake(c,xaBuffers(c));
+    }
+    if(XA.ctx.state!=="running")XA.ctx.resume();
+  }catch(e){XA=null;}
+  return XA;
+}
+function xaStart(){
+  if(!XA)return;
+  try{XA.ctx.resume();}catch(e){}
+  XA.stop();XA.start();XA.sid=(XA.sid||0)+1;XA.vol(XP.mute?0:1,.5);
+  clearInterval(XA.timer);XA.timer=setInterval(XA.tick,200);
+}
+function xaSet(P,fast){if(XA&&XA.on){XA.set(P,fast);XA.tick();}}
+/* 声音淡出后再停掉；这期间又打开了新的体验就不动它 */
+function xaStop(){
+  if(!XA||!XA.on)return;
+  var A=XA,sid=A.sid;A.vol(0,.25);clearInterval(A.timer);
+  setTimeout(function(){if(A.sid!==sid)return;A.stop();try{A.ctx.suspend();}catch(e){}},1100);
+}
+
+/* ---------- 画面 ---------- */
+function xpUrl(s){
+  var dpr=Math.min(window.devicePixelRatio||1,2),ar=s.w/s.h;
+  var w=Math.max(innerWidth,innerHeight*ar)*dpr*1.12;
+  w=Math.min(touchUI?2000:2400,Math.max(1000,Math.ceil(w/200)*200));
+  return XU+s.u+"&w="+w+"&q=76&auto=format&fit=max";
+}
+function xpTrack(a){if(a)XP.anims.push(a);if(a&&XP.paused)try{a.pause();}catch(e){}return a;}
+function xpBuild(){
+  if(XP.el)return XP.el;
+  var el=document.createElement("div");el.id="xp";el.className="xp";el.hidden=true;el.tabIndex=-1;
+  el.setAttribute("role","dialog");el.setAttribute("aria-modal","true");
+  el.innerHTML='<div class="xp-l"><img alt="" draggable="false"></div><div class="xp-l"><img alt="" draggable="false"></div>'+
+    '<div class="xp-vig"></div><div class="xp-blk"></div><div class="xp-spin"><i></i></div>'+
+    '<div class="xp-ui"><div class="xp-prog"></div>'+
+      '<div class="xp-btns"><button type="button" class="xp-b" data-x="mute"></button><button type="button" class="xp-b" data-x="pause"></button><button type="button" class="xp-b" data-x="close"></button></div>'+
+      '<button type="button" class="xp-b xp-info" data-x="info">'+XIC.info+'</button><div class="xp-cred" hidden></div></div>'+
+    '<button type="button" class="xp-go" data-x="go" hidden>'+XIC.go+'</button>';
+  document.body.appendChild(el);XP.el=el;
+  XP.lay=[].slice.call(el.querySelectorAll(".xp-l"));
+  /* 按钮藏着的时候按下去：这一下只把按钮叫出来，不会误点到看不见的按钮 */
+  el.addEventListener("pointerdown",function(){
+    XP.tapIdle=el.classList.contains("idle");clearTimeout(XP.tapT);
+    if(XP.tapIdle)XP.tapT=setTimeout(function(){XP.tapIdle=false;},900);
+  },true);
+  el.addEventListener("click",function(e){
+    if(XP.tapIdle){XP.tapIdle=false;return;}
+    var b=e.target.closest("[data-x]");if(!b)return;
+    e.stopPropagation();var x=b.getAttribute("data-x");
+    if(x==="close")xpExit();
+    else if(x==="pause")xpPause(!XP.paused,"user");
+    else if(x==="mute")xpMuteSet(!XP.mute);
+    else if(x==="info")xpCred();
+    else if(x==="go")xpPosterGo();
+    xpPoke();
+  });
+  /* 点右边下一幕、点左边上一幕；左右滑动也可以 */
+  var pd=null;
+  el.addEventListener("pointerdown",function(e){if(e.target.closest("button,a,.xp-cred"))return;pd={x:e.clientX,y:e.clientY,t:performance.now(),id:e.pointerId,idle:el.classList.contains("idle")};});
+  el.addEventListener("pointerup",function(e){
+    if(!pd||e.pointerId!==pd.id)return;
+    var dx=e.clientX-pd.x,dy=e.clientY-pd.y,dt=performance.now()-pd.t,wasIdle=pd.idle;pd=null;
+    xpPoke();
+    if(!XP.run||XP.poster)return;
+    /* 按钮藏起来时点在按钮所在的位置（右上角、左下角）：只把按钮叫出来，不翻页 */
+    if(wasIdle&&Math.abs(dx)<14&&Math.abs(dy)<14&&((e.clientY<96&&e.clientX>innerWidth-170)||(e.clientY>innerHeight-80&&e.clientX<80)))return;
+    if(!$(".xp-cred",el).hidden){xpCred(false);return;}
+    if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)*1.2){xpStep(dx<0?1:-1);return;}
+    if(Math.abs(dx)<14&&Math.abs(dy)<14&&dt<700)xpStep(e.clientX<innerWidth*.3?-1:1);
+  });
+  el.addEventListener("pointercancel",function(){pd=null;});
+  el.addEventListener("pointermove",function(e){if(e.pointerType==="mouse")xpPoke();});
+  return el;
+}
+function xpBtns(){
+  if(!XP.el)return;
+  var m=$('[data-x="mute"]',XP.el),p=$('[data-x="pause"]',XP.el),c=$('[data-x="close"]',XP.el),i=$('[data-x="info"]',XP.el),g=$('[data-x="go"]',XP.el);
+  m.innerHTML=XP.mute?XIC.mute:XIC.snd;m.setAttribute("aria-label",tr(XP.mute?"xpUnmute":"xpMute"));m.title=m.getAttribute("aria-label");
+  p.innerHTML=XP.paused?XIC.play:XIC.pause;p.setAttribute("aria-label",tr(XP.paused?"xpPlay":"xpPause"));p.title=p.getAttribute("aria-label");
+  c.innerHTML=XIC.x;c.setAttribute("aria-label",tr("xpClose"));c.title=tr("xpClose");
+  i.setAttribute("aria-label",tr("xpInfo"));i.title=tr("xpInfo");g.setAttribute("aria-label",tr("xpStart"));
+  p.hidden=!!XP.poster;
+  XP.el.classList.toggle("paused",!!XP.paused);
+}
+/* 一会儿不动，按钮和进度条就淡出，只剩画面 */
+function xpPoke(){
+  if(!XP.el)return;XP.el.classList.remove("idle");clearTimeout(XP.idle);
+  XP.idle=setTimeout(function(){if(XP.on&&XP.run&&!XP.paused&&$(".xp-cred",XP.el).hidden)XP.el.classList.add("idle");},2600);
+}
+function xpSpin(on){if(XP.el)$(".xp-spin",XP.el).classList.toggle("on",!!on);}
+
+/* 照片按顺序预先载入（最多同时 3 张） */
+function xpLoad(){
+  var n=XP.d.sc.length;XP.ok=[];XP.src=[];XP.imgs=[];
+  for(var i=0;i<n;i++)XP.src[i]=xpUrl(XP.d.sc[i]);
+  xpLoadOne(0);xpLoadOne(1);xpLoadOne(2);
+}
+function xpLoadOne(i){
+  if(!XP.d||i>=XP.d.sc.length||XP.imgs[i])return;
+  var im=new Image(),g=XP.gen,tries=0;XP.imgs[i]=im;
+  im.onload=function(){
+    if(g!==XP.gen)return;
+    var fin=function(){if(g!==XP.gen)return;XP.ok[i]=1;xpLoadNext();};
+    if(im.decode)im.decode().then(fin,fin);else fin();
+  };
+  im.onerror=function(){
+    if(g!==XP.gen)return;
+    if(++tries<2){setTimeout(function(){if(g!==XP.gen)return;XP.src[i]+="&r=1";im.src=XP.src[i];},800);return;}
+    XP.ok[i]=-1;xpLoadNext();
+  };
+  im.src=XP.src[i];
+}
+function xpLoadNext(){if(!XP.d)return;for(var i=0;i<XP.d.sc.length;i++){if(!XP.imgs[i]){xpLoadOne(i);return;}}}
+/* 等第 i 张（或之后第一张能用的）载入好；载不出来的那一幕直接跳过 */
+function xpWait(i,cb){
+  var g=XP.gen,n=XP.d.sc.length,t0=Date.now();
+  (function chk(){
+    if(g!==XP.gen||!XP.on)return;
+    while(i<n&&XP.ok[i]===-1)i++;
+    if(i>=n){xpSpin(false);cb(n);return;}
+    if(XP.ok[i]===1){xpSpin(false);cb(i);return;}
+    xpLoadOne(i);
+    if(Date.now()-t0>600)xpSpin(true);
+    if(Date.now()-t0>20000)XP.ok[i]=-1;
+    setTimeout(chk,150);
+  })();
+}
+
+function xpOpen(id,opt){
+  var d=XPS[id];if(!d||XP.on)return;
+  opt=opt||{};
+  if(!S.started)startApp();
+  xpBuild();
+  var el=XP.el;
+  XP.gen++;XP.on=true;XP.id=id;XP.d=d;XP.i=-1;XP.front=0;XP.paused=false;XP.pby=null;XP.ended=false;XP.run=false;XP.anims=[];XP.cur=null;
+  XP.poster=!!opt.poster;
+  XP.from=(typeof cityv!=="undefined"&&cityv&&!cityv.hidden&&!cityv.classList.contains("out"))?"city":"globe";
+  if(mOn())mClose(true);closePop();if(acctOpen())toggleAcct(false);
+  if(!sheet.hidden)closeSheet();if(suggOpen())closeSugg();
+  XP.lastFocus=document.activeElement;
+  /* 浏览器返回键 = 退出体验 */
+  XP.prevHash=location.hash.slice(1);XP.pushed=false;
+  if(location.hash!=="#x/"+id){try{history.pushState({atlas:1,xp:1},"","#x/"+id);XP.pushed=true;}catch(e){}}
+  el.setAttribute("aria-label",tr("xp_"+id));
+  $(".xp-prog",el).innerHTML=d.sc.map(function(){return '<i><b></b></i>';}).join("");
+  $(".xp-cred",el).hidden=true;$(".xp-go",el).hidden=true;
+  XP.lay.forEach(function(l){l.style.opacity=0;l.style.zIndex="";l.classList.remove("bob");var im=l.querySelector("img");im.removeAttribute("src");im.style.transform="";});
+  var blk=$(".xp-blk",el);blk.style.opacity=1;
+  XP.z0=S.zoomT;XP.cov=!!S.covered;
+  document.body.classList.add("xpon");S.sheetOpen=true;
+  var fly=XP.from==="globe"&&!XP.poster&&!reduced();
+  el.classList.toggle("fly",fly);el.classList.remove("out","idle");
+  if(fly)blk.style.opacity=0;
+  el.hidden=false;void el.offsetWidth;el.classList.add("in");
+  try{el.focus({preventScroll:true});}catch(e){}
+  xpBtns();xpPoke();xpLoad();xpLock(true);
+  if(XP.poster){xpPoster();return;}
+  xaStart();
+  if(fly){
+    /* 地球镜头先飞到瓦胡岛上空，快到时第一张照片从地球上淡入 */
+    var z=Math.min(zoomMax(),8);
+    S.fly={t:0,dur:2.9,lat0:S.lat,lon0:S.lon,dl:wrap(d.lon-S.lon),lat1:clamp(d.lat,-70,70),z0:S.zoomT,z1:z};S.lonV=S.latV=0;S.hold=true;
+    xaSet(d.fly);
+    var g=XP.gen;
+    XP.tm=setTimeout(function(){if(g===XP.gen)xpWait(0,function(j){xpGo(j,"fly");});},2200);
+  }else{
+    xaSet(d.fly);
+    XP.tm=setTimeout(function(){xpWait(0,function(j){xpGo(j,"fade");});},XP.from==="city"?450:0);
+  }
+}
+/* 直接打开分享链接时：先显示第一张和播放按钮，点一下才开始（浏览器要求点击后才能出声） */
+function xpPoster(){
+  var el=XP.el;
+  xpWait(0,function(j){
+    if(j>=XP.d.sc.length)return;
+    var l=XP.lay[0],im=l.querySelector("img"),s=XP.d.sc[j];
+    im.src=XP.src[j];im.style.objectPosition=s.f[0]+"% "+s.f[1]+"%";im.style.transform="scale("+s.kb[0]+")";
+    l.style.opacity=1;l.style.zIndex=1;XP.front=0;
+    var blk=$(".xp-blk",el);blk.style.opacity=.42;
+    $(".xp-go",el).hidden=false;try{$(".xp-go",el).focus({preventScroll:true});}catch(e){}
+  });
+}
+function xpPosterGo(){
+  if(!XP.on||!XP.poster)return;
+  xaInit();XP.poster=false;$(".xp-go",XP.el).hidden=true;xpBtns();
+  xaStart();xaSet(XP.d.fly);
+  xpWait(0,function(j){xpGo(j,"fade");});
+}
+function xpGo(i,kind){
+  if(!XP.on)return;
+  var n=XP.d.sc.length;
+  if(i>=n){xpEnd();return;}
+  if(i<0)i=0;
+  if(XP.cur){XP.cur.onfinish=null;XP.cur=null;}
+  kind=kind||XP.d.sc[i].tr||"fade";
+  var blk=$(".xp-blk",XP.el);
+  if(kind==="black"){
+    if(blk._a)blk._a.cancel();
+    var a=blk._a=xpTrack(blk.animate([{opacity:getComputedStyle(blk).opacity},{opacity:1}],{duration:700,easing:"ease-in",fill:"forwards"}));
+    XP.i=i;XP.busy=true;
+    a.onfinish=function(){if(!XP.on||XP.i!==i)return;blk.style.opacity=1;a.cancel();xpShow(i,"black");};
+    return;
+  }
+  /* 黑场（开场、海报的暗角、手动跳过黑场转场时）跟着新画面一起淡掉 */
+  if(kind!=="fly"){
+    var op=+getComputedStyle(blk).opacity;
+    if(blk._a){blk._a.cancel();blk._a=null;}
+    if(op>.01){
+      blk.style.opacity=op;
+      var a2=blk._a=xpTrack(blk.animate([{opacity:op},{opacity:0}],{duration:Math.max(300,XTR[kind]||600),easing:"ease-out",fill:"forwards"}));
+      a2.onfinish=function(){blk.style.opacity=0;a2.cancel();if(blk._a===a2)blk._a=null;};
+    }else blk.style.opacity=0;
+  }
+  xpShow(i,kind);
+}
+var XTR={fly:1600,fade:1300,plunge:380,surface:650,cut:280,quick:450,black:0};
+function xpShow(i,kind){
+  var s=XP.d.sc[i],el=XP.el,back=XP.lay[XP.front^1],front=XP.lay[XP.front],im=back.querySelector("img"),dur=XTR[kind];
+  if(dur==null)dur=1200;if(reduced())dur=Math.min(dur,200);
+  XP.i=i;XP.busy=false;XP.run=true;
+  if(im._kb)im._kb.cancel();if(back._fa){back._fa.cancel();back._fa=null;}
+  im.src=XP.src[i];
+  im.style.objectPosition=s.f[0]+"% "+s.f[1]+"%";
+  im.style.transformOrigin=s.f[0]+"% "+s.f[1]+"%";
+  back.classList.toggle("bob",!!s.bob);
+  var k=s.kb;
+  if(!reduced())im._kb=xpTrack(im.animate([{transform:"translate("+k[1]+"%,"+k[2]+"%) scale("+k[0]+")"},{transform:"translate("+k[4]+"%,"+k[5]+"%) scale("+k[3]+")"}],{duration:s.d*1000+dur+800,easing:"cubic-bezier(.25,.1,.4,1)",fill:"both"}));
+  else im.style.transform="scale("+k[0]+")";
+  back.style.zIndex=2;front.style.zIndex=1;
+  if(kind==="black"){
+    back.style.opacity=1;front.style.opacity=0;
+    var blk=$(".xp-blk",el),a=blk._a=xpTrack(blk.animate([{opacity:1},{opacity:0}],{duration:1000,easing:"ease-out",fill:"forwards"}));
+    a.onfinish=function(){blk.style.opacity=0;a.cancel();if(blk._a===a)blk._a=null;};
+  }else{
+    back.style.opacity=0;
+    var f=back._fa=xpTrack(back.animate([{opacity:0},{opacity:1}],{duration:dur,easing:"ease-in-out",fill:"forwards"}));
+    f.onfinish=function(){
+      back.style.opacity=1;f.cancel();if(back._fa===f)back._fa=null;
+      if(XP.lay[XP.front]===back){front.style.opacity=0;if(front._fa){front._fa.cancel();front._fa=null;}}
+      /* 从地球飞进来：第一张完全盖住地球后，地球就不用再画了 */
+      if(kind==="fly"&&XP.on){el.classList.remove("fly");S.covered=true;}
+    };
+  }
+  XP.front^=1;
+  xpSeg(i);
+  xaSet(s.a,kind==="plunge"||kind==="cut"||kind==="surface");
+  var cr=$(".xp-cred",el);if(!cr.hidden)xpCredFill();
+}
+function xpSeg(i){
+  var bs=XP.el.querySelectorAll(".xp-prog b");
+  for(var k=0;k<bs.length;k++){if(bs[k]._a){bs[k]._a.cancel();bs[k]._a=null;}bs[k].style.transform="scaleX("+(k<i?1:0)+")";}
+  var b=bs[i],s=XP.d.sc[i];if(!b)return;
+  var a=b._a=xpTrack(b.animate([{transform:"scaleX(0)"},{transform:"scaleX(1)"}],{duration:s.d*1000,easing:"linear",fill:"forwards"}));
+  XP.cur=a;
+  a.onfinish=function(){
+    if(XP.cur!==a||!XP.on)return;
+    XP.cur=null;b.style.transform="scaleX(1)";
+    var n=i+1;if(n>=XP.d.sc.length){xpEnd();return;}
+    xpWait(n,function(j){xpGo(j);});
+  };
+}
+function xpStep(dir){
+  if(!XP.on||!XP.run||XP.ended||XP.busy)return;
+  var n=XP.i+dir;if(n<0)n=0;
+  if(n>=XP.d.sc.length){xpEnd();return;}
+  if(XP.paused)xpPause(false);
+  if(XP.cur){XP.cur.onfinish=null;XP.cur=null;}
+  xpWait(n,function(j){xpGo(j,"quick");});
+}
+function xpPause(p,by){
+  if(!XP.on||XP.poster||p===XP.paused)return;
+  XP.paused=p;XP.pby=p?(by||"user"):null;
+  XP.anims=XP.anims.filter(function(a){return a.playState==="running"||a.playState==="paused";});
+  XP.anims.forEach(function(a){try{if(p)a.pause();else a.play();}catch(e){}});
+  if(XA&&XA.on){try{if(p)XA.ctx.suspend();else XA.ctx.resume();}catch(e){}}
+  xpBtns();xpPoke();
+}
+function xpMuteSet(m){
+  XP.mute=!!m;try{localStorage.setItem("atlas-xp-mute",XP.mute?"1":"0");}catch(e){}
+  if(!XP.mute)xaInit();
+  if(XA&&XA.on)XA.vol(XP.mute?0:1,.15);
+  xpBtns();
+}
+function xpCredFill(){
+  var s=XP.d.sc[Math.max(0,XP.i)],cr=$(".xp-cred",XP.el);
+  cr.innerHTML=esc(tr("xpPhoto"))+' · <a href="https://unsplash.com/'+esc(s.pf)+'?'+UTM+'" target="_blank" rel="noopener">'+esc(s.by)+'</a> / <a href="https://unsplash.com/?'+UTM+'" target="_blank" rel="noopener">Unsplash</a>';
+}
+function xpCred(show){
+  var cr=$(".xp-cred",XP.el);if(show===undefined)show=cr.hidden;
+  if(show){xpCredFill();cr.hidden=false;if(!XP.paused)xpPause(true,"cred");}
+  else{cr.hidden=true;if(XP.paused&&XP.pby==="cred")xpPause(false);}
+}
+function xpEnd(){
+  if(!XP.on||XP.ended)return;
+  XP.ended=true;XP.run=false;
+  if(XA&&XA.on)XA.vol(0,.7);
+  var blk=$(".xp-blk",XP.el);if(blk._a)blk._a.cancel();
+  var a=blk._a=xpTrack(blk.animate([{opacity:getComputedStyle(blk).opacity},{opacity:1}],{duration:reduced()?10:1800,easing:"ease-in",fill:"forwards"}));
+  a.onfinish=function(){blk.style.opacity=1;xpExit();};
+}
+/* 退出：自己加过一条浏览记录就退回去（地址栏也恢复），否则直接关 */
+function xpExit(){
+  if(!XP.on)return;
+  if(XP.pushed&&location.hash==="#x/"+XP.id){
+    XP.pushed=false;history.back();
+    var g=XP.gen;setTimeout(function(){if(XP.on&&XP.gen===g)xpClose();},500);
+  }else xpClose();
+}
+function xpClose(){
+  if(!XP.on)return;
+  var el=XP.el,d=XP.d,toGlobe=XP.from==="globe";
+  XP.on=false;XP.gen++;XP.run=false;clearTimeout(XP.tm);clearTimeout(XP.idle);
+  if(XP.cur){XP.cur.onfinish=null;XP.cur=null;}
+  if(XP.paused&&XA&&XA.on){try{XA.ctx.resume();}catch(e){}}
+  XP.paused=false;
+  xaStop();xpLock(false);xpSpin(false);
+  if(/^#x\//.test(location.hash))setHash(XP.prevHash&&!/^x\//.test(XP.prevHash)?XP.prevHash:"");
+  if(toGlobe){
+    /* 地球在后面先对准瓦胡岛并拉近，再揭开画面，镜头慢慢拉远回到原来的远近 */
+    S.fly=null;S.latV=S.lonV=0;S.spinK=0;S.hold=true;
+    S.lat=clamp(d.lat,-70,70);S.lon=d.lon;S.zoom=S.zoomT=Math.min(zoomMax(),8);
+    S.covered=false;
+  }
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    document.body.classList.remove("xpon");
+    el.classList.remove("in","idle");el.classList.add("out");
+    setTimeout(function(){
+      if(XP.on)return;
+      el.hidden=true;el.classList.remove("out","fly","paused");
+      XP.anims.forEach(function(a){try{a.cancel();}catch(e){}});XP.anims=[];
+      XP.lay.forEach(function(l){l.style.opacity=0;var im=l.querySelector("img");im.removeAttribute("src");im._kb=null;});
+      $(".xp-blk",el).style.opacity=1;
+    },reduced()?0:820);
+    if(toGlobe){
+      S.sheetOpen=false;
+      if(!reduced())S.fly={t:0,dur:1.7,lat0:S.lat,lon0:S.lon,dl:0,lat1:S.lat,z0:S.zoomT,z1:clamp(XP.z0||1,1,Math.max(1,S.zoomT-.4))};
+      setTimeout(function(){pinPulse(d.cities[0]);},700);
+      touch();
+    }
+    if(XP.lastFocus&&XP.lastFocus.focus&&document.contains(XP.lastFocus))try{XP.lastFocus.focus({preventScroll:true});}catch(e){}
+  });});
+}
+/* 播放时不让手机自动锁屏 */
+function xpLock(on){
+  try{
+    if(on&&navigator.wakeLock&&!XP.lock&&!document.hidden){navigator.wakeLock.request("screen").then(function(l){if(XP.on)XP.lock=l;else l.release();}).catch(function(){});}
+    else if(!on&&XP.lock){XP.lock.release().catch(function(){});XP.lock=null;}
+  }catch(e){}
+}
+document.addEventListener("visibilitychange",function(){
+  if(!XP.on)return;
+  if(document.hidden){XP.lock=null;if(!XP.paused&&XP.run)xpPause(true,"vis");}
+  else{if(XP.paused&&XP.pby==="vis")xpPause(false);xpLock(true);}
+});
+window.addEventListener("keydown",function(e){
+  if(!XP.on)return;
+  var k=e.key;
+  if(k==="Escape")xpExit();
+  else if(k==="ArrowRight")xpStep(1);
+  else if(k==="ArrowLeft")xpStep(-1);
+  else if(k===" "||k==="Spacebar"||k==="k"){if(XP.poster)xpPosterGo();else xpPause(!XP.paused,"user");}
+  else if(k==="Enter"&&XP.poster)xpPosterGo();
+  else if(k==="m"||k==="M")xpMuteSet(!XP.mute);
+  else if(k==="Tab")return;
+  else return;
+  e.preventDefault();e.stopImmediatePropagation();xpPoke();
+},true);
+
+/* ---------- 入口：顶栏“体验”、体验列表、城市页 ---------- */
+function xpCover(id,w){var d=XPS[id],s=d.sc[d.cover||0];return XU+s.u+"&w="+(w||900)+"&q=72&auto=format&fit=crop";}
+function xpCardHTML(id){
+  return '<button type="button" class="xpc" data-xpgo="'+id+'"><span class="xpc-ph"><img src="'+esc(xpCover(id,900))+'" alt="" loading="lazy"></span>'+
+    '<span class="xpc-t"><b>'+esc(tr("xp_"+id))+'</b><small>'+esc(tr("xp_"+id+"_w"))+' · '+esc(tr("xpMin"))+'</small></span><span class="xpc-go">'+XIC.go+'</span></button>';
+}
+function xpList(){
+  mOpen("xp",mx()+'<div class="xpl"><h2 id="mH">'+esc(tr("xpH"))+'</h2><p class="msub">'+esc(tr("xpSub"))+'</p><div class="xpl-g">'+Object.keys(XPS).map(xpCardHTML).join("")+'</div></div>',{wide:true});
+}
+function xpStartFromClick(id){xaInit();xpOpen(id);}
+mcard.addEventListener("click",function(e){
+  if(M.kind!=="xp")return;
+  var b=e.target.closest("[data-xpgo]");if(!b)return;
+  xpStartFromClick(b.getAttribute("data-xpgo"));
+});
+function xpForCity(cid){var r=null;Object.keys(XPS).some(function(k){if(XPS[k].cities.indexOf(cid)>=0){r=k;return true;}return false;});return r;}
+/* 城市页：相关的城市（檀香山、夏威夷）在照片上方显示体验入口 */
+function xpCity(cid){
+  var host=$("#cvXp");if(!host)return;
+  var id=cid&&xpForCity(cid);
+  if(!id){host.hidden=true;host.innerHTML="";return;}
+  host.hidden=false;
+  host.innerHTML='<button type="button" class="cvx" data-xpgo="'+id+'"><img src="'+esc(xpCover(id,1400))+'" alt="" loading="lazy">'+
+    '<span class="cvx-t"><b>'+esc(tr("xp_"+id+"_c"))+'</b><small>'+esc(tr("xpCity"))+'</small></span><span class="cvx-go">'+XIC.go+'</span></button>';
+}
+(function(){
+  var h=$("#cvXp");if(h)h.addEventListener("click",function(e){var b=e.target.closest("[data-xpgo]");if(b)xpStartFromClick(b.getAttribute("data-xpgo"));});
+  var xb=$("#xpBtn");if(xb)xb.addEventListener("click",function(){xpList();});
+})();
+function xpLabel(){var b=$("#xpBtn");if(b){b.title=tr("xpBtnT");b.setAttribute("aria-label",tr("xpBtnT"));}if(XP.on)xpBtns();}
+xpLabel();
+
 
 applyLang();
 
@@ -4248,7 +4950,7 @@ function texUpgrade(){
   swap(TEX.day,0,false,"tDay").then(function(){return swap(TEX.night,1,true,"tNight");});
 }
 boot();
-if(/[?&]debug\b/.test(location.search)){window.__atlas={S:S,CV:CV,SL:SL,TL:TL,C:C,CVC:CVC,UP:UP,LB:LB,LABS:function(){return LABS;}};var mt=/[?&]tiles=([^&]+)/.exec(location.search);if(mt)TL.src=decodeURIComponent(mt[1]);}
+if(/[?&]debug\b/.test(location.search)){window.__atlas={S:S,CV:CV,SL:SL,TL:TL,C:C,CVC:CVC,UP:UP,LB:LB,XP:XP,XPS:XPS,XA:function(){return XA;},LABS:function(){return LABS;}};var mt=/[?&]tiles=([^&]+)/.exec(location.search);if(mt)TL.src=decodeURIComponent(mt[1]);}
 })();
 </script>
 
