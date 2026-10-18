@@ -19,7 +19,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: 网站首页
-        run: curl -fsS --retry 3 --retry-delay 30 -o /dev/null -w "HTTP %{http_code}\n" https://lumoszm.github.io/
+        run: |
+          curl -fsS --retry 3 --retry-delay 30 -o /dev/null -w "HTTP %{http_code}\n" https://lumoszm.github.io/
       - name: 数据库（同时防止暂停）
         run: |
           set -e
@@ -33,7 +34,8 @@ jobs:
             exit 1
           fi
       - name: 登录服务
-        run: curl -fsS --retry 5 --retry-delay 60 --retry-all-errors -o /dev/null -w "HTTP %{http_code}\n" "$SB_URL/auth/v1/health" -H "apikey: $SB_KEY"
+        run: |
+          curl -fsS --retry 5 --retry-delay 60 --retry-all-errors -o /dev/null -w "HTTP %{http_code}\n" "$SB_URL/auth/v1/health" -H "apikey: $SB_KEY"
       - uses: actions/checkout@v4
       - name: 防止定时任务被停用
         run: |
