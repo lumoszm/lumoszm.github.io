@@ -1022,6 +1022,53 @@ body.cvlight #fpbar .fp-a .pub{color:#248A3D}
   .pf-selbar [data-pf="setpriv"],.pf-selbar [data-pf="setpub"]{order:4;flex:1;padding:9px 10px}
 }
 
+/* 足迹栏的文字区可以点开统计 */
+#fpbar button.fp-t{border:0;background:none;color:inherit;text-align:left;cursor:pointer;padding:4px 6px 4px 2px;border-radius:10px;font:inherit}
+#fpbar button.fp-t:hover{background:rgba(255,255,255,.08)}
+body.cvlight #fpbar button.fp-t:hover{background:rgba(0,0,0,.05)}
+/* 足迹统计 */
+.fst h3{font:600 15px/1.3 var(--f-body);color:var(--mf2);margin:20px 0 10px}
+.fst-big{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 18px}
+.fst-big div{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 6px;border-radius:16px;background:var(--mfill)}
+.fst-big b{font:700 32px/1 var(--f-display);font-variant-numeric:tabular-nums;color:#FFD66B}
+.fst-big b i{font-style:normal;font-size:16px;color:var(--mf3);margin-left:2px}
+.fst-big small{font-size:12.5px;color:var(--mf2);text-align:center}
+.fst-land p{font-size:14px;color:var(--mf2);margin:8px 2px 0}
+.fst-bar{height:8px;border-radius:4px;background:var(--mfill);overflow:hidden}
+.fst-bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#FFB340,#FFD66B)}
+.fst-conts{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 4px}
+.fst-conts span{padding:6px 11px;border-radius:999px;font:500 13px/1 var(--f-body);color:var(--mf3);background:var(--mfill)}
+.fst-conts span.on{color:#1d1406;background:linear-gradient(180deg,#FFD66B,#FFB340)}
+.fst-facts{margin:14px 0 0;display:flex;flex-direction:column;gap:2px}
+.fst-facts div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:10px 2px;border-bottom:.5px solid var(--mline)}
+.fst-facts dt{font-size:14px;color:var(--mf2);flex:none}
+.fst-facts dd{margin:0;text-align:right;font:500 14.5px/1.35 var(--f-body)}
+.fst-facts dd small{display:block;color:var(--mf3);font-size:12.5px;font-weight:400}
+.fst-list{display:flex;flex-wrap:wrap;gap:6px}
+.fst-list span{padding:6px 10px;border-radius:9px;font-size:13.5px;background:var(--mfill)}
+/* 那年今天 */
+.otd{position:fixed;z-index:7;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(22px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:12px;
+  max-width:min(400px,calc(100vw - 32px));padding:10px 12px 10px 10px;border-radius:20px;color:#fff;
+  opacity:0;transform:translateY(16px);transition:opacity .45s ease,transform .6s var(--ease)}
+.otd.in{opacity:1;transform:none}
+body.cityopen .otd,body.fpon .otd,body.xpon .otd{opacity:0;pointer-events:none}
+.otd-ph{position:relative;flex:none;width:58px;height:58px;border:0;padding:0;background:none;cursor:pointer}
+.otd-ph img{position:absolute;width:50px;height:50px;object-fit:cover;border-radius:11px;box-shadow:0 2px 8px rgba(0,0,0,.35);border:2px solid rgba(255,255,255,.9)}
+.otd-ph img:nth-child(1){left:4px;top:4px;z-index:3}
+.otd-ph.n2 img:nth-child(2),.otd-ph.n3 img:nth-child(2){left:0;top:0;transform:rotate(-8deg);z-index:2}
+.otd-ph.n3 img:nth-child(3){left:8px;top:6px;transform:rotate(7deg);z-index:1}
+.otd-ph.n1 img:nth-child(1){left:4px;top:4px}
+.otd-t{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.otd-t small{font-size:12px;color:#FFD66B;font-weight:600;letter-spacing:.02em}
+.otd-t b{font:600 15px/1.3 var(--f-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.otd-t span{font-size:12px;color:var(--label2)}
+.otd-go{flex:none;min-height:34px;padding:7px 14px;border:0;border-radius:999px;background:#fff;color:#111;font:600 14px/1 var(--f-body);cursor:pointer}
+.otd-x{flex:none;width:28px;height:28px;border:0;border-radius:50%;padding:0;display:grid;place-items:center;background:rgba(255,255,255,.12);color:rgba(255,255,255,.75);cursor:pointer;align-self:flex-start}
+.otd-x svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round}
+@media (max-width:640px){.otd{left:12px;right:12px;max-width:none}}
+#fpbar .fp-t{flex:1 1 auto;min-width:0;overflow:hidden}
+#fpbar .fp-t small{display:block;overflow:hidden;text-overflow:ellipsis}
+
 </style>
 </head>
 <body>
@@ -1300,6 +1347,7 @@ var S={
   dayAll:false,dayK:0,htx:1/4096,hty:1/2048
 };
 var stage=$("#stage"),glc=$("#gl");
+var LIT={k:0,t:0,tex:null,key:""};
 var ptrs={},pinch=null,downPos=null;
 
 /* ---------- WebGL ---------- */
@@ -1309,7 +1357,7 @@ var FS=[
 "#ifdef GL_FRAGMENT_PRECISION_HIGH","precision highp float;","#else","precision mediump float;","#endif",
 "varying vec3 vP;varying vec2 vUV;",
 "uniform sampler2D uDay,uNight,uWater,uHeight;",
-"uniform vec3 uL,uCam;uniform vec2 uHT;uniform float uDetail,uDayAll,uBump;uniform sampler2D uTile;uniform float uTileOn;uniform vec4 uTR;uniform vec3 uGain;",
+"uniform vec3 uL,uCam;uniform vec2 uHT;uniform float uDetail,uDayAll,uBump;uniform sampler2D uTile;uniform float uTileOn;uniform vec4 uTR;uniform vec3 uGain;uniform sampler2D uLit;uniform float uLitOn;",
 "float hash(vec3 p){p=fract(p*0.3183099+vec3(.1,.2,.3));p*=17.0;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}",
 "float noise(vec3 x){vec3 i=floor(x),f=fract(x);f=f*f*(3.0-2.0*f);",
 "return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),",
@@ -1343,6 +1391,11 @@ var FS=[
 "lights=pow(lights,1.2+0.6*uDetail)*(1.0+0.35*uDetail);",
 "vec3 nightCol=day*vec3(0.042,0.056,0.095)+vec3(1.0,0.72,0.40)*lights*1.45;",
 "vec3 col=mix(dayCol,nightCol,nightF);",
+/* 足迹“点亮”：去过的国家泛起暖光、描出金边；没去过的陆地稍稍暗下去 */
+"if(uLitOn>0.001){float lm=texture2D(uLit,vUV).r;float edge=smoothstep(0.06,0.4,lm)*(1.0-smoothstep(0.55,0.95,lm));float fill=smoothstep(0.35,0.9,lm);",
+"col*=mix(1.0,0.66,uLitOn*land*(1.0-fill));",
+"col=mix(col,col*vec3(1.18,1.05,0.80)+vec3(0.13,0.085,0.02)*(1.0-0.55*nightF),uLitOn*fill*0.85);",
+"col+=vec3(1.0,0.80,0.40)*uLitOn*(edge*0.5+fill*0.07*nightF);}",
 "float tw=smoothstep(-0.14,0.02,ndl)*(1.0-smoothstep(0.02,0.26,ndl));",
 /* 大气：边缘的蓝色散射与晨昏的暖光 */
 "float rim=pow(1.0-vd,2.6);float atmL=smoothstep(-0.35,0.45,ndl);",
@@ -1413,7 +1466,7 @@ var VS_T=[
 function tileInit(){
   try{
     TL.prog=program(VS_T,FS);
-    ["uVP","uB","uTR","uTile","uTileOn","uGain","uDay","uNight","uWater","uHeight","uL","uCam","uHT","uDetail","uDayAll","uBump"].forEach(function(n){TL.U[n]=gl.getUniformLocation(TL.prog,n);});
+    ["uVP","uB","uTR","uTile","uTileOn","uGain","uDay","uNight","uWater","uHeight","uL","uCam","uHT","uDetail","uDayAll","uBump","uLit","uLitOn"].forEach(function(n){TL.U[n]=gl.getUniformLocation(TL.prog,n);});
     TL.U.aG=gl.getAttribLocation(TL.prog,"aG");
     var n=16,v=new Float32Array((n+1)*(n+1)*2),k=0;
     for(var j=0;j<=n;j++)for(var i=0;i<=n;i++){v[k++]=i/n;v[k++]=j/n;}
@@ -1559,7 +1612,7 @@ function tileDraw(lightV){
   gl.uniform2f(U2.uHT,S.htx*1.5,S.hty*1.5);gl.uniform1f(U2.uBump,EARTH_BUMP);gl.uniform1f(U2.uDayAll,S.dayK);
   gl.uniform1f(U2.uDetail,smooth(1.6,3.6,zoomEff));
   gl.uniform1i(U2.uDay,0);gl.uniform1i(U2.uNight,1);gl.uniform1i(U2.uWater,2);gl.uniform1i(U2.uHeight,3);gl.uniform1i(U2.uTile,6);
-  gl.uniform1f(U2.uTileOn,1);gl.uniform3f(U2.uGain,TL.gain[0],TL.gain[1],TL.gain[2]);
+  gl.uniform1f(U2.uTileOn,1);gl.uniform3f(U2.uGain,TL.gain[0],TL.gain[1],TL.gain[2]);gl.uniform1i(U2.uLit,4);gl.uniform1f(U2.uLitOn,LIT.k);
   gl.activeTexture(gl.TEXTURE6);
   for(var i=0;i<TL.draw.length;i++){
     var c=TL.draw[i],sp=tSpan(c.z),lon0=-180+c.x*sp,lat0=90-c.y*sp;
@@ -1577,7 +1630,12 @@ function initGL(){
   gl=glc.getContext("webgl",{antialias:true,alpha:true,premultipliedAlpha:true,powerPreference:"high-performance"})||glc.getContext("experimental-webgl");
   if(!gl)throw new Error("no webgl");
   prog=program(VS,FS);glow=program(GVS,GFS);
-  ["uVP","uDay","uNight","uWater","uHeight","uL","uCam","uHT","uDetail","uDayAll","uBump","uTileOn"].forEach(function(n){U[n]=gl.getUniformLocation(prog,n);});
+  ["uVP","uDay","uNight","uWater","uHeight","uL","uCam","uHT","uDetail","uDayAll","uBump","uTileOn","uLit","uLitOn"].forEach(function(n){U[n]=gl.getUniformLocation(prog,n);});
+  /* 足迹点亮用的遮罩（第 4 号纹理）：先放一张 1×1 的黑图，打开足迹时再画上去过的国家 */
+  LIT.tex=gl.createTexture();gl.activeTexture(gl.TEXTURE4);gl.bindTexture(gl.TEXTURE_2D,LIT.tex);
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.LUMINANCE,1,1,0,gl.LUMINANCE,gl.UNSIGNED_BYTE,new Uint8Array([0]));
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
   ["uCam","uRight","uUp","uFwd","uL","uShift","uRes","uTanY","uAsp"].forEach(function(n){UG[n]=gl.getUniformLocation(glow,n);});
   U.aPos=gl.getAttribLocation(prog,"aPos");U.aUV=gl.getAttribLocation(prog,"aUV");UG.aQ=gl.getAttribLocation(glow,"aQ");
   sphere=buildSphere(256,128);
@@ -1781,6 +1839,7 @@ function render(now){
   /* 太阳 */
   var sp=sunPos(Date.now()),sl=wrap(sp.lon-S.spinAccum),sun=llv(sp.lat,sl);
   S.dayK+=((S.dayAll?1:0)-S.dayK)*(1-Math.exp(-dta*2.6));
+  LIT.k+=(LIT.t-LIT.k)*(1-Math.exp(-dta*(LIT.t>LIT.k?1.6:4)));if(Math.abs(LIT.t-LIT.k)<0.002)LIT.k=LIT.t;
   if(Math.abs((S.dayAll?1:0)-S.dayK)<0.002)S.dayK=S.dayAll?1:0;
   var lightV=slerp(sun,norm(eyeV),ease(S.dayK));
   /* 绘制 */
@@ -1804,7 +1863,7 @@ function render(now){
   gl.uniform2f(U.uHT,S.htx*1.5,S.hty*1.5);gl.uniform1f(U.uBump,EARTH_BUMP);gl.uniform1f(U.uDayAll,S.dayK);
   gl.uniform1f(U.uDetail,smooth(1.6,3.6,zoomEff));
   gl.uniform1i(U.uDay,0);gl.uniform1i(U.uNight,1);gl.uniform1i(U.uWater,2);gl.uniform1i(U.uHeight,3);
-  gl.uniform1f(U.uTileOn,0);
+  gl.uniform1f(U.uTileOn,0);gl.uniform1i(U.uLit,4);gl.uniform1f(U.uLitOn,LIT.k);
   gl.drawElements(gl.TRIANGLES,sphere.n,gl.UNSIGNED_SHORT,0);
   gl.disableVertexAttribArray(U.aPos);gl.disableVertexAttribArray(U.aUV);
   if(TL.prog){tileUpdate(now,vm,sx,sy);tileDraw(lightV);}
@@ -4150,7 +4209,7 @@ function fpOpen(){
       mClose(true);
       var was=!!C.fp;
       C.fp={self:true,prof:C.me,list:list,visits:must(rs[1])||[],t0:was?C.fp.t0:performance.now()};
-      document.body.classList.add("fpon");fpBar();refreshPins();
+      document.body.classList.add("fpon");fpBar();refreshPins();litFp();
       if(!was)fpFit();
       setHash("map");
     });
@@ -4170,7 +4229,8 @@ function fpFit(){
 function fpBar(){
   var el=$("#fpbar"),fp=C.fp;if(!fp)return;
   var ccs={};fp.list.forEach(function(q){if(q.cc)ccs[q.cc]=1;});
-  el.innerHTML=avHTML(fp.prof)+'<div class="fp-t"><b>'+esc(tr("fpMine"))+'</b><small>'+esc(fp.list.length?tr("fpStat")(fp.list.length,Object.keys(ccs).length):tr("fpEmpty"))+'</small></div><div class="fp-a">'+
+  el.innerHTML=avHTML(fp.prof)+'<button type="button" class="fp-t" data-f="stats" title="'+esc(tr("fpStatsH"))+'"><b>'+esc(tr("fpMine"))+'</b><small>'+esc(fp.list.length?tr("fpStat")(fp.list.length,Object.keys(ccs).length):tr("fpEmpty"))+'</small></button><div class="fp-a">'+
+    (fp.list.length?'<button type="button" data-f="stats" title="'+esc(tr("fpStatsH"))+'">'+ICN.chart+'<span>'+tr("fpStatsB")+'</span></button>':"")+
     '<button type="button" data-f="add" title="'+tr("fpAddH")+'">'+ICN.plus+'<span>'+tr("fpAdd")+'</span></button>'+
     '<button type="button" data-f="album" title="'+tr("myAlbum")+'">'+ICN.photo+'<span>'+tr("fpAlbum")+'</span></button>'+
     '<button type="button" data-f="x" class="ic" aria-label="'+tr("fpExit")+'" title="'+tr("fpExit")+'">'+ICN.x+'</button></div>';
@@ -4178,12 +4238,12 @@ function fpBar(){
 }
 function fpClose(){
   if(!C.fp)return;
-  C.fp=null;document.body.classList.remove("fpon");layerOut($("#fpbar"));refreshPins();S.hold=false;
+  C.fp=null;document.body.classList.remove("fpon");layerOut($("#fpbar"));refreshPins();S.hold=false;LIT.t=0;
   if(/^#map$/.test(location.hash))setHash("");
 }
 $("#fpbar").addEventListener("click",function(e){
   var b=e.target.closest("[data-f]");if(!b||!C.fp)return;var a=b.getAttribute("data-f");
-  if(a==="x")fpClose();else if(a==="add")fpAddOpen();else if(a==="album")profileOpen();
+  if(a==="x")fpClose();else if(a==="add")fpAddOpen();else if(a==="album")profileOpen();else if(a==="stats"&&C.fp.list.length)fpStats();
 });
 var FA={city:null,q:""};
 function fpAddOpen(){
@@ -4323,6 +4383,139 @@ function commReady(){
   if(cOK())loadOverview();
   if(location.hash.length>2){startApp();setTimeout(route,reduced()?0:900);}
 }
+
+/* ---------- 点亮地图（足迹统计）与 那年今天 ---------- */
+Object.assign(I18N.zh,{
+  fpStatsH:"足迹统计",fpStatsB:"统计",
+  stCountries:"国家和地区",stCities:"城市",stConts:"大洲",
+  stLand:function(p){return "走过的国家和地区，占世界陆地的 "+p;},
+  stSince:function(d){return "从 "+d+" 开始";},
+  stFar:"相距最远的两个足迹",stNorth:"最北",stSouth:"最南",stList:"去过的国家和地区",
+  cont_AS:"亚洲",cont_EU:"欧洲",cont_AF:"非洲",cont_NA:"北美洲",cont_SA:"南美洲",cont_OC:"大洋洲",cont_AN:"南极洲",
+  otdH:"那年今天",otdAgo:function(n){return n+" 年前的今天";},otdIn:function(c){return "你在"+c;},otdN:function(n){return n+" 张照片";},otdGo:"看看"
+});
+Object.assign(I18N.en,{
+  fpStatsH:"Travel stats",fpStatsB:"Stats",
+  stCountries:"Countries & regions",stCities:"Cities",stConts:"Continents",
+  stLand:function(p){return "Your countries and regions cover "+p+" of the world’s land";},
+  stSince:function(d){return "Since "+d;},
+  stFar:"Your two farthest-apart places",stNorth:"Northernmost",stSouth:"Southernmost",stList:"Countries & regions",
+  cont_AS:"Asia",cont_EU:"Europe",cont_AF:"Africa",cont_NA:"North America",cont_SA:"South America",cont_OC:"Oceania",cont_AN:"Antarctica",
+  otdH:"On this day",otdAgo:function(n){return n===1?"1 year ago today":n+" years ago today";},otdIn:function(c){return "You were in "+c;},otdN:function(n){return n===1?"1 photo":n+" photos";},otdGo:"Look back"
+});
+ICN.chart='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V11M12 20V5M19 20v-6"/></svg>';
+var CONTS=["AS","EU","AF","NA","SA","OC","AN"];
+
+/* 国界数据（简化过的 Natural Earth 1:5000 万国界，公有领域），打开足迹时才下载 */
+var CTRY={p:null,d:null};
+function ctryLoad(){
+  if(!CTRY.p)CTRY.p=fetch("lib/countries.json").then(function(r){if(!r.ok)throw new Error("countries");return r.json();})
+    .then(function(d){CTRY.d=d.c;return d.c;},function(e){CTRY.p=null;throw e;});
+  return CTRY.p;
+}
+function fpCCs(){var o={};if(C.fp)C.fp.list.forEach(function(q){if(q.cc)o[q.cc]=1;});return o;}
+/* 把去过的国家画进一张经纬度展开的遮罩图，交给地球的着色器去“点亮” */
+function litFp(){
+  var ccs=Object.keys(fpCCs()).sort(),key=ccs.join(",");
+  if(!ccs.length){LIT.t=0;return;}
+  if(key===LIT.key&&LIT.ready){LIT.t=1;return;}
+  ctryLoad().then(function(D){
+    if(!C.fp||!gl)return;
+    var W=touchUI?2048:4096,H=W/2,cv=document.createElement("canvas");cv.width=W;cv.height=H;
+    var x=cv.getContext("2d"),sx=W/3600,sy=H/1800,dg=W/360;
+    x.fillStyle="#000";x.fillRect(0,0,W,H);x.lineJoin="round";
+    var path=function(c){
+      x.beginPath();
+      c.p.forEach(function(r){for(var i=0;i<r.length;i+=2){var px=(r[i]+1800)*sx,py=(900-r[i+1])*sy;if(i)x.lineTo(px,py);else x.moveTo(px,py);}x.closePath();});
+    };
+    /* 先描两圈半透明的宽边，再填满：边缘是一圈柔和的渐变，着色器据此画出金色的国界 */
+    ccs.forEach(function(cc){var c=D[cc];if(!c)return;path(c);
+      x.strokeStyle="rgba(255,255,255,.22)";x.lineWidth=dg*.9;x.stroke();
+      x.strokeStyle="rgba(255,255,255,.45)";x.lineWidth=dg*.45;x.stroke();});
+    x.fillStyle="#fff";
+    ccs.forEach(function(cc){var c=D[cc];if(!c)return;path(c);x.fill();});
+    gl.activeTexture(gl.TEXTURE4);gl.bindTexture(gl.TEXTURE_2D,LIT.tex);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.LUMINANCE,gl.LUMINANCE,gl.UNSIGNED_BYTE,cv);
+    gl.generateMipmap(gl.TEXTURE_2D);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+    LIT.key=key;LIT.ready=true;LIT.k=0;LIT.t=C.fp?1:0;
+  }).catch(function(){});
+}
+function kmFmt(n){try{return new Intl.NumberFormat(LANG==="en"?"en-US":"zh-CN").format(Math.round(n));}catch(e){return String(Math.round(n));}}
+function monthFmt(d){
+  var t=new Date(d);if(isNaN(t))return "";
+  try{return new Intl.DateTimeFormat(LANG==="en"?"en-US":"zh-CN",{year:"numeric",month:"long"}).format(t);}catch(e){return t.getFullYear()+"-"+(t.getMonth()+1);}
+}
+function fpStats(){
+  var fp=C.fp;if(!fp||!fp.list.length)return;
+  ctryLoad().catch(function(){return null;}).then(function(D){
+    if(!C.fp)return;
+    var L=fp.list,cc=Object.keys(fpCCs()),conts={},area=0,total=0;
+    if(D){Object.keys(D).forEach(function(k){total+=D[k].a;});cc.forEach(function(k){var c=D[k];if(c){conts[c.ct]=1;area+=c.a;}});}
+    var far=0,fa=null,fb=null,north=L[0],south=L[0],first=null;
+    for(var i=0;i<L.length;i++){
+      var a=L[i];if(a.lat>north.lat)north=a;if(a.lat<south.lat)south=a;if(a.first&&(!first||a.first<first))first=a.first;
+      for(var j=i+1;j<L.length;j++){var b=L[j],d=hav(a.lat,a.lon,b.lat,b.lon);if(d>far){far=d;fa=a;fb=b;}}
+    }
+    var pct=total?area/total*100:0,pctS=pct>=10?pct.toFixed(0)+"%":pct>=1?pct.toFixed(1)+"%":pct>0?(pct<0.01?"<0.01%":pct.toFixed(2)+"%"):"0%";
+    var nC=Object.keys(conts).length;
+    var names=cc.map(function(k){return ccName(k)||k;}).sort(function(x,y){return x.localeCompare(y,LANG==="en"?"en":"zh");});
+    var h=mx()+'<div class="fst"><h2 id="mH">'+esc(tr("fpStatsH"))+'</h2>'+(first?'<p class="msub">'+esc(tr("stSince")(monthFmt(first)))+'</p>':"")+
+      '<div class="fst-big"><div><b>'+cc.length+'</b><small>'+tr("stCountries")+'</small></div><div><b>'+L.length+'</b><small>'+tr("stCities")+'</small></div><div><b>'+nC+'<i>/7</i></b><small>'+tr("stConts")+'</small></div></div>'+
+      (D?'<div class="fst-land"><div class="fst-bar"><i style="width:'+Math.max(pct,pct>0?1.5:0).toFixed(2)+'%"></i></div><p>'+esc(tr("stLand")(pctS))+'</p></div>':"")+
+      '<div class="fst-conts">'+CONTS.map(function(k){return '<span class="'+(conts[k]?"on":"")+'">'+esc(tr("cont_"+k))+'</span>';}).join("")+'</div>'+
+      '<dl class="fst-facts">'+
+        (fa&&far>1?'<div><dt>'+tr("stFar")+'</dt><dd>'+esc(fa.name)+' ↔ '+esc(fb.name)+'<small>'+kmFmt(far)+' km</small></dd></div>':"")+
+        (L.length>1?'<div><dt>'+tr("stNorth")+'</dt><dd>'+esc(north.name)+'<small>'+Math.abs(north.lat).toFixed(1)+'°'+(north.lat>=0?"N":"S")+'</small></dd></div>'+
+          '<div><dt>'+tr("stSouth")+'</dt><dd>'+esc(south.name)+'<small>'+Math.abs(south.lat).toFixed(1)+'°'+(south.lat>=0?"N":"S")+'</small></dd></div>':"")+
+      '</dl>'+
+      '<h3>'+tr("stList")+'</h3><div class="fst-list">'+names.map(function(n){return '<span>'+esc(n)+'</span>';}).join("")+'</div></div>';
+    mOpen("fpstats",h);
+  });
+}
+
+/* 那年今天：往年的今天拍过照片，就轻轻提示一下（每天最多一次） */
+var OTD={done:false,list:null,tries:0};
+function otdKey(){var d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
+function otdCheck(){
+  if(OTD.done)return;
+  if(++OTD.tries>200){OTD.done=true;return;}
+  if(!S.started||!cOK()||!C.me||C.fp||document.body.classList.contains("cityopen")||mOn()||lbOn())return;
+  OTD.done=true;
+  var key=otdKey();try{if(localStorage.getItem("atlas-otd")===key)return;}catch(e){}
+  var now=new Date(),conds=[];
+  for(var y=now.getFullYear()-1;y>=now.getFullYear()-30;y--){
+    var a=new Date(y,now.getMonth(),now.getDate()),b=new Date(y,now.getMonth(),now.getDate()+1);
+    if(a.getMonth()!==now.getMonth())continue;   /* 2 月 29 日这类日子在平年不存在 */
+    conds.push('and(taken_at.gte."'+a.toISOString()+'",taken_at.lt."'+b.toISOString()+'")');
+  }
+  C.sb.from("media").select(MCOLS).eq("user_id",myId()).or(conds.join(",")).order("taken_at",{ascending:false}).limit(40).then(function(r){
+    var list=(must(r)||[]).filter(function(m){return m.thumb&&!m.hidden;});
+    if(!list.length)return;
+    return signFor(list,["thumb"]).then(function(){OTD.list=list;otdShow(key);});
+  }).catch(function(){});
+}
+function otdShow(key){
+  var list=OTD.list,first=list[0],yr=new Date(first.taken_at).getFullYear(),ago=new Date().getFullYear()-yr;
+  /* 最近那一年里，照片最多的城市 */
+  var cnt={},best=null;list.forEach(function(m){if(new Date(m.taken_at).getFullYear()!==yr)return;var c=rowCity(m);cnt[c]=(cnt[c]||0)+1;if(!best||cnt[c]>cnt[best])best=c;});
+  var el=document.createElement("div");el.id="otd";el.className="otd glass";el.setAttribute("role","dialog");el.setAttribute("aria-label",tr("otdH"));
+  var ph=list.slice(0,3).map(function(m){return '<img src="'+esc(mURL(m,"thumb"))+'" alt="">';}).join("");
+  el.innerHTML='<button type="button" class="otd-ph n'+Math.min(3,list.length)+'" data-otd="go" aria-label="'+esc(tr("otdGo"))+'">'+ph+'</button>'+
+    '<div class="otd-t"><small>'+esc(tr("otdAgo")(ago))+'</small><b>'+esc(best?tr("otdIn")(best):tr("otdH"))+'</b><span>'+esc(tr("otdN")(list.length))+'</span></div>'+
+    '<button type="button" class="otd-go" data-otd="go">'+esc(tr("otdGo"))+'</button>'+
+    '<button type="button" class="otd-x" data-otd="x" aria-label="'+esc(tr("close"))+'">'+ICN.x+'</button>';
+  document.body.appendChild(el);
+  var done=function(){try{localStorage.setItem("atlas-otd",key);}catch(e){}el.classList.remove("in");setTimeout(function(){el.remove();},400);};
+  el.addEventListener("click",function(e){
+    var b=e.target.closest("[data-otd]");if(!b)return;
+    if(b.getAttribute("data-otd")==="go")lbOpen(OTD.list,0,"album");
+    done();
+  });
+  requestAnimationFrame(function(){requestAnimationFrame(function(){el.classList.add("in");});});
+}
+OTD.timer=setInterval(function(){if(OTD.done){clearInterval(OTD.timer);return;}otdCheck();},1500);
 
 
 applyLang();
