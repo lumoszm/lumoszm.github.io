@@ -865,11 +865,20 @@ body.cvlight .mlinks a{color:rgba(60,60,67,.6)}
 .lb-act button{display:inline-flex;align-items:center;gap:6px;min-height:38px;padding:8px 14px;border:0;border-radius:999px;background:rgba(255,255,255,.12);color:#fff;font:600 14px/1 var(--f-body);cursor:pointer;font-variant-numeric:tabular-nums}
 .lb-act button:hover{background:rgba(255,255,255,.2)}
 .lb-act svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+.lb-act .ic{width:38px;padding:0;justify-content:center}
+.lb-act .ic.red:hover{color:#FF6961;background:rgba(255,69,58,.18)}
+.lb-vis{display:inline-flex;padding:3px;border-radius:999px;background:rgba(255,255,255,.12)}
+.lb-act .lb-vis button{min-height:32px;padding:6px 12px;background:none;color:rgba(255,255,255,.75);transition:background-color .2s,color .2s}
+.lb-act .lb-vis button:hover{background:rgba(255,255,255,.1)}
+.lb-act .lb-vis button[aria-checked="true"]{background:#fff;color:#111;cursor:default}
+.lb-act .lb-vis svg{width:15px;height:15px}
+.lb-vis[aria-busy="true"]{opacity:.5;pointer-events:none}
 .lb-act .on{color:#FF375F}
 .lb-act .on svg{fill:currentColor}
 @media (max-width:640px){
   .lb-in{flex-wrap:wrap}
   .lb-cap{flex-basis:100%;order:3}
+  .lb-act{flex-basis:100%;order:4;flex-wrap:wrap}
   #lbP,#lbN{display:none}
 }
 /* 小菜单 */
@@ -987,6 +996,32 @@ body.cvlight #fpbar .fp-a button{background:rgba(0,0,0,.06);color:#1d1d1f}
 body.cvlight #fpbar .fp-a button:hover{background:rgba(0,0,0,.1)}
 body.cvlight #fpbar .fp-a .pub{color:#248A3D}
 
+/* 我的地图册：批量选择 */
+.pf-bt .mbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.pf-g.selm .gi{cursor:pointer}
+.pf-g.selm .gi img{transition:transform .25s var(--ease),opacity .25s}
+.pf-g.selm .gi:hover img{transform:none}
+.pf-g .gi.pk img{transform:scale(.9)!important;border-radius:6px}
+.gi .ck{position:absolute;left:8px;top:8px;width:24px;height:24px;border-radius:50%;border:2px solid #fff;background:rgba(0,0,0,.28);display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.gi .ck svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.gi.pk .ck{background:#0A84FF;border-color:#0A84FF}
+.gi.pk .ck svg{opacity:1}
+.pf-g.selm .gi .vd{left:auto;right:8px;top:auto;bottom:8px}
+.pf-selbar{position:sticky;bottom:0;z-index:4;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));
+  background:var(--mbg);border-top:.5px solid var(--mline);box-shadow:0 -8px 24px rgba(0,0,0,.18)}
+.pf-seln{font:600 14px/1.3 var(--f-body);color:var(--mf);font-variant-numeric:tabular-nums}
+.pf-selsp{flex:1}
+.pf-selbar .mbtn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.pf-selbar .mbtn[disabled]{opacity:.38}
+.pf-selbar .mbtn{white-space:nowrap}
+@media (max-width:640px){
+  .pf-selbar{padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px))}
+  .pf-seln,.pf-selbar [data-pf="selall"]{order:1}
+  .pf-selbar [data-pf="selx"]{order:2;margin-left:auto;background:none;min-height:32px;padding:6px 4px;color:var(--macc);font-weight:500}
+  .pf-selsp{order:3;flex-basis:100%;height:0}
+  .pf-selbar [data-pf="setpriv"],.pf-selbar [data-pf="setpub"]{order:4;flex:1;padding:9px 10px}
+}
+
 </style>
 </head>
 <body>
@@ -1077,7 +1112,7 @@ body.cvlight #fpbar .fp-a .pub{color:#248A3D}
 
 
 <script src="lib/supabase-2.117.2.js"></script>
-<script src="lib/docs.js?v=20261018"></script>
+<script src="lib/docs.js?v=20261019"></script>
 <script>
 (function(){
 "use strict";
@@ -3637,7 +3672,11 @@ Object.assign(I18N.zh,{
   consentH:"记录旅行足迹",consentOK:"同意并开启",notNow:"暂不",
   consentBody:"<p>开启后，ATLAS 会根据你上传照片时选择的城市和拍摄日期，以及你手动添加的地方，在地球上画出你的旅行足迹。</p><p>行踪信息属于敏感个人信息，所以需要你单独同意。足迹只有你自己能看到；我们只记录到城市一级，不保存照片里的精确坐标。</p><p>你可以随时在“编辑资料”里关闭这项功能，关闭后手动添加的足迹会被删除。</p>",
   admH:"举报处理",admEmpty:"没有待处理的举报",admN:function(n){return n+" 人举报";},admDismiss:"忽略",admAuto:"已自动隐藏",admUser:"用户",admMedia:"照片",
-  ctyN:function(n){return n+" 座城市有照片";},ctyNone:"这里还没有照片。搜索一座城市，成为第一个分享的人。"
+  ctyN:function(n){return n+" 座城市有照片";},ctyNone:"这里还没有照片。搜索一座城市，成为第一个分享的人。",
+  visL:"谁能看到",visPriv:"仅自己",visPub:"公开",selMode:"批量选择",selCancel:"取消",selAll:"全选",selNone:"全不选",
+  selN:function(n){return n?"已选 "+n+" 项":"点照片来选择";},setPub:"设为公开",setPriv:"设为仅自己可见",
+  batchDoing:function(a,b){return "正在处理 "+a+" / "+b;},batchPub:function(n){return "已公开 "+n+" 项";},batchPriv:function(n){return n+" 项已改为仅自己可见";},
+  batchFail:function(n){return n+" 项没有改成功，请再试一次";},batchSame:"选中的照片已经是这个状态了"
 });
 Object.assign(I18N.en,{
   catAll:"All",cvPhotos:"photos",cat_scenery:"Scenery",cat_activity:"Activities",cat_culture:"Culture",
@@ -3661,7 +3700,19 @@ Object.assign(I18N.en,{
   consentH:"Record your travel map",consentOK:"Agree and turn on",notNow:"Not now",
   consentBody:"<p>When this is on, ATLAS draws your journeys on the globe from the cities and dates of the photos you upload and the places you add by hand.</p><p>Travel history is sensitive personal information, so we ask for your separate consent. Your map is visible only to you, and we only record places at city level — never the exact coordinates from your photos.</p><p>You can turn this off at any time in Edit profile; the places you added by hand are then deleted.</p>",
   admH:"Reports",admEmpty:"Nothing to review",admN:function(n){return n+(n===1?" report":" reports");},admDismiss:"Dismiss",admAuto:"Auto-hidden",admUser:"Traveler",admMedia:"Photo",
-  ctyN:function(n){return "Photos from "+n+(n===1?" city":" cities");},ctyNone:"No photos here yet. Search for a city and be the first to share."
+  ctyN:function(n){return "Photos from "+n+(n===1?" city":" cities");},ctyNone:"No photos here yet. Search for a city and be the first to share.",
+  visL:"Who can see this",visPriv:"Only me",visPub:"Public",selMode:"Select",selCancel:"Cancel",selAll:"Select all",selNone:"Deselect all",
+  selN:function(n){return n?n+" selected":"Tap photos to select";},setPub:"Make public",setPriv:"Make private",
+  batchDoing:function(a,b){return "Updating "+a+" of "+b;},batchPub:function(n){return n+(n===1?" item is":" items are")+" now public";},batchPriv:function(n){return n+(n===1?" item is":" items are")+" now private";},
+  batchFail:function(n){return n+(n===1?" item":" items")+" couldn’t be updated. Please try again.";},batchSame:"The selected items already have this setting"
+});
+Object.assign(ICN,{
+  link:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1 1"/><path d="M14 10a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1-1"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 7h15M10 4.5h4M6.5 7l.9 12a1.6 1.6 0 0 0 1.6 1.5h6a1.6 1.6 0 0 0 1.6-1.5l.9-12M10 11v6M14 11v6"/></svg>',
+  eye:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+  eyeOff:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.9 5.7A9.4 9.4 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a16 16 0 0 1-2.6 3.4M6.6 6.7A16 16 0 0 0 2.5 12S6 18.5 12 18.5a9 9 0 0 0 4.4-1.1M3.5 3.5l17 17"/></svg>',
+  ban:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/></svg>',
+  check:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
 });
 var CATS=["scenery","activity","culture"],CATK={s:"scenery",a:"activity",c:"culture"};
 var MCOLS="id,user_id,kind,path,thumb,w,h,dur,caption,taken_at,created_at,is_public,category,hidden,city_id,city_zh,city_en,cc,author:profiles!media_user_id_fkey(id,name,avatar)";
@@ -3855,8 +3906,22 @@ function lbInfo(){
       esc([LB.ctx==="city"?"":city,cat,when,!m.is_public?tr("privTag"):LB.ctx==="album"?tr("pubTag"):"",m.hidden?tr("hiddenTag"):""].filter(Boolean).join(" · "))+'</small></span></div>'+
       '<p class="lb-cap">'+esc(m.caption||"")+'</p>';
   }
-  h+='<div class="lb-act">'+(LB.ctx!=="city"?'<button type="button" data-lb="city" aria-label="'+esc(city)+'" title="'+esc(city)+'">'+ICN.pin+'</button>':"")+
-    (m.cur?"":'<button type="button" data-lb="more" aria-label="…">'+ICN.dots+'</button>')+'</div>';
+  var mine=!m.cur&&C.me&&m.user_id===C.me.id;
+  var ib=function(a,ic,t,cls){return '<button type="button" class="ic'+(cls?" "+cls:"")+'" data-lb="'+a+'" aria-label="'+esc(t)+'" title="'+esc(t)+'">'+ic+'</button>';};
+  h+='<div class="lb-act">'+(LB.ctx!=="city"?'<button type="button" data-lb="city" aria-label="'+esc(city)+'" title="'+esc(city)+'">'+ICN.pin+'</button>':"");
+  if(!m.cur){
+    /* 自己的照片：公开 / 仅自己 一目了然，点另一边就切换 */
+    if(mine)h+='<div class="lb-vis" role="radiogroup" aria-label="'+esc(tr("visL"))+'"'+(m._busy?' aria-busy="true"':"")+'>'+
+      '<button type="button" role="radio" data-lb="priv" aria-checked="'+!m.is_public+'">'+ICN.lock+'<span>'+tr("visPriv")+'</span></button>'+
+      '<button type="button" role="radio" data-lb="pub" aria-checked="'+!!m.is_public+'">'+ICN.globe+'<span>'+tr("visPub")+'</span></button></div>';
+    if(m.is_public&&!m.hidden)h+=ib("link",ICN.link,tr("copyLink"));
+    if(mine)h+=ib("del",ICN.trash,tr("del"),"red");
+    else{
+      h+=ib("report",ICN.flag,tr("report"));
+      if(isAdmin()){h+=ib("hide",m.hidden?ICN.eye:ICN.eyeOff,tr(m.hidden?"unhide":"hide"));h+=ib("ban",ICN.ban,tr("banUser"),"red");}
+    }
+  }
+  h+='</div>';
   $("#lbIn").innerHTML=h;
 }
 function lbMove(d){var n=LB.i+d;if(n<0||n>=LB.list.length)return;var v=lbEl.querySelector("video");if(v)v.pause();LB.i=n;lbShow();}
@@ -3875,22 +3940,15 @@ $("#lbIn").addEventListener("click",function(e){
   var m=LB.list[LB.i];if(!m)return;
   var b=e.target.closest("[data-lb]");if(!b)return;var a=b.getAttribute("data-lb");
   if(a==="city"){lbClose();mClose(true);openPlace(m.city_id);}
-  else if(a==="more"){
-    var mine=C.me&&m.user_id===C.me.id,items=[];
-    if(m.is_public&&!m.hidden)items.push({t:tr("copyLink"),fn:function(){copyText(location.origin+location.pathname+"#m/"+m.id);}});
-    if(mine){
-      if(m.is_public)items.push({t:tr("makePriv"),fn:function(){setVis(m,false);}});
-      else items.push({t:tr("makePub"),fn:function(){setVis(m,true,m.category||"scenery");}});
-      items.push({hr:1});items.push({t:tr("del"),red:true,fn:function(){delMedia(m);}});
-    }else{
-      items.push({t:tr("report"),fn:function(){reportMenu(b,"media",m.id,true);}});
-      if(isAdmin()){
-        items.push({t:tr(m.hidden?"unhide":"hide"),fn:function(){C.sb.rpc("admin_set_hidden",{k:"media",t:m.id,h:!m.hidden}).then(function(r){if(r.error)toast(errText(r.error));else{m.hidden=!m.hidden;lbInfo();mediaChanged(m);}});}});
-        items.push({t:tr("banUser"),red:true,fn:function(){if(confirm(tr("banUser")+"?"))C.sb.rpc("admin_ban",{uid:m.user_id,b:true}).then(function(r){if(r.error)toast(errText(r.error));else{toast(tr("saved"));mediaChanged(m);}});}});
-      }
-    }
-    popMenu(b,items,true);
+  else if(a==="priv"||a==="pub"){
+    var pub=a==="pub";if(!!m.is_public===pub||m._busy)return;
+    var p=setVis(m,pub,m.category||"scenery");lbInfo();p.then(function(){if(LB.list[LB.i]===m)lbInfo();});
   }
+  else if(a==="link")copyText(location.origin+location.pathname+"#m/"+m.id);
+  else if(a==="del")delMedia(m);
+  else if(a==="report")reportMenu(b,"media",m.id,true);
+  else if(a==="hide"&&isAdmin())C.sb.rpc("admin_set_hidden",{k:"media",t:m.id,h:!m.hidden}).then(function(r){if(r.error)toast(errText(r.error));else{m.hidden=!m.hidden;lbInfo();mediaChanged(m);}});
+  else if(a==="ban"&&isAdmin()){if(confirm(tr("banUser")+"?"))C.sb.rpc("admin_ban",{uid:m.user_id,b:true}).then(function(r){if(r.error)toast(errText(r.error));else{toast(tr("saved"));mediaChanged(m);}});}
 });
 function catMenu(anchor,cb){popMenu(anchor,CATS.map(function(c){return {t:tr("cat_"+c),fn:function(){cb(c);}};}),true);}
 function copyText(s){
@@ -3916,22 +3974,27 @@ function delMedia(m){
   });
 }
 /* 公开 ⇄ 仅自己：在两个存储桶之间移动文件，再改记录 */
-function setVis(m,pub,cat){
-  var from=m.is_public?"media":"private",to=pub?"media":"private";
-  var mv=function(p){return C.sb.storage.from(from).move(p,p,{destinationBucket:to}).then(must);};
-  mv(m.thumb).then(function(){return mv(m.path);}).then(function(){
-    return C.sb.from("media").update(pub?{is_public:true,category:cat||m.category}:{is_public:false}).eq("id",m.id).then(must);
+function setVis(m,pub,cat,quiet){
+  if(!!m.is_public===pub)return Promise.resolve(true);
+  var from=m.is_public?"media":"private",to=pub?"media":"private",moved=[];
+  var mv=function(p,a,b){return C.sb.storage.from(a).move(p,p,{destinationBucket:b}).then(must);};
+  m._busy=true;
+  return mv(m.thumb,from,to).then(function(){moved.push(m.thumb);return mv(m.path,from,to);}).then(function(){moved.push(m.path);
+    return C.sb.from("media").update(pub?{is_public:true,category:cat||m.category||"scenery"}:{is_public:false}).eq("id",m.id).then(must);
+  }).catch(function(e){
+    return Promise.all(moved.map(function(p){return mv(p,to,from).catch(function(){});})).then(function(){throw e;});
   }).then(function(){
-    m.is_public=pub;if(pub&&cat)m.category=cat;toast(tr(pub?"madePub":"madePriv"));
-    signFor([m],["thumb","path"]).then(function(){lbInfo();mediaChanged(m);if(lbOn())lbShow();});
-  }).catch(function(e){toast(errText(e));});
+    m._busy=false;m.is_public=pub;if(pub)m.category=cat||m.category||"scenery";
+    if(!quiet){toast(tr(pub?"madePub":"madePriv"));signFor([m],["thumb","path"]).then(function(){if(LB.list[LB.i]===m){lbInfo();if(lbOn())lbShow();}mediaChanged(m);});}
+    return true;
+  },function(e){m._busy=false;if(!quiet)toast(errText(e));return false;});
 }
 
 /* ---------- 我的地图册（只有自己能看到） ---------- */
-var PF={items:[],st:null};
+var PF={items:[],st:null,sel:null,busy:null};
 function profileOpen(){
   if(!cOK()||!C.me)return;
-  PF={items:[],st:null};
+  PF={items:[],st:null,sel:null,busy:null};
   mOpen("pf",mx()+'<div class="cv-load"><i></i></div>',{wide:true,onclose:function(){if(/^#me$/.test(location.hash))setHash(CV.id?"c/"+CV.id:"");}});
   setHash("me");
   Promise.all([C.sb.rpc("my_stats"),C.sb.from("media").select(MCOLS).eq("user_id",myId()).order("created_at",{ascending:false}).limit(300)]).then(function(rs){
@@ -3946,17 +4009,52 @@ function pfRender(){
     '<div class="pf-st"><div><b>'+st.m+'</b><small>'+tr("pfM")+'</small></div><div><b>'+st.c+'</b><small>'+tr("pfC")+'</small></div><div><b>'+st.k+'</b><small>'+tr("pfK")+'</small></div></div>'+
     '<div class="pf-bt"><button type="button" class="mbtn sm" data-pf="map">'+ICN.globe.replace("<svg",'<svg width="16" height="16" style="fill:none;stroke:currentColor;stroke-width:2"')+tr("showMap")+'</button>'+
     '<button type="button" class="mbtn sec sm" data-pf="up">'+ICN.plus.replace("<svg",'<svg width="16" height="16" style="fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round"')+tr("share")+'</button>'+
-    '<button type="button" class="mbtn sec sm" data-pf="edit">'+tr("pfEdit")+'</button></div><p class="pf-note">'+ICN.lock+tr("pfNote")+'</p></div><div id="pfG"></div>');
-  pfGridRender();
+    '<button type="button" class="mbtn sec sm" data-pf="edit">'+tr("pfEdit")+'</button>'+
+    (PF.items.length?'<button type="button" class="mbtn sec sm" data-pf="sel">'+ICN.check+tr("selMode")+'</button>':"")+'</div><p class="pf-note">'+ICN.lock+tr("pfNote")+'</p></div><div id="pfG"></div><div id="pfSel"></div>');
+  pfGridRender();pfSelRender();
 }
 function pfGridRender(){
   var g=$("#pfG");if(!g)return;
   if(!PF.items.length){g.innerHTML='<div class="pf-empty">'+tr("pfEmptyMe")+'</div>';return;}
-  g.innerHTML='<div class="pf-g">'+PF.items.map(function(m,i){
-    return '<button type="button" class="gi'+(m.hidden?" hid":"")+'" data-pg="'+i+'"><img src="'+esc(mURL(m,"thumb"))+'" alt="" loading="lazy" decoding="async">'+
+  g.innerHTML='<div class="pf-g'+(PF.sel?" selm":"")+'">'+PF.items.map(function(m,i){
+    var pk=PF.sel&&PF.sel[m.id];
+    return '<button type="button" class="gi'+(m.hidden?" hid":"")+(pk?" pk":"")+'" data-pg="'+i+'"'+(PF.sel?' aria-pressed="'+!!pk+'"':"")+'><img src="'+esc(mURL(m,"thumb"))+'" alt="" loading="lazy" decoding="async">'+
+      (PF.sel?'<span class="ck" aria-hidden="true">'+ICN.check+'</span>':"")+
       (m.kind==="video"?'<span class="vd">'+ICN.play+(m.dur?dur(m.dur):"")+'</span>':"")+(m.is_public?'<span class="pv pub">'+ICN.globe+'</span>':"")+
       '<small>'+esc(rowCity(m))+'</small></button>';
   }).join("")+'</div>';
+}
+function pfSelN(){return PF.sel?PF.items.filter(function(m){return PF.sel[m.id];}).length:0;}
+function pfSelRender(){
+  var h=$("#pfSel");if(!h)return;
+  if(!PF.sel){h.innerHTML="";return;}
+  var n=pfSelN(),all=n===PF.items.length,b=PF.busy,dis=(!n||b)?" disabled":"";
+  h.innerHTML='<div class="pf-selbar"><span class="pf-seln">'+esc(b?tr("batchDoing")(b.done,b.n):tr("selN")(n))+'</span>'+
+    '<button type="button" class="mlink" data-pf="selall"'+(b?" disabled":"")+'>'+tr(all?"selNone":"selAll")+'</button>'+
+    '<span class="pf-selsp"></span>'+
+    '<button type="button" class="mbtn sec sm" data-pf="setpriv"'+dis+'>'+ICN.lock+tr("setPriv")+'</button>'+
+    '<button type="button" class="mbtn sm" data-pf="setpub"'+dis+'>'+ICN.globe+tr("setPub")+'</button>'+
+    '<button type="button" class="mbtn sec sm" data-pf="selx"'+(b?" disabled":"")+'>'+tr("selCancel")+'</button></div>';
+}
+/* 批量切换：同时最多 3 张，全部做完再统一刷新 */
+function pfBatch(pub){
+  if(PF.busy)return;
+  var list=PF.items.filter(function(m){return PF.sel[m.id]&&!!m.is_public!==pub;});
+  if(!list.length){toast(tr("batchSame"));return;}
+  PF.busy={done:0,n:list.length,fail:0};pfSelRender();
+  var k=0;
+  var next=function(){
+    if(k>=list.length)return Promise.resolve();
+    var m=list[k++];
+    return setVis(m,pub,null,true).then(function(ok){if(!ok)PF.busy.fail++;PF.busy.done++;pfSelRender();return next();});
+  };
+  Promise.all([next(),next(),next()]).then(function(){
+    var f=PF.busy.fail,ok=list.length-f;PF.busy=null;
+    toast(f?tr("batchFail")(f):tr(pub?"batchPub":"batchPriv")(ok));
+    if(!f)PF.sel=null;
+    signFor(PF.items,["thumb"]).then(function(){if(mOn("pf")){pfGridRender();pfSelRender();}});
+    loadOverview();if(C.fp)fpReload();if(CVC.id)cvComm(CVC.id);
+  });
 }
 function pfEditHTML(){
   var me=C.me||{},on=!!me.track_at;
@@ -3972,9 +4070,19 @@ function pfEditHTML(){
 var pfAvBlob=null;
 mcard.addEventListener("click",function(e){
   if(M.kind!=="pf")return;
-  var g=e.target.closest("[data-pg]");if(g){lbOpen(PF.items,+g.getAttribute("data-pg"),"album");return;}
+  var g=e.target.closest("[data-pg]");
+  if(g){
+    var gm=PF.items[+g.getAttribute("data-pg")];
+    if(PF.sel){if(PF.busy||!gm)return;if(PF.sel[gm.id])delete PF.sel[gm.id];else PF.sel[gm.id]=1;g.classList.toggle("pk",!!PF.sel[gm.id]);g.setAttribute("aria-pressed",!!PF.sel[gm.id]);pfSelRender();return;}
+    lbOpen(PF.items,+g.getAttribute("data-pg"),"album");return;
+  }
   var b=e.target.closest("[data-pf]");if(!b)return;var a=b.getAttribute("data-pf");
-  if(a==="edit"){pfAvBlob=null;mSet(pfEditHTML());}
+  if(a==="sel"){if(!PF.sel){PF.sel={};pfGridRender();pfSelRender();var sb=$("#pfSel");if(sb&&sb.scrollIntoView)sb.scrollIntoView({block:"nearest"});}}
+  else if(a==="selx"){if(!PF.busy){PF.sel=null;pfGridRender();pfSelRender();}}
+  else if(a==="selall"){if(!PF.busy&&PF.sel){var allSel=pfSelN()===PF.items.length;PF.sel={};if(!allSel)PF.items.forEach(function(m){PF.sel[m.id]=1;});pfGridRender();pfSelRender();}}
+  else if(a==="setpub")pfBatch(true);
+  else if(a==="setpriv")pfBatch(false);
+  else if(a==="edit"){pfAvBlob=null;mSet(pfEditHTML());}
   else if(a==="map"){mClose(true);fpOpen();}
   else if(a==="up"){mClose(true);upStart(null);}
   else if(a==="av")pickAvatar(function(blob){pfAvBlob=blob;$("#pfAv").innerHTML='<span class="av"><img src="'+URL.createObjectURL(blob)+'" alt=""></span>';});
