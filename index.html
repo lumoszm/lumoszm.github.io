@@ -3448,6 +3448,30 @@ function loadOverview(n){
 }
 /* 地球上的城市标记：精选照片 + 旅行者公开的照片 */
 var SUB_KM=35;
+/* 出名的地方：有精选相册，或者是大城市 */
+function isMajor(id){var c=typeof CUR!=="undefined"&&CUR.p&&CUR.p[id],p=C.PI&&C.PI[id];return !!(c&&c.length)||!!(p&&p.pc>=7);}
+var MAJ={key:"",list:[]};
+function majorNear(lat,lon){
+  var key=(C.P?C.P.length:0)+"|"+(CUR.p?Object.keys(CUR.p).length:0);
+  if(MAJ.key!==key){MAJ.key=key;MAJ.list=[];
+    if(C.PI){Object.keys(CUR.p||{}).forEach(function(id){if(C.PI[id]&&CUR.p[id].length)MAJ.list.push(C.PI[id]);});
+      (C.P||[]).forEach(function(p){if(p.k==="c"&&p.pc>=7&&!(CUR.p&&CUR.p[p.id]))MAJ.list.push(p);});}
+  }
+  var best=null,bd=SUB_KM;
+  MAJ.list.forEach(function(m){if(Math.abs(m.lat-lat)>0.6)return;var d=hav(lat,lon,m.lat,m.lon);if(d<bd){bd=d;best=m;}});
+  return best;
+}
+/* 我的足迹：附近不太出名的地点并进最近的出名城市，地球上显示成一个，点开再列出具体地点 */
+function fpGroups(){
+  var by={},out=[];
+  (C.fp?C.fp.list:[]).forEach(function(q){
+    var m=isMajor(q.id)?null:majorNear(q.lat,q.lon),gid=m?m.id:q.id,g=by[gid];
+    if(!g){g=by[gid]={id:gid,lat:m?m.lat:q.lat,lon:m?m.lon:q.lon,name:m?pName(m):q.name,cc:q.cc,cover:"",cover_public:false,n:0,subs:[]};out.push(g);}
+    g.subs.push(q);g.n+=q.n||0;
+    if(q.cover&&(!g.cover||q.id===gid)){g.cover=q.cover;g.cover_public=q.cover_public;}
+  });
+  return out;
+}
 function pinSource(){
   var by={},out=[];
   function add(id,img,n,lat,lon,zh,en,cc){
@@ -3484,7 +3508,8 @@ function commPins(){
   /* 旅程回放时只显示这趟旅行的各站 */
   if(REP.on)return REP.stops.map(function(q,i){return {id:q.id,lat:q.lat,lon:q.lon,name:q.name,badge:String(i+1),img:q.img||"",fp:true};});
   if(C.fp){
-    return C.fp.list.map(function(q,i){
+    C.fp.groups=fpGroups();
+    return C.fp.groups.map(function(q,i){
       var src=q.cover?(q.cover_public?pubURL(q.cover):(C.signed[q.cover]&&C.signed[q.cover].u)||""):"";
       return {id:q.id,lat:q.lat,lon:q.lon,name:q.name,badge:String(i+1),img:src,fp:true};
     });
@@ -3499,7 +3524,7 @@ function refreshPins(){buildLabels();}
 var arcC=null,arcX=null,arcOn=false;
 function drawArcs(VP,eye,now){
   if(!arcC){arcC=$("#arcs");if(!arcC)return;arcX=arcC.getContext("2d");}
-  var fp=C.fp,R=REP.on?REP:null,list=R?R.stops:fp?fp.list:[],on=!!((R||fp)&&list.length>1&&S.layoutE>0.7);
+  var fp=C.fp,R=REP.on?REP:null,list=R?R.stops:fp?(fp.groups||fp.list):[],on=!!((R||fp)&&list.length>1&&S.layoutE>0.7);
   var W=S.W,H=S.H,dpr=S.dpr;
   if(arcC.width!==Math.round(W*dpr)||arcC.height!==Math.round(H*dpr)){arcC.width=Math.round(W*dpr);arcC.height=Math.round(H*dpr);}
   if(!on){if(arcOn){arcX.clearRect(0,0,arcC.width,arcC.height);arcOn=false;}return;}
@@ -4529,6 +4554,15 @@ mcard.addEventListener("click",function(e){
   }
 });
 function fpPinClick(id,el){
+  var g=C.fp&&C.fp.groups&&C.fp.groups.filter(function(x){return x.id===id;})[0];
+  /* 并在一起的几个地点：先列出来选 */
+  if(g&&g.subs.length>1){
+    popMenu(el,g.subs.map(function(q){return {t:q.name+(q.n?" · "+tr("repPhotos")(q.n):""),fn:function(){fpPinOne(q.id,el);}};}),true);
+    return;
+  }
+  fpPinOne(g&&g.subs.length?g.subs[0].id:id,el);
+}
+function fpPinOne(id,el){
   var fp=C.fp;
   if(fp&&fp.visits.some(function(v){return v.city_id===id;})){
     popMenu(el,[{t:tr("fpOpenAlbum"),fn:function(){openPlace(id);}},{t:tr("fpDelVisit"),red:true,fn:function(){
@@ -5227,7 +5261,7 @@ function texUpgrade(){
   swap(TEX.day,0,false,"tDay").then(function(){return swap(TEX.night,1,true,"tNight");});
 }
 boot();
-if(/[?&]debug\b/.test(location.search)){window.__atlas={S:S,CV:CV,SL:SL,TL:TL,C:C,CVC:CVC,UP:UP,LB:LB,LABS:function(){return LABS;},openPlace:function(i){openPlace(i);},docOpen:function(k){docOpen(k,true);}};var mt=/[?&]tiles=([^&]+)/.exec(location.search);if(mt)TL.src=decodeURIComponent(mt[1]);}
+if(/[?&]debug\b/.test(location.search)){window.__atlas={S:S,CV:CV,SL:SL,TL:TL,C:C,CVC:CVC,UP:UP,LB:LB,LABS:function(){return LABS;},openPlace:function(i){openPlace(i);},refreshPins:function(){refreshPins();},docOpen:function(k){docOpen(k,true);}};var mt=/[?&]tiles=([^&]+)/.exec(location.search);if(mt)TL.src=decodeURIComponent(mt[1]);}
 })();
 </script>
 
