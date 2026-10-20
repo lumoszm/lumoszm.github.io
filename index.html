@@ -569,6 +569,13 @@ body.cvlight #acctBtn .av{box-shadow:0 0 0 1.5px rgba(0,0,0,.1)}
   text-shadow:0 0 6px rgba(0,8,20,.95),0 0 2px rgba(0,8,20,.95),0 1px 3px rgba(0,8,20,.9)}
 .pin.nm .pn,.pin:hover .pn,.pin:focus-visible .pn{display:inline}
 .pin:hover .ph{transform:scale(1.12)}
+/* 名字放在圆的左边 */
+.pin.nl .pn{position:absolute;right:calc(100% + 7px);top:50%;transform:translateY(-50%)}
+.pin.nb .pn,.pin.nt .pn{position:absolute;left:50%;transform:translateX(-50%)}
+.pin.nb .pn{top:calc(100% + 4px)}
+.pin.nt .pn{bottom:calc(100% + 4px)}
+/* 鼠标指着的城市浮到最上面，名字不会被旁边的标记挡住 */
+.pin:hover,.pin:focus-visible{z-index:5}
 .pin.dot .ph{width:8px;height:8px;padding:0;background:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.3),0 0 9px 1px rgba(255,255,255,.5)}
 /* 小白点太小不好点：给它一圈看不见的点击范围 */
 .pin.dot::after{content:"";position:absolute;left:-8px;top:50%;width:24px;height:24px;margin-top:-12px;border-radius:50%}
@@ -1922,7 +1929,7 @@ function buildLabels(){
   var host=$("#labels"),html="";
   LABS=[];
   commPins().forEach(function(q){
-    LABS.push({k:"pin",id:q.id,lat:q.lat,lon:q.lon,v:llv(q.lat,q.lon),name:q.name,img:q.img,nw:q.name.length*(LANG==="en"?8:15)+10});
+    LABS.push({k:"pin",id:q.id,lat:q.lat,lon:q.lon,v:llv(q.lat,q.lon),name:q.name,img:q.img,nw:q.name.length*(LANG==="en"?8.2:15)+6});
     html+='<button type="button" class="lab pin'+(q.fp?' fp':'')+'" data-i="'+(LABS.length-1)+'" data-pin="'+esc(q.id)+'" aria-label="'+esc(q.name)+'"><span class="ph"><img alt="" decoding="async"><b>'+esc(q.badge||"")+'</b></span><span class="pn">'+esc(q.name)+'</span></button>';
   });
   var minZ={1:1.2,2:1.7,3:2.4};
@@ -1965,12 +1972,18 @@ function updateLabels(VP,eye,d,z){
   }
   /* 名字：不压住别的标记和别的名字时才显示 */
   var showNm=S.labels&&(z>=2.2||C.fp);
+  /* 名字先放右边，被别的标记挡住就依次试左边、下面、上面 */
+  function nmFree(nb,k){
+    if(nb[0]<-60||nb[2]>W+60)return false;
+    for(var q1=0;q1<placed.length;q1++){if(q1===k)continue;var p1=placed[q1];if(nb[0]<p1[2]&&nb[2]>p1[0]&&nb[1]<p1[3]&&nb[3]>p1[1])return false;}
+    for(var q2=0;q2<dots.length;q2++){var d2=dots[q2];if(d2[0]>nb[0]-5&&d2[0]<nb[2]+5&&d2[1]>nb[1]-5&&d2[1]<nb[3]+5)return false;}
+    return true;
+  }
   for(var k=0;showNm&&k<circ.length;k++){
     var Lh=LABS[circ[k][2]];
-    var nb=[Lh.x+R,Lh.y-10,Lh.x+R+8+Lh.nw,Lh.y+10],ok2=nb[2]<W+60;
-    for(var q1=0;ok2&&q1<placed.length;q1++){if(q1===k)continue;var p1=placed[q1];if(nb[0]<p1[2]&&nb[2]>p1[0]&&nb[1]<p1[3]&&nb[3]>p1[1])ok2=false;}
-    for(var q2=0;ok2&&q2<dots.length;q2++){var d2=dots[q2];if(d2[0]>nb[0]-4&&d2[0]<nb[2]+4&&d2[1]>nb[1]-4&&d2[1]<nb[3]+4)ok2=false;}
-    if(ok2){Lh.nmv=true;placed.push(nb);}
+    var hw=Lh.nw/2+2,cand=[["",[Lh.x+R+3,Lh.y-10,Lh.x+R+9+Lh.nw,Lh.y+10]],["nl",[Lh.x-R-9-Lh.nw,Lh.y-10,Lh.x-R-3,Lh.y+10]],
+      ["nb",[Lh.x-hw,Lh.y+R+1,Lh.x+hw,Lh.y+R+21]],["nt",[Lh.x-hw,Lh.y-R-21,Lh.x+hw,Lh.y-R-1]]];
+    for(var c2=0;c2<cand.length;c2++){if(nmFree(cand[c2][1],k)){Lh.nmv=true;Lh.nmS=cand[c2][0];placed.push(cand[c2][1]);break;}}
   }
   for(var i2=0;i2<np;i2++){
     var P=LABS[i2],sh=P.vis;
@@ -1981,6 +1994,7 @@ function updateLabels(VP,eye,d,z){
     }
     if(sh!==P.on){P.on=sh;P.el.classList.toggle("on",sh);P.el.tabIndex=sh?0:-1;}
     if(P.nmv!==P.nm){P.nm=P.nmv;P.el.classList.toggle("nm",P.nm);}
+    var sd=P.nmv?P.nmS||"":"";if(sd!==(P.wasS||"")){if(P.wasS)P.el.classList.remove(P.wasS);if(sd)P.el.classList.add(sd);P.wasS=sd;}
   }
   for(var i=np;i<LABS.length;i++){
     var L=LABS[i],show=false,x=0,y=0;
@@ -4081,7 +4095,7 @@ function openPlace(id){
 }
 function goPlace(id){
   if(!S.started)startApp();
-  if(C.fp&&!C.fp.list.some(function(q){return q.id===id;}))fpClose();
+  if(C.fp&&!C.fp.list.some(function(q){return q.id===id;})&&!(C.fp.groups||[]).some(function(g){return g.id===id;}))fpClose();
   openCity(id);
 }
 function cvMeChanged(){if(cityv&&!cityv.hidden&&CVC.id){cvGridRender();}}
@@ -4089,7 +4103,9 @@ function cvMeChanged(){if(cityv&&!cityv.hidden&&CVC.id){cvGridRender();}}
 function cvComm(id,keep){
   var g=++CVC.gen;
   /* 附近不太出名的地点在地球上并进了这座城市：城市页把它们的照片一起显示，并列出这些地点 */
-  var ids=[id].concat((C.subs&&C.subs[id])||[]);
+  /* 我的足迹里点开：用自己合并在这里的地点，并把自己只给自己看的照片也放进来 */
+  var fg=C.fp&&C.fp.self&&(C.fp.groups||[]).filter(function(x){return x.id===id;})[0];
+  var ids=fg?[id].concat(fg.subs.map(function(q){return q.id;}).filter(function(x){return x!==id;})):[id].concat((C.subs&&C.subs[id])||[]);
   if(!keep){CVC.id=id;CVC.ids=ids;CVC.items=[];CVC.more=false;CVC.stats=null;CVC.tab="all";CVC.pl="";CVC.sub=null;}
   CVC.loading=true;CVC.cur=curItems(id);cvTabs();cvGridRender();
   /* 精选照片不用等社区服务，先放到大图里（社区服务连不上时也有图看） */
@@ -4098,6 +4114,8 @@ function cvComm(id,keep){
   if(cOK()){
     var q=C.sb.from("media").select(MCOLS);q=ids.length>1?q.in("city_id",ids):q.eq("city_id",id);
     jobs.push(Promise.all(ids.map(function(c){return C.sb.rpc("city_stats",{cid:c});})),q.eq("is_public",true).order("created_at",{ascending:false}).range(0,PAGE-1));
+    if(fg&&myId())jobs.push(C.sb.from("media").select(MCOLS).eq("user_id",myId()).eq("is_public",false).in("city_id",ids).order("created_at",{ascending:false}).limit(300)
+      .then(function(r){var L=must(r)||[];return signFor(L,["thumb","path"]).then(function(){return L;});}));
   }
   Promise.all(jobs).then(function(rs){
     if(g!==CVC.gen)return;
@@ -4110,6 +4128,12 @@ function cvComm(id,keep){
     });
     CVC.stats=st;
     CVC.items=rs[2]?(must(rs[2])||[]):[];CVC.more=CVC.items.length===PAGE;
+    var priv=rs[3]||[];
+    if(priv.length){
+      CVC.items=CVC.items.concat(priv).sort(function(a,b){return a.created_at<b.created_at?1:-1;});
+      CVC.sub.forEach(function(x){x.n+=priv.filter(function(m){return m.city_id===x.id;}).length;});
+      st.n+=priv.length;
+    }
     CVC.loading=false;cvSummary();cvTabs();cvGridRender();cvHero(id);
   }).catch(function(e){if(g!==CVC.gen)return;CVC.loading=false;CVC.stats=CVC.stats||{n:0,people:0,scenery:0,activity:0,culture:0};cvSummary();cvTabs();cvGridRender();cvHero(id);netFail(e);});
 }
@@ -4556,10 +4580,7 @@ mcard.addEventListener("click",function(e){
 function fpPinClick(id,el){
   var g=C.fp&&C.fp.groups&&C.fp.groups.filter(function(x){return x.id===id;})[0];
   /* 并在一起的几个地点：先列出来选 */
-  if(g&&g.subs.length>1){
-    popMenu(el,g.subs.map(function(q){return {t:q.name+(q.n?" · "+tr("repPhotos")(q.n):""),fn:function(){fpPinOne(q.id,el);}};}),true);
-    return;
-  }
+  if(g&&g.subs.length>1){openPlace(g.id);return;}
   fpPinOne(g&&g.subs.length?g.subs[0].id:id,el);
 }
 function fpPinOne(id,el){
