@@ -3525,7 +3525,7 @@ function commPins(){
     C.fp.groups=fpGroups();
     return C.fp.groups.map(function(q,i){
       var src=q.cover?(q.cover_public?pubURL(q.cover):(C.signed[q.cover]&&C.signed[q.cover].u)||""):"";
-      return {id:q.id,lat:q.lat,lon:q.lon,name:q.name,badge:String(i+1),img:src,fp:true};
+      return {id:q.id,lat:q.lat,lon:q.lon,name:q.name,badge:"",img:src,fp:true};
     });
   }
   return pinSource().slice(0,600).map(function(q){
@@ -4103,37 +4103,39 @@ function cvMeChanged(){if(cityv&&!cityv.hidden&&CVC.id){cvGridRender();}}
 function cvComm(id,keep){
   var g=++CVC.gen;
   /* 附近不太出名的地点在地球上并进了这座城市：城市页把它们的照片一起显示，并列出这些地点 */
-  /* 我的足迹里点开：用自己合并在这里的地点，并把自己只给自己看的照片也放进来 */
+  /* 从“我的足迹”点开：只显示自己的照片（公开的和只给自己看的），地点也按自己的足迹列 */
   var fg=C.fp&&C.fp.self&&(C.fp.groups||[]).filter(function(x){return x.id===id;})[0];
+  var own=!!(fg&&myId());
   var ids=fg?[id].concat(fg.subs.map(function(q){return q.id;}).filter(function(x){return x!==id;})):[id].concat((C.subs&&C.subs[id])||[]);
-  if(!keep){CVC.id=id;CVC.ids=ids;CVC.items=[];CVC.more=false;CVC.stats=null;CVC.tab="all";CVC.pl="";CVC.sub=null;}
-  CVC.loading=true;CVC.cur=curItems(id);cvTabs();cvGridRender();
+  if(!keep){CVC.id=id;CVC.ids=ids;CVC.own=own;CVC.items=[];CVC.more=false;CVC.stats=null;CVC.tab="all";CVC.pl="";CVC.sub=null;}
+  if(own&&!keep)PHOTOS[id]=[];
+  CVC.loading=true;CVC.cur=own?[]:curItems(id);cvTabs();cvGridRender();
   /* 精选照片不用等社区服务，先放到大图里（社区服务连不上时也有图看） */
   if(CVC.cur.length)cvHero(id);
   var jobs=[loadCurated()];
-  if(cOK()){
+  if(cOK()&&own){
+    jobs.push(null,C.sb.from("media").select(MCOLS).eq("user_id",myId()).in("city_id",ids).order("created_at",{ascending:false}).limit(500)
+      .then(function(r){var L=must(r)||[];return signFor(L,["thumb","path"]).then(function(){return L;});}));
+  }else if(cOK()){
     var q=C.sb.from("media").select(MCOLS);q=ids.length>1?q.in("city_id",ids):q.eq("city_id",id);
     jobs.push(Promise.all(ids.map(function(c){return C.sb.rpc("city_stats",{cid:c});})),q.eq("is_public",true).order("created_at",{ascending:false}).range(0,PAGE-1));
-    if(fg&&myId())jobs.push(C.sb.from("media").select(MCOLS).eq("user_id",myId()).eq("is_public",false).in("city_id",ids).order("created_at",{ascending:false}).limit(300)
-      .then(function(r){var L=must(r)||[];return signFor(L,["thumb","path"]).then(function(){return L;});}));
   }
   Promise.all(jobs).then(function(rs){
     if(g!==CVC.gen)return;
-    CVC.cur=curItems(id);
     var st={n:0,people:0,scenery:0,activity:0,culture:0};
-    CVC.sub=ids.map(function(c,i){
-      var r=rs[1]?(must(rs[1][i])||[])[0]:null,n=r?+r.n_media:0;
-      if(r){st.n+=n;st.people+=+r.n_people;st.scenery+=+r.n_scenery;st.activity+=+r.n_activity;st.culture+=+r.n_culture;}
-      return {id:c,n:n+(i?0:CVC.cur.length)};
-    });
-    CVC.stats=st;
-    CVC.items=rs[2]?(must(rs[2])||[]):[];CVC.more=CVC.items.length===PAGE;
-    var priv=rs[3]||[];
-    if(priv.length){
-      CVC.items=CVC.items.concat(priv).sort(function(a,b){return a.created_at<b.created_at?1:-1;});
-      CVC.sub.forEach(function(x){x.n+=priv.filter(function(m){return m.city_id===x.id;}).length;});
-      st.n+=priv.length;
+    if(own){
+      CVC.cur=[];CVC.items=rs[2]||[];CVC.more=false;st.n=CVC.items.length;
+      CVC.sub=ids.map(function(c){return {id:c,n:CVC.items.filter(function(m){return m.city_id===c;}).length};});
+    }else{
+      CVC.cur=curItems(id);
+      CVC.sub=ids.map(function(c,i){
+        var r=rs[1]?(must(rs[1][i])||[])[0]:null,n=r?+r.n_media:0;
+        if(r){st.n+=n;st.people+=+r.n_people;st.scenery+=+r.n_scenery;st.activity+=+r.n_activity;st.culture+=+r.n_culture;}
+        return {id:c,n:n+(i?0:CVC.cur.length)};
+      });
+      CVC.items=rs[2]?(must(rs[2])||[]):[];CVC.more=CVC.items.length===PAGE;
     }
+    CVC.stats=st;
     CVC.loading=false;cvSummary();cvTabs();cvGridRender();cvHero(id);
   }).catch(function(e){if(g!==CVC.gen)return;CVC.loading=false;CVC.stats=CVC.stats||{n:0,people:0,scenery:0,activity:0,culture:0};cvSummary();cvTabs();cvGridRender();cvHero(id);netFail(e);});
 }
