@@ -17,6 +17,10 @@
 <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ATLAS">
 <link rel="preconnect" href="https://mzttscrmrlxsppknmdvg.supabase.co" crossorigin>
 <link rel="preload" href="tex/day4k.jpg" as="image">
 <link rel="preload" href="tex/night4k.jpg" as="image">
@@ -1990,7 +1994,7 @@ function updateLabels(VP,eye,d,z){
     if(sh){
       P.el.style.transform="translate("+P.x.toFixed(1)+"px,"+P.y.toFixed(1)+"px)";
       if(P.dot!==P.wasDot){P.wasDot=P.dot;P.el.classList.toggle("dot",!!P.dot);P.el.style.translate=P.dot?"-4px -50%":"-16px -50%";}
-      if(!P.dot&&!P.loaded&&P.img){P.loaded=true;P.el.querySelector("img").src=P.img;}
+      if(!P.dot&&!P.loaded&&P.img){P.loaded=true;var im0=P.el.querySelector("img");im0.onerror=function(){this.style.visibility="hidden";};im0.src=P.img;}
     }
     if(sh!==P.on){P.on=sh;P.el.classList.toggle("on",sh);P.el.tabIndex=sh?0:-1;}
     if(P.nmv!==P.nm){P.nm=P.nmv;P.el.classList.toggle("nm",P.nm);}
@@ -5284,6 +5288,10 @@ function texUpgrade(){
   swap(TEX.day,0,false,"tDay").then(function(){return swap(TEX.night,1,true,"tNight");});
 }
 boot();
+/* 加到主屏幕后像 App 一样打开；地球贴图等文件缓存在手机上，第二次打开更快，没网时也能打开 */
+if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="127.0.0.1")&&!/[?&]nosw\b/.test(location.search)){
+  window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});
+}
 if(/[?&]debug\b/.test(location.search)){window.__atlas={S:S,CV:CV,SL:SL,TL:TL,C:C,CVC:CVC,UP:UP,LB:LB,LABS:function(){return LABS;},openPlace:function(i){openPlace(i);},refreshPins:function(){refreshPins();},docOpen:function(k){docOpen(k,true);}};var mt=/[?&]tiles=([^&]+)/.exec(location.search);if(mt)TL.src=decodeURIComponent(mt[1]);}
 })();
 </script>
