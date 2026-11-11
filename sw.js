@@ -2,7 +2,7 @@
    - 网页本身和数据清单（cities/photos/目录）：先联网取最新的，没网时用缓存
    - 地球贴图、程序库、图标：先用缓存，同时在后台更新
    - 其他网站的请求（数据库、Unsplash 照片、地图瓦片）不经过这里 */
-var V = "atlas-e65b89ae28";
+var V = "atlas-dbaf6d4990";
 var CORE = ["./", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "tex/day4k.jpg", "tex/night4k.jpg", "tex/water4k.png", "tex/height4k.jpg", "tex/land2k.png", "cities.json", "photos.json"];
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(V).then(function (c) { return c.addAll(CORE); }).catch(function () {}).then(function () { return self.skipWaiting(); }));

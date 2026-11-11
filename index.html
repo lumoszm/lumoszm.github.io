@@ -1368,7 +1368,7 @@ html[lang="en"] .ct-dd{font-size:16.5px;line-height:1.55}
 
 
 <script src="lib/supabase-2.117.2.js"></script>
-<script src="lib/docs.js?v=20261111"></script>
+<script src="lib/docs.js?v=20261112"></script>
 <script>
 (function(){
 "use strict";
@@ -4062,7 +4062,7 @@ Object.assign(I18N.en,{
   rsn:["Spam","Sexual content","Violent or disturbing","Privacy or copyright","Not about this city","Something else"],
   hiddenTag:"Hidden",privTag:"Only you",pubTag:"Public",makePriv:"Stop sharing (keep in my album)",makePub:"Share to the city album…",madePriv:"Now only visible to you",madePub:"Shared to the city album",
   copyLink:"Copy link",copied:"Link copied",hide:"Hide",unhide:"Unhide",takenOn:"Taken %s",vidErr:"This video can’t play in this browser.",
-  inCity:"in %s",loadErr:"Couldn’t load this. Please try again later.",curBy:"Photo: %s",curSrc:"via Wikimedia Commons",curPx:"on Pexels",curUs:"on Unsplash",
+  inCity:"in %s",loadErr:"Couldn’t load this. Please try again later.",curBy:"Photo by %s",curSrc:"via Wikimedia Commons",curPx:"on Pexels",curUs:"on Unsplash",
   myAlbum:"My map album",showMap:"Show my travel map",pfEdit:"Edit profile",pfM:"Photos & videos",pfC:"Cities",pfK:"Countries",pfEmptyMe:"Your map album is empty. Tap Share photos to add pictures from your trips, or add places on your travel map.",
   pfNote:"Only you can see your map album.",
   bio:"Bio",bioPh:"A line about you (optional, only you see it)",save:"Save",saved:"Saved",delAcct:"Delete account",delAcctSub:"Your profile, photos, videos and travel map will be permanently deleted. This can’t be undone.",
@@ -5221,7 +5221,7 @@ function catDetail(e){
       '<p class="ct-dd">'+esc(catL(e.d))+'</p>'+t+
       '<div class="ct-dact"><button type="button" class="ct-go" data-d="go">'+ICN.globe+'<span>'+esc(tr("catGo"))+'</span></button>'+
       (n>1?'<span class="ct-nav"><button type="button" data-d="prev" aria-label="'+esc(tr("catPrev"))+'">'+ICN.prev+'</button><button type="button" data-d="next" aria-label="'+esc(tr("catNext"))+'">'+ICN.next+'</button></span>':"")+'</div>'+
-      '<p class="ct-cr">'+trf("curBy",'<a href="'+esc(q(e.p[4]))+'" target="_blank" rel="noopener">'+esc(e.p[3])+'</a>')+' · <a href="'+esc(q(e.p[5]))+'" target="_blank" rel="noopener">'+esc(tr("curUs"))+'</a></p>'+
+      '<p class="ct-cr">'+trf("curBy",'<a href="'+esc(q(e.p[4]))+'" target="_blank" rel="noopener">'+esc(e.p[3])+'</a>')+(LANG==="en"?' ':' · ')+'<a href="'+esc(q(e.p[5]))+'" target="_blank" rel="noopener">'+esc(tr("curUs"))+'</a></p>'+
     '</div></div>';
 }
 function catShow(i){
