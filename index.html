@@ -22,6 +22,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ATLAS">
 <link rel="preconnect" href="https://mzttscrmrlxsppknmdvg.supabase.co" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com">
 <link rel="preload" href="tex/day4k.jpg" as="image">
 <link rel="preload" href="tex/night4k.jpg" as="image">
 <style>:root{color-scheme:dark}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
@@ -70,6 +71,7 @@ button{font:inherit;color:inherit}
 
 /* 舞台 */
 #stage{position:fixed;inset:0;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+html.iosgap #stage,html.iosgap .cityv,html.iosgap .catv{bottom:calc(-1 * env(safe-area-inset-top,0px))}
 #stage.pointer{cursor:pointer}
 #stage.drag{cursor:grabbing}
 #gl{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -1340,7 +1342,7 @@ html[lang="en"] .ct-dd{font-size:16.5px;line-height:1.55}
     </div>
   </div>
   <div class="mlinks" id="acctLinks"></div>
-  <p class="acct-note"><span data-i18n="imgNote">地球影像来源：NASA（Blue Marble、Black Marble、GIBS）</span><br><span data-i18n="dataNote">地名数据：GeoNames、Wikidata、Natural Earth</span></p>
+  <p class="acct-note"><span data-i18n="imgNote">地球影像来源：NASA（Blue Marble、Black Marble、GIBS）；银河：NASA/Goddard SVS，Gaia DR2：ESA/Gaia/DPAC</span><br><span data-i18n="dataNote">地名数据：GeoNames、Wikidata、Natural Earth</span></p>
 </div>
 
 <div id="fallback" hidden><div class="fbcard glass">
@@ -1371,7 +1373,7 @@ html[lang="en"] .ct-dd{font-size:16.5px;line-height:1.55}
 (function(){
 "use strict";
 
-var TEX={day:"tex/day8k.jpg",night:"tex/night8k.jpg",day4:"tex/day4k.jpg",night4:"tex/night4k.jpg",water:"tex/water4k.png",height:"tex/height4k.jpg",sky:"tex/sky4k.jpg",land:"tex/land2k.png"};
+var TEX={day:"tex/day8k.jpg",night:"tex/night8k.jpg",day4:"tex/day4k.jpg",night4:"tex/night4k.jpg",water:"tex/water4k.png",height:"tex/height4k.jpg",sky:"tex/sky4k.jpg",sky2:"tex/sky2k.jpg",sky8:"tex/sky8k.jpg",land:"tex/land2k.png"};
 
 /* ---------- 数据 ---------- */
 var CONT=[
@@ -1428,14 +1430,14 @@ var I18N={
       fbTitle:"这台设备打不开三维地球",fbText:"浏览器没有启用 WebGL。请换用最新版的 Chrome、Edge 或 Safari 再打开。",
       pinHide:"隐藏城市",pinShow:"显示城市",pinHideT:"隐藏地球上的城市照片标记",pinShowT:"显示地球上的城市照片标记",dayOn:"全球白天",dayOff:"昼夜",dayOnT:"让整个地球都处在白天",dayOffT:"恢复昼夜",
       close:"关闭",prev:"上一个",next:"下一个",fest:"节日",food:"美食",craft:"手艺",tipRow:"入乡随俗",fact:"你知道吗",
-      country:"国家",cities:"已收录的城市",pending:"介绍内容整理中。",back:"返回",backGlobe:"回到地球",photoSoon:"示意图 · 照片待添加",local:"当地",localTime:"当地时间",imgNote:"地球影像来源：NASA（Blue Marble、Black Marble、GIBS）",slide:"第 %s 张",about2:"介绍",searchPh:"搜索",searchAria:"搜索国家、城市或地点",clear:"清除",cancel:"取消",noRes:"没有找到相关地点",localDay:"当地时间，白天",localNight:"当地时间，夜晚",sep:"，",
+      country:"国家",cities:"已收录的城市",pending:"介绍内容整理中。",back:"返回",backGlobe:"回到地球",photoSoon:"示意图 · 照片待添加",local:"当地",localTime:"当地时间",imgNote:"地球影像来源：NASA（Blue Marble、Black Marble、GIBS）；银河：NASA/Goddard SVS，Gaia DR2：ESA/Gaia/DPAC",slide:"第 %s 张",about2:"介绍",searchPh:"搜索",searchAria:"搜索国家、城市或地点",clear:"清除",cancel:"取消",noRes:"没有找到相关地点",localDay:"当地时间，白天",localNight:"当地时间，夜晚",sep:"，",
       soon:function(n){return n+"的板块还在筹备中。现在先收录了五座试点城市，再往后会按国家逐步补上。";}},
   en:{globe:"Rotatable, zoomable 3D globe",settings:"Settings",language:"Language",about:"ATLAS: turn the globe, pick a city, learn a local greeting, and discover its festivals, food and crafts.",
       start:"Click the globe to begin",startTouch:"Tap the globe to begin",loading:"Loading the Earth…",tip:"Drag to rotate · Scroll to zoom · Click a name to open",tipTouch:"Drag to rotate · Pinch to zoom · Tap a name to open",
       fbTitle:"This device can’t show the 3D globe",fbText:"WebGL isn’t available in this browser. Please try the latest Chrome, Edge or Safari.",
       pinHide:"Hide cities",pinShow:"Show cities",pinHideT:"Hide the city photo markers on the globe",pinShowT:"Show the city photo markers on the globe",dayOn:"All daylight",dayOff:"Day & night",dayOnT:"Light up the whole globe",dayOffT:"Back to day and night",
       close:"Close",prev:"Previous",next:"Next",fest:"Festival",food:"Food",craft:"Craft",tipRow:"Etiquette",fact:"Did you know?",
-      country:"Country",cities:"Cities on ATLAS",pending:"Details for this city are on the way.",back:"Back",backGlobe:"Back to the globe",photoSoon:"Placeholder · photos coming soon",local:"Local",localTime:"Local time",imgNote:"Earth imagery: NASA (Blue Marble, Black Marble, GIBS)",slide:"Image %s",about2:"About",searchPh:"Search",searchAria:"Search countries, cities or places",clear:"Clear",cancel:"Cancel",noRes:"No matching places",localDay:"Local time, daytime",localNight:"Local time, night",sep:", ",
+      country:"Country",cities:"Cities on ATLAS",pending:"Details for this city are on the way.",back:"Back",backGlobe:"Back to the globe",photoSoon:"Placeholder · photos coming soon",local:"Local",localTime:"Local time",imgNote:"Earth imagery: NASA (Blue Marble, Black Marble, GIBS). Milky Way: NASA/Goddard SVS, Gaia DR2: ESA/Gaia/DPAC",slide:"Image %s",about2:"About",searchPh:"Search",searchAria:"Search countries, cities or places",clear:"Clear",cancel:"Cancel",noRes:"No matching places",localDay:"Local time, daytime",localNight:"Local time, night",sep:", ",
       soon:function(n){return "The "+n+" section is still in the works. ATLAS starts with five pilot cities, and more countries will be added over time.";}}
 };
 var CONT_EN={asia:"Asia",europe:"Europe",africa:"Africa",america:"Americas",oceania:"Oceania"};
@@ -2196,8 +2198,20 @@ function drawSky(now,t,dta,spinD){
   gl.disableVertexAttribArray(SKY.P.aP);gl.disableVertexAttribArray(SKY.P.aC);gl.disableVertexAttribArray(SKY.P.aS);
   gl.disable(gl.BLEND);
 }
+/* iOS 从主屏幕全屏打开时，页面高度会少掉顶部状态栏那一截，屏幕最下面露出一条黑边。
+   检测到这种情况就把地球画布往下延伸到屏幕底部（只在全屏模式下生效） */
+function iosGap(){
+  var st=navigator.standalone===true;try{st=st||matchMedia("(display-mode: standalone)").matches;}catch(e){}
+  if(!st)return;
+  var pr=document.createElement("div");pr.style.cssText="position:fixed;left:0;top:0;width:1px;height:env(safe-area-inset-top,0px);visibility:hidden;pointer-events:none";
+  document.body.appendChild(pr);var top=pr.getBoundingClientRect().height;pr.remove();
+  var portrait=innerHeight>=innerWidth,sw=screen.width||0,sh=screen.height||0;
+  var full=portrait?Math.max(sw,sh):Math.min(sw,sh),gap=full-innerHeight;
+  document.documentElement.classList.toggle("iosgap",top>0&&gap>4&&Math.abs(gap-top)<=4);
+}
 function resize(){
-  S.W=innerWidth;S.H=innerHeight;
+  iosGap();
+  S.W=stage.clientWidth||innerWidth;S.H=stage.clientHeight||innerHeight;
   var dpr=Math.min(window.devicePixelRatio||1,2);
   if(S.W*S.H*dpr*dpr>3400000)dpr=Math.max(1,Math.sqrt(3400000/(S.W*S.H)));
   S.dpr=dpr;glc.width=Math.round(S.W*dpr);glc.height=Math.round(S.H*dpr);
@@ -3465,6 +3479,23 @@ function loadOverview(n){
   });
 }
 /* 地球上的城市标记：精选照片 + 旅行者公开的照片 */
+/* 城市圆圈只有 32px：照片取 96px 的小图（Unsplash 按需裁好、自动选 WebP/AVIF），比原来的 480px 小几十倍 */
+function pinPath(a){
+  if(a[7]==="unsplash")return a[0]+(a[0].indexOf("?")<0?"?":"&")+"w=96&h=96&fit=crop&crop=entropy&q=60&auto=format";
+  return curPath(a,true);
+}
+/* 地球出现后，在后台把圆圈照片先下载好（同时最多 6 张），转到哪里都能马上显示 */
+var PINPRE={done:{},q:[],n:0};
+function pinPreload(list){
+  list.forEach(function(u){if(u&&!PINPRE.done[u]){PINPRE.done[u]=1;PINPRE.q.push(u);}});
+  (function pump(){
+    while(PINPRE.n<6&&PINPRE.q.length){
+      var u=PINPRE.q.shift(),im=new Image();PINPRE.n++;
+      im.onload=im.onerror=function(){PINPRE.n--;pump();};
+      im.decoding="async";im.src=u;
+    }
+  })();
+}
 var SUB_KM=35;
 /* 出名的地方：有精选相册，或者是大城市 */
 function isMajor(id){var c=typeof CUR!=="undefined"&&CUR.p&&CUR.p[id],p=C.PI&&C.PI[id];return !!(c&&c.length)||!!(p&&p.pc>=7);}
@@ -3501,7 +3532,7 @@ function pinSource(){
   Object.keys(cur).forEach(function(id){
     var a=cur[id];if(!a.length)return;var p=C.PI[id];if(!p)return;
     var s=a.filter(function(x){return x[1]==="s";})[0]||a[0];
-    add(id,curPath(s,true),a.length);
+    add(id,pinPath(s),a.length);
   });
   C.ov.forEach(function(o){add(o.city_id,o.cover?pubURL(o.cover):"",o.n,o.clat,o.clng,o.city_zh,o.city_en,o.cc);});
   /* 出名的地方（有精选相册或大城市）各自显示；附近不太出名的地点（比如东京的各个区）并进最近的那座城市，
@@ -3532,9 +3563,12 @@ function commPins(){
       return {id:q.id,lat:q.lat,lon:q.lon,name:q.name,badge:"",img:src,fp:true};
     });
   }
-  return pinSource().slice(0,600).map(function(q){
+  var L=pinSource().slice(0,600).map(function(q){
     return {id:q.id,lat:q.lat,lon:q.lon,name:q.name,badge:"",img:q.img};
   });
+  /* 等地球贴图都加载完再预载，免得抢带宽 */
+  (function go(){if(!S.ready){setTimeout(go,800);return;}setTimeout(function(){pinPreload(L.map(function(q){return q.img;}));},600);})();
+  return L;
 }
 function refreshPins(){buildLabels();}
 
@@ -5272,7 +5306,7 @@ function boot(){
     loadTex(TEX.night4||TEX.night,1,TEX.day4||small?4096:8192,true).then(function(t){S.tNight=t;return t;}),
     loadTex(TEX.water,2,small?2048:4096,"la"),
     loadTex(TEX.height,3,small?2048:4096,true,function(w,h){S.htx=1/w;S.hty=1/h;}),
-    loadTex(TEX.sky,5,small?2048:4096,false,null,true)
+    loadTex(small&&TEX.sky2?TEX.sky2:TEX.sky,5,small?2048:4096,false,null,true).then(function(t){S.tSky=t;return t;})
   ]).then(function(){
     S.ready=true;document.body.classList.remove("loading");
     S.last=performance.now();requestAnimationFrame(render);
@@ -5285,7 +5319,10 @@ function texUpgrade(){
   function swap(src,unit,lum,key){
     return loadTex(src,unit,8192,lum).then(function(t){var old=S[key];S[key]=t;if(old&&old!==t)gl.deleteTexture(old);}).catch(function(){});
   }
-  swap(TEX.day,0,false,"tDay").then(function(){return swap(TEX.night,1,true,"tNight");});
+  swap(TEX.day,0,false,"tDay").then(function(){return swap(TEX.night,1,true,"tNight");}).then(function(){
+    /* 高清银河（8K），电脑上最后再换 */
+    if(TEX.sky8)return loadTex(TEX.sky8,5,8192,false,null,true).then(function(t){var old=S.tSky;S.tSky=t;if(old&&old!==t)gl.deleteTexture(old);}).catch(function(){});
+  });
 }
 boot();
 /* 加到主屏幕后像 App 一样打开；地球贴图等文件缓存在手机上，第二次打开更快，没网时也能打开 */
