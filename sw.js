@@ -1,4 +1,4 @@
-/* ATLAS 离线缓存（版本 336b89f505）
+/* ATLAS 离线缓存（版本 e5e95e07bb）
    原则：网络不稳时（比如国内直连 GitHub），凡是以前成功取到过的东西都还能用。
    - 缓存只有一个，名字固定；发布新版本不清空旧内容，只在后台逐个更新
    - 网页和数据清单：先联网，几秒内没回来就先用上一次的
@@ -56,6 +56,8 @@ self.addEventListener("fetch", function (e) {
   if (isData) {
     /* 带 ?v= 的地址内容不会变：有缓存就直接用 */
     if (/[?&]v=/.test(u.search)) e.respondWith(caches.match(req).then(function (hit) { return hit || netFirst(req, false, 8000, { ignoreSearch: true }); }));
+    /* 地名库和照片清单比较大：有缓存就先用（后台更新，下次打开生效），城市标记不用等网络 */
+    else if (/\/(cities|photos)\.json$/.test(p)) e.respondWith(cacheFirst(req));
     else e.respondWith(netFirst(req, false, 4000, { ignoreSearch: true }));
     return;
   }

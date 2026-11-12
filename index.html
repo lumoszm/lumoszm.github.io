@@ -4138,7 +4138,10 @@ var CUR={p:null,base:"photos/"},curP=null;
 function loadCurated(){
   if(curP)return curP;
   curP=(window.__ATLAS_PHOTOS?Promise.resolve(window.__ATLAS_PHOTOS):fetchRetry("photos.json"))
-    .then(function(d){CUR.p=d.p||{};CUR.base=d.base||"photos/";refreshPins();return CUR.p;},function(){CUR.p={};return CUR.p;});
+    .then(function(d){CUR.p=d.p||{};CUR.base=d.base||"photos/";
+      /* 地名库还没到时，先用清单里自带的名字和坐标把城市标记画出来 */
+      if(d.pl&&!C.P){Object.keys(d.pl).forEach(function(id){var f=d.pl[id];if(!C.PI[id])C.PI[id]={id:id,zh:f[0],en:f[1],lat:f[2],lon:f[3],cc:f[4],tz:f[5],pc:f[6],k:f[7],alt:""};});}
+      refreshPins();return CUR.p;},function(){CUR.p={};return CUR.p;});
   return curP;
 }
 /* 精选照片的地址：Unsplash 的直接用它的图片服务（按规定不另存），其它的在 photos/ 文件夹里 */
@@ -5417,6 +5420,8 @@ function boot(){
   resize();
   try{initGL();}catch(err){showFallback(false);return;}
   buildLabels();
+  /* 城市照片清单和地名库与地球贴图同时开始下载，不等地球显示出来 */
+  try{loadCurated();loadPlaces().catch(function(){});}catch(err){}
   var sp=sunPos(Date.now());
   S.lat=22;S.lon=wrap(sp.lon+40);
   glc.addEventListener("webglcontextlost",function(e){e.preventDefault();});
