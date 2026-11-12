@@ -3126,6 +3126,14 @@ function errText(e){
   return tr("E_FAIL");
 }
 function must(r){if(r&&r.error)throw r.error;return r?r.data:null;}
+/* 取数据文件：网络不稳时自动再试几次（间隔 1、3、6 秒） */
+function fetchRetry(u,n){
+  n=n||0;
+  return fetch(u).then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.json();}).catch(function(e){
+    if(n>=3)throw e;
+    return new Promise(function(res){setTimeout(res,[1000,3000,6000][n]);}).then(function(){return fetchRetry(u,n+1);});
+  });
+}
 function offline(){if(!C.off){C.off=true;toast(tr("offline"),4500);}netRetrySoon();}
 /* 连不上之后不放弃：每 45 秒、回到前台或网络恢复时再试一次，连上就自动恢复社区内容 */
 var NRT=0;
@@ -3144,7 +3152,7 @@ function netFail(e){if(/Failed to fetch|NetworkError|Load failed|network/i.test(
 var placesP=null;
 function loadPlaces(){
   if(placesP)return placesP;
-  placesP=(window.__ATLAS_CITIES?Promise.resolve(window.__ATLAS_CITIES):fetch("cities.json").then(function(r){if(!r.ok)throw new Error("cities");return r.json();}))
+  placesP=(window.__ATLAS_CITIES?Promise.resolve(window.__ATLAS_CITIES):fetchRetry("cities.json"))
   .then(function(d){
     C.TZ=d.tz;C.CC=d.cc;var P=[],PI={};
     d.c.split("\n").forEach(function(l){
@@ -4129,7 +4137,7 @@ var CVC={id:null,gen:0,items:[],cur:[],more:false,loading:false,stats:null,tab:"
 var CUR={p:null,base:"photos/"},curP=null;
 function loadCurated(){
   if(curP)return curP;
-  curP=(window.__ATLAS_PHOTOS?Promise.resolve(window.__ATLAS_PHOTOS):fetch("photos.json").then(function(r){if(!r.ok)throw 0;return r.json();}))
+  curP=(window.__ATLAS_PHOTOS?Promise.resolve(window.__ATLAS_PHOTOS):fetchRetry("photos.json"))
     .then(function(d){CUR.p=d.p||{};CUR.base=d.base||"photos/";refreshPins();return CUR.p;},function(){CUR.p={};return CUR.p;});
   return curP;
 }
@@ -5142,7 +5150,7 @@ var CAT={d:null,p:null,k:"f",ct:"",list:[],i:-1,el:null,dt:null,last:null,cards:
 var CONTS=["AS","EU","AF","NA","SA","OC"];
 function catLoad(){
   if(CAT.p)return CAT.p;
-  CAT.p=fetch("lib/catalog.json?v="+CATV).then(function(r){if(!r.ok)throw new Error("catalog");return r.json();})
+  CAT.p=fetchRetry("lib/catalog.json?v="+CATV)
     .then(function(d){CAT.d=d;return d;},function(e){CAT.p=null;throw e;});
   return CAT.p;
 }
@@ -5421,7 +5429,7 @@ function boot(){
     loadTex(TEX.water,2,small?2048:4096,"la"),
     loadTex(TEX.height,3,small?2048:4096,true,function(w,h){S.htx=1/w;S.hty=1/h;}),
     /* 星空贴图没载入不影响地球显示：退回纯黑背景 */
-    loadTex(small&&TEX.sky2?TEX.sky2:TEX.sky,5,small?2048:4096,false,null,true,"tex/sky4k.jpg").then(function(t){S.tSky=t;return t;},function(){S.tSky=null;return null;})
+    loadTex(small&&TEX.sky2?TEX.sky2:TEX.sky,5,small?2048:4096,false,null,true,"tex/sky4k.jpg").then(function(t){S.tSky=t;return t;},function(){S.tSky=null;skyRetry(0);return null;})
   ]).then(function(){
     S.ready=true;document.body.classList.remove("loading");
     S.last=performance.now();requestAnimationFrame(render);
@@ -5429,6 +5437,14 @@ function boot(){
     var cn=navigator.connection||{};
     if(!small&&TEX.day4&&!cn.saveData&&!/(^|-)2g$/.test(cn.effectiveType||"")&&(gl.getParameter(gl.MAX_TEXTURE_SIZE)||0)>=8192)setTimeout(texUpgrade,1200);
   }).catch(function(){showFallback(true);});
+}
+/* 星空没载入时，过一会儿在后台再试（10 秒、30 秒、90 秒），载到了就补上银河 */
+function skyRetry(n){
+  if(n>=3)return;
+  setTimeout(function(){
+    if(S.tSky)return;
+    loadTex(TEX.sky,5,S.small?2048:4096,false,null,true,"tex/sky4k.jpg").then(function(t){S.tSky=t;},function(){skyRetry(n+1);});
+  },[10000,30000,90000][n]);
 }
 function showFallback(net){
   var fb=$("#fallback");fb.hidden=false;$("#loading").hidden=true;
