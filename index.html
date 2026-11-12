@@ -71,7 +71,7 @@ button{font:inherit;color:inherit}
 
 /* 舞台 */
 #stage{position:fixed;inset:0;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
-html.iosgap #stage,html.iosgap .cityv,html.iosgap .catv{bottom:calc(-1 * env(safe-area-inset-top,0px))}
+html.iosgap #stage,html.iosgap .cityv,html.iosgap .catv{bottom:auto;height:var(--fullh)}
 #stage.pointer{cursor:pointer}
 #stage.drag{cursor:grabbing}
 #gl{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -1342,7 +1342,7 @@ html[lang="en"] .ct-dd{font-size:16.5px;line-height:1.55}
     </div>
   </div>
   <div class="mlinks" id="acctLinks"></div>
-  <p class="acct-note"><span data-i18n="imgNote">地球影像来源：NASA（Blue Marble、Black Marble、GIBS）；银河：NASA/Goddard SVS，Gaia DR2：ESA/Gaia/DPAC</span><br><span data-i18n="dataNote">地名数据：GeoNames、Wikidata、Natural Earth</span></p>
+  <p class="acct-note"><span data-i18n="imgNote">地球影像来源：NASA（Blue Marble、Black Marble、GIBS）</span><br><span data-i18n="dataNote">地名数据：GeoNames、Wikidata、Natural Earth</span></p>
 </div>
 
 <div id="fallback" hidden><div class="fbcard glass">
@@ -1373,7 +1373,7 @@ html[lang="en"] .ct-dd{font-size:16.5px;line-height:1.55}
 (function(){
 "use strict";
 
-var TEX={day:"tex/day8k.jpg",night:"tex/night8k.jpg",day4:"tex/day4k.jpg",night4:"tex/night4k.jpg",water:"tex/water4k.png",height:"tex/height4k.jpg",sky:"tex/sky4k.jpg",sky2:"tex/sky2k.jpg",sky8:"tex/sky8k.jpg",land:"tex/land2k.png"};
+var TEX={day:"tex/day8k.jpg",night:"tex/night8k.jpg",day4:"tex/day4k.jpg",night4:"tex/night4k.jpg",water:"tex/water4k.png",height:"tex/height4k.jpg",sky:"tex/sky4k.jpg",sky2:"",sky8:"",land:"tex/land2k.png"};
 
 /* ---------- 数据 ---------- */
 var CONT=[
@@ -1430,14 +1430,14 @@ var I18N={
       fbTitle:"这台设备打不开三维地球",fbText:"浏览器没有启用 WebGL。请换用最新版的 Chrome、Edge 或 Safari 再打开。",
       pinHide:"隐藏城市",pinShow:"显示城市",pinHideT:"隐藏地球上的城市照片标记",pinShowT:"显示地球上的城市照片标记",dayOn:"全球白天",dayOff:"昼夜",dayOnT:"让整个地球都处在白天",dayOffT:"恢复昼夜",
       close:"关闭",prev:"上一个",next:"下一个",fest:"节日",food:"美食",craft:"手艺",tipRow:"入乡随俗",fact:"你知道吗",
-      country:"国家",cities:"已收录的城市",pending:"介绍内容整理中。",back:"返回",backGlobe:"回到地球",photoSoon:"示意图 · 照片待添加",local:"当地",localTime:"当地时间",imgNote:"地球影像来源：NASA（Blue Marble、Black Marble、GIBS）；银河：NASA/Goddard SVS，Gaia DR2：ESA/Gaia/DPAC",slide:"第 %s 张",about2:"介绍",searchPh:"搜索",searchAria:"搜索国家、城市或地点",clear:"清除",cancel:"取消",noRes:"没有找到相关地点",localDay:"当地时间，白天",localNight:"当地时间，夜晚",sep:"，",
+      country:"国家",cities:"已收录的城市",pending:"介绍内容整理中。",back:"返回",backGlobe:"回到地球",photoSoon:"示意图 · 照片待添加",local:"当地",localTime:"当地时间",imgNote:"地球影像来源：NASA（Blue Marble、Black Marble、GIBS）",slide:"第 %s 张",about2:"介绍",searchPh:"搜索",searchAria:"搜索国家、城市或地点",clear:"清除",cancel:"取消",noRes:"没有找到相关地点",localDay:"当地时间，白天",localNight:"当地时间，夜晚",sep:"，",
       soon:function(n){return n+"的板块还在筹备中。现在先收录了五座试点城市，再往后会按国家逐步补上。";}},
   en:{globe:"Rotatable, zoomable 3D globe",settings:"Settings",language:"Language",about:"ATLAS: turn the globe, pick a city, learn a local greeting, and discover its festivals, food and crafts.",
       start:"Click the globe to begin",startTouch:"Tap the globe to begin",loading:"Loading the Earth…",tip:"Drag to rotate · Scroll to zoom · Click a name to open",tipTouch:"Drag to rotate · Pinch to zoom · Tap a name to open",
       fbTitle:"This device can’t show the 3D globe",fbText:"WebGL isn’t available in this browser. Please try the latest Chrome, Edge or Safari.",
       pinHide:"Hide cities",pinShow:"Show cities",pinHideT:"Hide the city photo markers on the globe",pinShowT:"Show the city photo markers on the globe",dayOn:"All daylight",dayOff:"Day & night",dayOnT:"Light up the whole globe",dayOffT:"Back to day and night",
       close:"Close",prev:"Previous",next:"Next",fest:"Festival",food:"Food",craft:"Craft",tipRow:"Etiquette",fact:"Did you know?",
-      country:"Country",cities:"Cities on ATLAS",pending:"Details for this city are on the way.",back:"Back",backGlobe:"Back to the globe",photoSoon:"Placeholder · photos coming soon",local:"Local",localTime:"Local time",imgNote:"Earth imagery: NASA (Blue Marble, Black Marble, GIBS). Milky Way: NASA/Goddard SVS, Gaia DR2: ESA/Gaia/DPAC",slide:"Image %s",about2:"About",searchPh:"Search",searchAria:"Search countries, cities or places",clear:"Clear",cancel:"Cancel",noRes:"No matching places",localDay:"Local time, daytime",localNight:"Local time, night",sep:", ",
+      country:"Country",cities:"Cities on ATLAS",pending:"Details for this city are on the way.",back:"Back",backGlobe:"Back to the globe",photoSoon:"Placeholder · photos coming soon",local:"Local",localTime:"Local time",imgNote:"Earth imagery: NASA (Blue Marble, Black Marble, GIBS)",slide:"Image %s",about2:"About",searchPh:"Search",searchAria:"Search countries, cities or places",clear:"Clear",cancel:"Cancel",noRes:"No matching places",localDay:"Local time, daytime",localNight:"Local time, night",sep:", ",
       soon:function(n){return "The "+n+" section is still in the works. ATLAS starts with five pilot cities, and more countries will be added over time.";}}
 };
 var CONT_EN={asia:"Asia",europe:"Europe",africa:"Africa",america:"Americas",oceania:"Oceania"};
@@ -2203,11 +2203,12 @@ function drawSky(now,t,dta,spinD){
 function iosGap(){
   var st=navigator.standalone===true;try{st=st||matchMedia("(display-mode: standalone)").matches;}catch(e){}
   if(!st)return;
-  var pr=document.createElement("div");pr.style.cssText="position:fixed;left:0;top:0;width:1px;height:env(safe-area-inset-top,0px);visibility:hidden;pointer-events:none";
-  document.body.appendChild(pr);var top=pr.getBoundingClientRect().height;pr.remove();
   var portrait=innerHeight>=innerWidth,sw=screen.width||0,sh=screen.height||0;
-  var full=portrait?Math.max(sw,sh):Math.min(sw,sh),gap=full-innerHeight;
-  document.documentElement.classList.toggle("iosgap",top>0&&gap>4&&Math.abs(gap-top)<=4);
+  var full=portrait?Math.max(sw,sh):Math.min(sw,sh),wide=portrait?Math.min(sw,sh):Math.max(sw,sh);
+  /* 只在窗口宽度等于屏幕宽度时（手机全屏，不是 iPad 分屏）、而且窗口比屏幕矮时才处理 */
+  var on=Math.abs(innerWidth-wide)<=2&&full>innerHeight+2;
+  var r=document.documentElement;r.classList.toggle("iosgap",on);
+  if(on)r.style.setProperty("--fullh",full+"px");
 }
 function resize(){
   iosGap();
