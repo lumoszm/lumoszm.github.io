@@ -71,7 +71,13 @@ button{font:inherit;color:inherit}
 
 /* 舞台 */
 #stage{position:fixed;inset:0;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
-html.iosgap #stage,html.iosgap .cityv,html.iosgap .catv{bottom:auto;height:var(--fullh)}
+html.iosgap #stage,html.iosgap .cityv,html.iosgap .catv,html.iosgap #loading,html.iosgap #fallback{top:0;bottom:auto;height:var(--fullh)}
+html.iosgap,html.iosgap body{min-height:var(--fullh)}
+/* 同一个问题的纯样式兜底（WebKit bug 254868）：iOS 主屏幕模式下 100vh 才是整块屏幕的高度 */
+@media all and (display-mode:standalone){@supports (-webkit-touch-callout:none){
+  #stage,.cityv,.catv,#loading,#fallback{top:0;bottom:auto;height:100vh}
+  html,body{min-height:100vh}
+}}
 #stage.pointer{cursor:pointer}
 #stage.drag{cursor:grabbing}
 #gl{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -2218,12 +2224,15 @@ function drawSky(now,t,dta,spinD){
 /* iOS 从主屏幕全屏打开时，页面高度会少掉顶部状态栏那一截，屏幕最下面露出一条黑边。
    检测到这种情况就把地球画布往下延伸到屏幕底部（只在全屏模式下生效） */
 function iosGap(){
-  var st=navigator.standalone===true;try{st=st||matchMedia("(display-mode: standalone)").matches;}catch(e){}
+  /* 只针对 iPhone/iPad 的主屏幕模式（navigator.standalone 只有 iOS 有） */
+  var st=navigator.standalone===true;
   if(!st)return;
   var portrait=innerHeight>=innerWidth,sw=screen.width||0,sh=screen.height||0;
   var full=portrait?Math.max(sw,sh):Math.min(sw,sh),wide=portrait?Math.min(sw,sh):Math.max(sw,sh);
   /* 只在窗口宽度等于屏幕宽度时（手机全屏，不是 iPad 分屏）、而且窗口比屏幕矮时才处理 */
-  var on=Math.abs(innerWidth-wide)<=2&&full>innerHeight+2;
+  /* 有的系统版本里 innerHeight 报的是整屏高度，但固定定位的层实际矮一截，所以不再拿 innerHeight 判断：
+     只要是全屏宽度，就把这些层的高度直接定成屏幕高度（本来就一样高时没有任何影响） */
+  var on=Math.abs(innerWidth-wide)<=2;
   var r=document.documentElement;r.classList.toggle("iosgap",on);
   if(on)r.style.setProperty("--fullh",full+"px");
 }
