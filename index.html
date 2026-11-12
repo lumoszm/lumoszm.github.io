@@ -3516,6 +3516,9 @@ var PINPRE={done:{},q:[],n:0};
 function pinPreload(list){
   list.forEach(function(u){if(u&&!PINPRE.done[u]){PINPRE.done[u]=1;PINPRE.q.push(u);}});
   (function pump(){
+    /* 打开目录或城市页时先停一停，把网速让给眼前要看的照片 */
+    var bc=document.body.classList;
+    if(bc.contains("catopen")||bc.contains("cityopen")){if(!PINPRE.t)PINPRE.t=setTimeout(function(){PINPRE.t=0;pump();},1500);return;}
     while(PINPRE.n<6&&PINPRE.q.length){
       var u=PINPRE.q.shift(),im=new Image();PINPRE.n++;
       im.onload=im.onerror=function(){PINPRE.n--;pump();};
@@ -5144,8 +5147,15 @@ function catLoad(){
 function catL(a){return a?(LANG==="en"?a[1]||a[0]:a[0]||a[1]):"";}
 function catImg(e,w,h){
   var u=e.p[0]+(e.p[0].indexOf("?")<0?"?":"&");
-  if(!h)return u+"w="+w+"&q=80&fm=jpg&fit=max";
-  return u+"w="+w+"&h="+h+"&fit=crop"+(e.fx!=null?"&crop=focalpoint&fp-x="+e.fx+"&fp-y="+(e.fy!=null?e.fy:0.5):"")+"&q=72&fm=jpg";
+  /* auto=format：浏览器支持就给 AVIF/WebP，比 JPG 小一半以上 */
+  if(!h)return u+"w="+w+"&q=65&auto=format&fit=max";
+  return u+"w="+w+"&h="+h+"&fit=crop"+(e.fx!=null?"&crop=focalpoint&fp-x="+e.fx+"&fp-y="+(e.fy!=null?e.fy:0.5):"")+"&q=60&auto=format";
+}
+/* 大图按屏幕实际需要的宽度取（手机约 1200，电脑弹窗约 1200–1600），不再一律 1600 */
+function catDW(){
+  var f=CAT.dt&&$(".ct-dimg",CAT.dt),cw=(f&&f.clientWidth)||Math.min(innerWidth,760);
+  var px=cw*Math.min(window.devicePixelRatio||1,3);
+  return px<=800?800:px<=1200?1200:1600;
 }
 function catCont(e){var c=C.CC&&C.CC[e.cc];return c?c[2]:"";}
 function catEl(){
@@ -5226,7 +5236,7 @@ function catRender(reset){
   var g=$("#ctGrid");
   g.innerHTML=CAT.list.length?CAT.list.map(function(e,i){
     return '<button type="button" class="ct-card" data-ci="'+i+'">'+
-      '<img alt="" loading="'+(i<8?"eager":"lazy")+'" decoding="async" src="'+esc(catImg(e,400,500))+'" srcset="'+esc(catImg(e,400,500))+' 400w, '+esc(catImg(e,640,800))+' 640w" sizes="(max-width:640px) 50vw, 280px">'+
+      '<img alt="" loading="'+(i<8?"eager":"lazy")+'" decoding="async" src="'+esc(catImg(e,400,500))+'" srcset="'+esc(catImg(e,280,350))+' 280w, '+esc(catImg(e,400,500))+' 400w, '+esc(catImg(e,560,700))+' 560w" sizes="(max-width:640px) 34vw, 280px">'+
       '<span class="ct-cap"><b>'+esc(catL(e.n))+'</b><small>'+esc(catL(e.l))+'</small></span></button>';
   }).join(""):'<p class="ct-none">'+esc(tr("catEmpty"))+'</p>';
   if(reset){
@@ -5240,7 +5250,7 @@ function catDetail(e){
   var other=LANG==="en"?e.n[0]:e.n[1];
   var n=CAT.list.length;
   return '<div class="ct-dc" role="dialog" aria-modal="true" aria-labelledby="ctDh">'+
-    '<figure class="ct-dimg"><img alt="'+esc(catL(e.n))+'" src="'+esc(catImg(e,1600))+'"></figure>'+
+    '<figure class="ct-dimg"><img alt="'+esc(catL(e.n))+'"></figure>'+
     '<button type="button" class="ct-dx" data-d="x" aria-label="'+esc(tr("close"))+'">'+ICN.x+'</button>'+
     '<div class="ct-db">'+
       '<p class="ct-dk">'+ICN.pinS+'<span>'+esc(catL(e.l))+'</span></p>'+
@@ -5259,11 +5269,12 @@ function catShow(i){
   var im=$(".ct-dimg img",dt);
   /* 先用卡片那张小图垫底，大图到了再换上 */
   var card=$('.ct-card[data-ci="'+i+'"] img',CAT.el);
-  if(card&&card.currentSrc&&!im.complete){im.style.backgroundImage='url("'+card.currentSrc+'")';}
+  if(card&&card.currentSrc){im.style.backgroundImage='url("'+card.currentSrc+'")';}
+  im.src=catImg(e,catDW());
   if(!was)layerIn(dt);
   var x=$(".ct-dx",dt);if(!touchUI&&x)try{x.focus({preventScroll:true});}catch(er){}
   /* 预载下一张 */
-  var nx=CAT.list[i+1];if(nx){var p=new Image();p.src=catImg(nx,1600);}
+  var nx=CAT.list[i+1];if(nx){var p=new Image();p.src=catImg(nx,catDW());}
 }
 function catHide(quiet){
   if(!catDtOn())return;
