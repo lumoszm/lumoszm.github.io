@@ -10,7 +10,7 @@ self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(V).then(function (c) {
     /* 逐个取，哪个失败都不影响其他的 */
     return Promise.all(CORE.map(function (u) {
-      return fetch(u, { cache: "no-cache" }).then(function (r) { if (r && r.ok) return c.put(u, r).then(function () { return 1; }); return 0; }).catch(function () { return 0; });
+      return fetch(u).then(function (r) { if (r && r.ok) return c.put(u, r).then(function () { return 1; }); return 0; }).catch(function () { return 0; });
     }));
   }).then(function (ok) {
     self.__allOk = ok.every(function (x) { return x; });
