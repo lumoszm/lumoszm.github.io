@@ -1194,9 +1194,9 @@ html[lang="en"] .ct-head h2{letter-spacing:-.02em}
 .ct-chips button:hover{border-color:#a1a1a6}
 .ct-chips button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
 .ct-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;margin-top:10px}
-.ct-card{position:relative;display:block;aspect-ratio:4/5;padding:0;border:0;border-radius:18px;overflow:hidden;background:#e8e8ed;color:#fff;text-align:left;cursor:pointer;isolation:isolate;transform:translateZ(0);animation:ctIn .5s var(--ease) both}
+.ct-card{position:relative;display:block;aspect-ratio:4/5;padding:0;border:0;border-radius:18px;overflow:hidden;background:#e8e8ed center/cover no-repeat;color:#fff;text-align:left;cursor:pointer;isolation:isolate;transform:translateZ(0);animation:ctIn .5s var(--ease) both}
 @keyframes ctIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.ct-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s ease,transform .7s var(--ease)}
+.ct-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .2s ease,transform .7s var(--ease)}
 .ct-card img.ok{opacity:1}
 .ct-card img.bad{opacity:0}
 @media (hover:hover){.ct-card:hover img{transform:scale(1.045)}}
@@ -1218,11 +1218,13 @@ html[lang="en"] .ct-head h2{letter-spacing:-.02em}
 .ct-dt.in .ct-dc{transform:none}
 .ct-dimg{position:relative;margin:0;background:#1d1d1f center/cover no-repeat}
 .ct-dimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:inherit;background-size:cover;background-position:center}
-.ct-dx{position:absolute;top:14px;right:14px;z-index:3;width:36px;height:36px;display:grid;place-items:center;padding:0;border:0;border-radius:50%;
+.catv.dton .ct-x{display:none}
+.ct-card.seen{animation:none}
+.ct-dback{position:absolute;top:14px;left:14px;z-index:3;width:36px;height:36px;display:grid;place-items:center;padding:0;border:0;border-radius:50%;
   background:rgba(242,242,247,.72);color:var(--ink);cursor:pointer;-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
   box-shadow:0 0 0 .5px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.12);transition:background-color .2s}
-.ct-dx:hover{background:rgba(229,229,234,.88)}
-.ct-dx svg{width:17px;height:17px;stroke-width:2}
+.ct-dback:hover{background:rgba(229,229,234,.88)}
+.ct-dback svg{width:19px;height:19px;stroke-width:2.2;margin-left:-2px}
 .ct-db{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:56px 36px 26px;overflow-y:auto;min-height:0}
 .ct-dk{display:flex;align-items:center;gap:5px;margin:0;font:600 13px/1.35 var(--f-body);color:var(--ink2)}
 .ct-dk svg{flex:none;width:15px;height:15px}
@@ -1260,8 +1262,8 @@ html[lang="en"] .ct-dd{font-size:16.5px;line-height:1.55}
   .ct-cap small{font-size:11.5px}
   .ct-dt{padding:0;place-items:stretch}
   .ct-dc{width:100%;height:100%;grid-template-columns:1fr;grid-template-rows:minmax(0,52%) minmax(0,1fr);border-radius:0;box-shadow:none;transform:translateY(24px)}
-  .ct-dx{top:calc(12px + env(safe-area-inset-top,0px));right:12px;background:rgba(0,0,0,.42);color:#fff;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
-  .ct-dx:hover{background:rgba(0,0,0,.5)}
+  .ct-dback{top:calc(12px + env(safe-area-inset-top,0px));left:12px;background:rgba(0,0,0,.42);color:#fff;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+  .ct-dback:hover{background:rgba(0,0,0,.5)}
   .ct-db{padding:22px 20px calc(18px + env(safe-area-inset-bottom,0px));gap:8px}
   .ct-db h3{font-size:28px}
   .ct-dd{font-size:16px;margin-top:4px}
@@ -5136,7 +5138,7 @@ ICN.clock='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r
 ICN.pinS='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>';
 
 var CATV="552e751c";
-var CAT={d:null,p:null,k:"f",ct:"",list:[],i:-1,el:null,dt:null,last:null};
+var CAT={d:null,p:null,k:"f",ct:"",list:[],i:-1,el:null,dt:null,last:null,cards:{},vis:new Set(),n:0,io:null,cw:null};
 var CONTS=["AS","EU","AF","NA","SA","OC"];
 function catLoad(){
   if(CAT.p)return CAT.p;
@@ -5153,10 +5155,61 @@ function catImg(e,w,h){
 }
 /* 大图按屏幕实际需要的宽度取（手机约 1200，电脑弹窗约 1200–1600），不再一律 1600 */
 function catDW(){
-  var f=CAT.dt&&$(".ct-dimg",CAT.dt),cw=(f&&f.clientWidth)||Math.min(innerWidth,760);
+  var cw=innerWidth<=640?innerWidth:Math.min(600,innerWidth*0.6);
   var px=cw*Math.min(window.devicePixelRatio||1,3);
   return px<=800?800:px<=1200?1200:1600;
 }
+/* 卡片照片的宽度：按卡片在屏幕上的实际像素取一档 */
+function catCW(){
+  if(CAT.cw)return CAT.cw;
+  var cw=innerWidth<=640?innerWidth/2:280,px=cw*Math.min(window.devicePixelRatio||1,3);
+  CAT.cw=px<=300?[280,350]:px<=440?[400,500]:[560,700];
+  return CAT.cw;
+}
+/* 每个条目的卡片只建一次：切换分类或大洲时直接复用，已经载入的照片不用再等 */
+function catCard(e){
+  var c=CAT.cards[e.i];if(c)return c;
+  c=document.createElement("button");c.type="button";c.className="ct-card";c._e=e;
+  c.innerHTML='<img alt="" decoding="async"><span class="ct-cap"><b>'+esc(catL(e.n))+'</b><small>'+esc(catL(e.l))+'</small></span>';
+  CAT.cards[e.i]=c;
+  if(CAT.io)CAT.io.observe(c);
+  return c;
+}
+/* 照片排队下载：先是屏幕上看得见的，再是当前列表剩下的，最后是另外两个分类（提前备好，切过去就能立刻看到） */
+function catNext(){
+  var it,i,L;
+  for(it of CAT.vis){if(!it._s)return it;}
+  /* 提前备好的数量有上限（每个列表前 30 张），再往下的随滚动提前载入，免得白白耗流量 */
+  for(i=0;i<CAT.list.length&&i<30;i++){it=catCard(CAT.list[i]);if(!it._s)return it;}
+  var ks=[CAT.k].concat(["f","s","e"].filter(function(k){return k!==CAT.k;}));
+  for(var j=0;j<ks.length;j++){L=CAT.d[ks[j]]||[];for(i=0;i<L.length&&i<30;i++){it=catCard(L[i]);if(!it._s)return it;}}
+  return null;
+}
+function catPump(){
+  if(!CAT.d)return;
+  if(document.body.classList.contains("cityopen")){clearTimeout(CAT.tp);CAT.tp=setTimeout(catPump,1500);return;}
+  while(CAT.n<8){
+    var c=catNext();if(!c)return;
+    catStart(c);
+  }
+}
+function catStart(c){
+  if(c._s)return;
+  c._s=1;CAT.n++;
+  var im=c.firstChild,w=catCW();
+  im.onload=function(){im.classList.add("ok");CAT.n--;catPump();};
+  im.onerror=function(){im.classList.add("ok","bad");CAT.n--;catPump();};
+  im.src=catImg(c._e,w[0],w[1]);
+}
+/* 地球显示出来几秒后，先把目录清单和第一屏照片备好，这样第一次点开目录就有图 */
+function catWarm(){
+  if(!S.ready||!S.started){setTimeout(catWarm,1500);return;}
+  setTimeout(function(){
+    var cn=navigator.connection||{};if(cn.saveData)return;
+    catLoad().then(catPump,function(){});
+  },1500);
+}
+catWarm();
 function catCont(e){var c=C.CC&&C.CC[e.cc];return c?c[2]:"";}
 function catEl(){
   if(CAT.el)return CAT.el;
@@ -5178,6 +5231,20 @@ function catEl(){
     if(a==="x")catHide();else if(a==="prev")catStep(-1);else if(a==="next")catStep(1);else if(a==="go")catGo(CAT.list[CAT.i]);
   });
   CAT.dt.addEventListener("click",function(e){if(e.target===CAT.dt)catHide();});
+  if("IntersectionObserver" in window)CAT.io=new IntersectionObserver(function(es){
+    es.forEach(function(x){
+      var c=x.target;
+      if(!x.isIntersecting){CAT.vis.delete(c);return;}
+      CAT.vis.add(c);
+      /* 清晰的照片还没到时，先放一张几 KB 的小样垫着，马上就能看到画面 */
+      if(!c._t&&!c.firstChild.classList.contains("ok")){c._t=1;c.style.backgroundImage='url("'+catImg(c._e,64,80)+'")';}
+    });catPump();
+  },{root:el,rootMargin:"1200px 0px"});
+  /* 手指或鼠标一按到卡片就开始下载大图，等点击完成时多半已经到了 */
+  el.addEventListener("pointerdown",function(e){
+    var c=e.target.closest&&e.target.closest(".ct-card");
+    if(c&&c._e&&!c._p){c._p=1;var p=new Image();p.src=catImg(c._e,catDW());}
+  },{passive:true});
   /* 卡片照片载入后再淡入 */
   el.addEventListener("load",function(e){if(e.target.tagName==="IMG")e.target.classList.add("ok");},true);
   el.addEventListener("error",function(e){if(e.target.tagName==="IMG")e.target.classList.add("ok","bad");},true);
@@ -5234,11 +5301,18 @@ function catRender(reset){
   Array.prototype.forEach.call($(".ct-chips",el).children,function(b){b.setAttribute("aria-pressed",b.getAttribute("data-ct")===ct?"true":"false");});
   CAT.list=(CAT.d[k]||[]).filter(function(e){return !ct||catCont(e)===ct;});
   var g=$("#ctGrid");
-  g.innerHTML=CAT.list.length?CAT.list.map(function(e,i){
-    return '<button type="button" class="ct-card" data-ci="'+i+'">'+
-      '<img alt="" loading="'+(i<8?"eager":"lazy")+'" decoding="async" src="'+esc(catImg(e,400,500))+'" srcset="'+esc(catImg(e,280,350))+' 280w, '+esc(catImg(e,400,500))+' 400w, '+esc(catImg(e,560,700))+' 560w" sizes="(max-width:640px) 34vw, 280px">'+
-      '<span class="ct-cap"><b>'+esc(catL(e.n))+'</b><small>'+esc(catL(e.l))+'</small></span></button>';
-  }).join(""):'<p class="ct-none">'+esc(tr("catEmpty"))+'</p>';
+  CAT.vis.clear();
+  if(CAT.list.length){
+    var fr=document.createDocumentFragment();
+    CAT.list.forEach(function(e,i){
+      var c=catCard(e);c.setAttribute("data-ci",i);
+      /* 出现过的卡片不再重放入场动画 */
+      if(c._seen)c.classList.add("seen");c._seen=1;
+      fr.appendChild(c);
+    });
+    g.textContent="";g.appendChild(fr);
+  }else g.innerHTML='<p class="ct-none">'+esc(tr("catEmpty"))+'</p>';
+  catPump();
   if(reset){
     var bar=$(".ct-bar",el),top=bar.offsetTop;
     if(el.scrollTop>top)el.scrollTop=top;
@@ -5251,7 +5325,7 @@ function catDetail(e){
   var n=CAT.list.length;
   return '<div class="ct-dc" role="dialog" aria-modal="true" aria-labelledby="ctDh">'+
     '<figure class="ct-dimg"><img alt="'+esc(catL(e.n))+'"></figure>'+
-    '<button type="button" class="ct-dx" data-d="x" aria-label="'+esc(tr("close"))+'">'+ICN.x+'</button>'+
+    '<button type="button" class="ct-dback" data-d="x" aria-label="'+esc(tr("back"))+'">'+ICN.prev+'</button>'+
     '<div class="ct-db">'+
       '<p class="ct-dk">'+ICN.pinS+'<span>'+esc(catL(e.l))+'</span></p>'+
       '<h3 id="ctDh">'+esc(catL(e.n))+'</h3>'+(other&&other!==catL(e.n)?'<p class="ct-den">'+esc(other)+'</p>':"")+
@@ -5272,12 +5346,14 @@ function catShow(i){
   if(card&&card.currentSrc){im.style.backgroundImage='url("'+card.currentSrc+'")';}
   im.src=catImg(e,catDW());
   if(!was)layerIn(dt);
-  var x=$(".ct-dx",dt);if(!touchUI&&x)try{x.focus({preventScroll:true});}catch(er){}
+  CAT.el.classList.add("dton");
+  var x=$(".ct-dback",dt);if(!touchUI&&x)try{x.focus({preventScroll:true});}catch(er){}
   /* 预载下一张 */
-  var nx=CAT.list[i+1];if(nx){var p=new Image();p.src=catImg(nx,catDW());}
+  [CAT.list[i+1],CAT.list[i-1]].forEach(function(nx){if(nx){var p=new Image();p.src=catImg(nx,catDW());}});
 }
 function catHide(quiet){
   if(!catDtOn())return;
+  CAT.el.classList.remove("dton");
   layerOut(CAT.dt,function(){CAT.dt.innerHTML="";});
   if(!quiet){
     var b=$('.ct-card[data-ci="'+CAT.i+'"]',CAT.el)||CAT.last;
