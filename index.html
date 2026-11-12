@@ -3037,7 +3037,7 @@ Object.assign(I18N.zh,{
   traveler:"旅行者",myPage:"我的主页",myMap:"我的足迹",admin:"举报处理",signOut:"退出登录",signedOut:"已退出登录",signedIn:"欢迎回来，%s",
   loginLead:"登录后可以建立只属于自己的地图册：上传旅途中的照片和短视频，在地球上记录去过的地方；也可以把照片分享到城市相册。",loginBtn:"登录 / 注册",
   privacy:"隐私政策",terms:"用户协议",rules:"社区规则",dataNote:"地名数据：GeoNames、Wikidata、Natural Earth",
-  offline:"社区服务暂时连不上，地球仍可正常浏览",mailNotReady:"登录邮件暂时发不出去：网站的发信服务还在配置中，请过些时候再试",notConf:"社区功能还没有开通",banned:"你的账号已被限制使用",
+  offline:"社区服务暂时连不上，地球仍可正常浏览；连上后会自动恢复",online:"社区服务已重新连上",mailNotReady:"登录邮件暂时发不出去：网站的发信服务还在配置中，请过些时候再试",notConf:"社区功能还没有开通",banned:"你的账号已被限制使用",
   landmark:"地标",nature:"自然景观",km:"%s 公里",justNow:"刚刚",
   E_RATE_HOUR:"一小时内上传太多了，请稍后再试",E_RATE_DAY:"今天上传的数量已经到上限了",E_QUOTA:"你的存储空间已用完（每人 500 MB）",E_FULL:"网站的存储空间暂时满了，正在扩容，请过几天再上传",
   E_RATE_POST:"发言太频繁了，请稍后再试",E_RATE_REPORT:"今天举报次数太多了",E_FAIL:"操作没有成功，请重试"
@@ -3055,7 +3055,7 @@ Object.assign(I18N.en,{
   traveler:"Traveler",myPage:"My profile",myMap:"My travel map",admin:"Reports",signOut:"Sign out",signedOut:"Signed out",signedIn:"Welcome back, %s",
   loginLead:"Sign in to build your own private map album — keep photos and short videos from your trips and see where you’ve been on the globe. You can also share photos with city albums.",loginBtn:"Sign in / Sign up",
   privacy:"Privacy Policy",terms:"Terms of Use",rules:"Community Guidelines",dataNote:"Place data: GeoNames, Wikidata, Natural Earth",
-  offline:"Community features can’t be reached right now. You can still explore the globe.",mailNotReady:"We couldn’t send the sign-in email — the site’s email service is still being set up. Please try again later.",notConf:"Community features aren’t set up yet",banned:"Your account has been restricted",
+  offline:"Community features can’t be reached right now. You can still explore the globe — it will reconnect automatically.",online:"Community features are back",mailNotReady:"We couldn’t send the sign-in email — the site’s email service is still being set up. Please try again later.",notConf:"Community features aren’t set up yet",banned:"Your account has been restricted",
   landmark:"Landmark",nature:"Nature",km:"%s km",justNow:"just now",
   E_RATE_HOUR:"Too many uploads this hour. Please try again later.",E_RATE_DAY:"You’ve reached today’s upload limit.",E_QUOTA:"You’ve used all of your 500 MB storage.",E_FULL:"ATLAS is out of storage for now. Please try uploading again in a few days.",
   E_RATE_POST:"You’re posting too fast. Please wait a moment.",E_RATE_REPORT:"Too many reports today.",E_FAIL:"That didn’t work. Please try again."
@@ -3124,7 +3124,18 @@ function errText(e){
   return tr("E_FAIL");
 }
 function must(r){if(r&&r.error)throw r.error;return r?r.data:null;}
-function offline(){if(!C.off){C.off=true;toast(tr("offline"),4500);}}
+function offline(){if(!C.off){C.off=true;toast(tr("offline"),4500);}netRetrySoon();}
+/* 连不上之后不放弃：每 45 秒、回到前台或网络恢复时再试一次，连上就自动恢复社区内容 */
+var NRT=0;
+function netRetrySoon(){if(!NRT)NRT=setTimeout(netRetry,45000);}
+function netRetry(){
+  clearTimeout(NRT);NRT=0;
+  if(!C.off||!cOK())return;
+  if(document.hidden){netRetrySoon();return;}
+  meFails=0;loadMe();loadOverview(OV_RETRY.length);
+}
+window.addEventListener("online",function(){if(C.off)netRetry();});
+document.addEventListener("visibilitychange",function(){if(!document.hidden&&C.off)netRetry();});
 function netFail(e){if(/Failed to fetch|NetworkError|Load failed|network/i.test(String(e&&e.message||e)))offline();else{toast(tr("loadErr"));if(window.console)console.warn(e);}}
 
 /* ---------- 地名库：城市（GeoNames）＋地标 ---------- */
@@ -3483,7 +3494,7 @@ function loadOverview(n){
   if(!cOK())return Promise.resolve();
   return C.sb.rpc("city_overview").then(function(r){
     if(r.error)throw r.error;
-    C.off=false;
+    if(C.off){C.off=false;toast(tr("online"),2200);if(C.fp&&typeof fpReload==="function")fpReload();if(typeof CVC!=="undefined"&&CVC.id)cvComm(CVC.id);}
     C.ov=(r.data||[]).map(function(o){o.n=+o.n;return o;}).sort(function(a,b){return b.n-a.n||(a.last_at<b.last_at?1:-1);});
     C.ovById={};C.ovCC={};C.ov.forEach(function(o){C.ovById[o.city_id]=o;C.ovCC[o.cc]=(C.ovCC[o.cc]||0)+1;});
     HAS_COUNTRY={};
