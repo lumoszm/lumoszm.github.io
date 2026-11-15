@@ -1312,13 +1312,6 @@ body.cityopen .hp,body.catopen .hp{opacity:0;pointer-events:none}
 .hp-head small{display:block;margin-top:2px;color:var(--mf2);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hp-head .mx{margin:0;flex:none}
 .hp-body{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:6px 18px 24px;scrollbar-width:thin;scrollbar-color:rgba(127,127,127,.35) transparent}
-.hp-pack{display:flex;align-items:center;gap:14px;margin:12px 0 2px;padding:10px 12px 10px 14px;border-radius:14px;background:var(--mfill)}
-.hp-pack>span{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.hp-pack b{font:500 15px/1.3 var(--f-body)}
-.hp-pack small{color:var(--mf3);font-size:12.5px}
-.hp-subs{margin:-4px 0 10px;color:var(--mf2);font-size:12.5px;line-height:1.5}
-.hp-nl{display:flex;align-items:center;gap:4px;margin-bottom:6px;color:var(--mf2);font-size:12.5px}
-.hp-nl svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2}
 .hp-tip{display:flex;align-items:center;gap:6px;margin:10px 0 2px;color:var(--mf3);font-size:12.5px}
 .hp-tip svg{width:14px;height:14px;flex:none;fill:none;stroke:currentColor;stroke-width:2}
 .hp-pl{padding:16px 0 18px;border-bottom:1px solid var(--mline)}
@@ -5585,23 +5578,21 @@ Object.assign(I18N.zh,{
   hpNoPh:"这里还没有照片",hpPhHint:"点照片可以看大图，并设置公开或删除",hpAddPh:"上传照片",
   hpWrite:"写点文字",hpNotePh:"写下这里的故事、日记或感受…",hpEdit:"编辑",hpSave:"保存",hpCancel:"取消",hpDelNote:"删除这段文字",
   hpDelNoteQ:"确定删除这段文字吗？",hpSaved:"已保存",hpPrivNote:"文字只有你自己能看到。",hpNoNotes:"文字功能还没开通：需要先在 Supabase 里运行数据库更新。",
-  hpGo:"在地球上看",hpPack:"合并附近的地方",hpPackSub:"比如东京各区并成“东京及周边”",hpNear:function(n){return n+"及周边";}
+  hpGo:"在地球上看"
 });
 Object.assign(I18N.en,{
   hpB:"Profile",hpH:"My profile",hpEmpty:"No places yet. Tap “Add” below to record where you’ve been.",
   hpNoPh:"No photos here yet",hpPhHint:"Tap a photo to view it, share it or delete it",hpAddPh:"Upload photos",
   hpWrite:"Write something",hpNotePh:"The story, a diary entry, how it felt…",hpEdit:"Edit",hpSave:"Save",hpCancel:"Cancel",hpDelNote:"Delete this text",
   hpDelNoteQ:"Delete this text?",hpSaved:"Saved",hpPrivNote:"Only you can see your writing.",hpNoNotes:"Writing isn’t available yet: the database update needs to be run in Supabase first.",
-  hpGo:"Show on globe",hpPack:"Group nearby places",hpPackSub:"For example, Tokyo’s wards become “Tokyo & nearby”",hpNear:function(n){return n+" & nearby";}
+  hpGo:"Show on globe"
 });
 ICN.edit='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5h4l10-10a2.8 2.8 0 0 0-4-4l-10 10z"/><path d="M13 7l4 4"/></svg>';
 
 var NT_COLS="id,user_id,city_id,city_zh,city_en,cc,body,created_at,updated_at";
 /* 表还没建好（数据库没更新）时，文字功能整个藏起来 */
 function ntMissing(e){var s=String((e&&(e.code||""))+" "+(e&&e.message||""));return /PGRST205|42P01|notes/.test(s);}
-var HP={el:null,media:[],notes:{},edit:null,ok:true,busy:false,gen:0,units:[],pack:false};
-/* “合并附近的地方”记在本机，下次打开还是同样的选择 */
-try{HP.pack=localStorage.getItem("atlas-hp-pack")==="1";}catch(e){}
+var HP={el:null,media:[],notes:{},edit:null,ok:true,busy:false,gen:0};
 
 function hpOn(){return !!(HP.el&&!HP.el.hidden&&!HP.el.classList.contains("out"));}
 function hpEl(){
@@ -5656,31 +5647,21 @@ function hpWhen(q){
   var a=ymText(q.first),b=ymText(q.last);
   return a&&b&&a!==b?a+" – "+b:a||b;
 }
-/* 主页里的一个个地方：不合并时一个地方一块；合并时附近不太出名的地点并进最近的出名城市（和地球上的足迹标记一样） */
-function hpUnits(){
-  var list=C.fp?C.fp.list:[],U;
-  if(HP.pack&&typeof fpGroups==="function"){
-    U=fpGroups().map(function(g){return {id:g.id,lat:g.lat,lon:g.lon,name:g.name,cc:g.cc,subs:g.subs};});
-  }else U=list.map(function(q){return {id:q.id,lat:q.lat,lon:q.lon,name:q.name,cc:q.cc,subs:[q]};});
-  U.forEach(function(u){
-    u.first=u.subs.map(function(q){return q.first;}).filter(Boolean).sort()[0]||null;
-    u.last=u.subs.map(function(q){return q.last||q.first;}).filter(Boolean).sort().pop()||null;
-  });
+function hpPlaces(){
+  var L=(C.fp?C.fp.list:[]).slice();
   /* 最近去的在上面；没有日期的放最后 */
-  U.sort(function(a,b){return (b.last||"").localeCompare(a.last||"");});
-  return U;
+  L.sort(function(a,b){return (b.last||b.first||"").localeCompare(a.last||a.first||"");});
+  return L;
 }
 function hpRender(){
   var el=HP.el;if(!el)return;
   var body=$(".hp-body",el),st=body?body.scrollTop:0;
-  var U=HP.units=hpUnits();
+  var L=hpPlaces();
   var h=hpHead()+'<div class="hp-body">';
-  if(!U.length)h+='<div class="pf-empty">'+esc(tr("hpEmpty"))+'</div>';
+  if(!L.length)h+='<div class="pf-empty">'+esc(tr("hpEmpty"))+'</div>';
   else{
-    h+='<div class="hp-pack"><span><b>'+esc(tr("hpPack"))+'</b><small>'+esc(tr("hpPackSub"))+'</small></span>'+
-      '<button type="button" class="tg" role="switch" data-h="pack" aria-checked="'+HP.pack+'" aria-label="'+esc(tr("hpPack"))+'"></button></div>';
     h+='<p class="hp-tip">'+ICN.photo+'<span>'+esc(tr("hpPhHint"))+'</span></p>';
-    h+=U.map(hpBlock).join("");
+    h+=L.map(hpBlock).join("");
   }
   h+='</div>';
   el.innerHTML=h;
@@ -5688,12 +5669,10 @@ function hpRender(){
   var ta=$("#hpTa");if(ta){ta.focus({preventScroll:true});try{ta.setSelectionRange(ta.value.length,ta.value.length);}catch(e){}}
 }
 function hpMediaOf(id){return HP.media.filter(function(m){return m.city_id===id;});}
-function hpMediaU(u){var ids={};u.subs.forEach(function(q){ids[q.id]=1;});return HP.media.filter(function(m){return ids[m.city_id];});}
-function hpBlock(u,k){
-  var ms=hpMediaU(u),many=u.subs.length>1;
-  var h='<section class="hp-pl" data-u="'+k+'"><div class="hp-plh"><button type="button" class="hp-name" data-h="go" title="'+esc(tr("hpGo"))+'">'+ICN.pin+'<b>'+esc(many?tr("hpNear")(u.name||u.id):(u.name||u.id))+'</b></button>'+
-    '<small>'+esc(hpWhen(u))+'</small></div>';
-  if(many)h+='<p class="hp-subs">'+u.subs.map(function(q){return esc(q.name||q.id);}).join(" · ")+'</p>';
+function hpBlock(q){
+  var id=q.id,ms=hpMediaOf(id),n=HP.notes[id];
+  var h='<section class="hp-pl" data-pl="'+esc(id)+'"><div class="hp-plh"><button type="button" class="hp-name" data-h="go" title="'+esc(tr("hpGo"))+'">'+ICN.pin+'<b>'+esc(q.name||id)+'</b></button>'+
+    '<small>'+esc(hpWhen(q))+'</small></div>';
   if(ms.length){
     h+='<div class="hp-g">'+ms.map(function(m,i){
       return '<button type="button" class="gi" data-h="ph" data-i="'+i+'"><img src="'+esc(mURL(m,"thumb"))+'" alt="" loading="lazy" decoding="async">'+
@@ -5701,24 +5680,12 @@ function hpBlock(u,k){
         '<span class="pv'+(m.is_public?" pub":"")+'" title="'+esc(tr(m.is_public?"pubTag":"privTag"))+'">'+(m.is_public?ICN.globe:ICN.lock)+'</span></button>';
     }).join("")+'<button type="button" class="hp-add" data-h="up" aria-label="'+esc(tr("hpAddPh"))+'">'+ICN.plus+'</button></div>';
   }else h+='<div class="hp-noph"><span>'+esc(tr("hpNoPh"))+'</span><button type="button" class="mbtn sec sm" data-h="up">'+ICN.plus+esc(tr("hpAddPh"))+'</button></div>';
-  if(HP.ok){
-    /* 文字按具体地点保存：合并后这一块里各地点已写的文字都列出来，再给整块（主城市）留一个“写点文字” */
-    var ids=[u.id].concat(u.subs.map(function(q){return q.id;}).filter(function(x){return x!==u.id;}));
-    var shown=0;
-    ids.forEach(function(id){
-      var n=HP.notes[id];
-      if(HP.edit===id){h+='<div data-nid="'+esc(id)+'">'+hpEditor(n)+'</div>';shown++;return;}
-      if(!n)return;
-      var lab=many?((u.subs.filter(function(q){return q.id===id;})[0]||{}).name||(id===u.id?u.name:id)):"";
-      h+='<div data-nid="'+esc(id)+'">'+hpNote(n,lab)+'</div>';shown++;
-    });
-    if(!HP.notes[u.id]&&HP.edit!==u.id)h+='<div data-nid="'+esc(u.id)+'">'+hpNote(null)+'</div>';
-  }
+  if(HP.ok)h+=HP.edit===id?hpEditor(n):hpNote(n);
   return h+'</section>';
 }
-function hpNote(n,lab){
+function hpNote(n){
   if(!n)return '<button type="button" class="hp-write" data-h="write">'+ICN.edit+'<span>'+esc(tr("hpWrite"))+'</span></button>';
-  return '<div class="hp-note">'+(lab?'<small class="hp-nl">'+ICN.pin+esc(lab)+'</small>':"")+'<p>'+esc(n.body)+'</p><div class="hp-nm">'+
+  return '<div class="hp-note"><p>'+esc(n.body)+'</p><div class="hp-nm">'+
     '<span class="hp-vis">'+ICN.lock+esc(tr("privTag"))+'</span>'+
     '<button type="button" class="mlink" data-h="write">'+esc(tr("hpEdit"))+'</button></div></div>';
 }
@@ -5732,18 +5699,11 @@ function hpEditor(n){
 }
 function hpClick(e){
   var b=e.target.closest("[data-h]");if(!b)return;
-  var a=b.getAttribute("data-h"),sec=b.closest("[data-u]"),u=sec&&HP.units[+sec.getAttribute("data-u")];
-  var nb=b.closest("[data-nid]"),id=nb?nb.getAttribute("data-nid"):u&&u.id;
+  var a=b.getAttribute("data-h"),sec=b.closest("[data-pl]"),id=sec&&sec.getAttribute("data-pl");
   if(a==="x"){hpClose();return;}
-  if(a==="pack"){
-    if(HP.edit&&!hpLeaveOK())return;
-    HP.pack=!HP.pack;HP.edit=null;try{localStorage.setItem("atlas-hp-pack",HP.pack?"1":"0");}catch(er){}
-    hpRender();return;
-  }
-  if(!u)return;
-  if(a==="go"){flyTo(u.lat,u.lon,u.subs.length>1?2.6:3);S.hold=true;return;}
-  if(a==="ph"){lbOpen(hpMediaU(u),+b.getAttribute("data-i"),"album");return;}
-  if(a==="up"){upStart(u.id);return;}
+  if(a==="go"){var q=(C.fp.list||[]).filter(function(x){return x.id===id;})[0];if(q){flyTo(q.lat,q.lon,3);S.hold=true;}return;}
+  if(a==="ph"){var ms=hpMediaOf(id);lbOpen(ms,+b.getAttribute("data-i"),"album");return;}
+  if(a==="up"){upStart(id);return;}
   if(a==="write"){
     if(HP.edit&&HP.edit!==id&&!hpLeaveOK())return;
     HP.edit=id;hpRender();return;
@@ -5767,7 +5727,7 @@ function hpLeaveOK(){
 function hpSave(id,btn){
   var ta=$("#hpTa");if(!ta||HP.busy)return;
   var body=ta.value.trim(),n=HP.notes[id];
-  var q=(C.fp.list||[]).filter(function(x){return x.id===id;})[0]||HP.units.filter(function(x){return x.id===id;})[0]||{},p=place(id)||{};
+  var q=(C.fp.list||[]).filter(function(x){return x.id===id;})[0]||{},p=place(id)||{};
   var done=function(r){
     HP.busy=false;btn.disabled=false;
     if(r.error){$("#hpErr").textContent=ntMissing(r.error)?tr("hpNoNotes"):errText(r.error);return;}
