@@ -146,8 +146,10 @@ html.iosgap,html.iosgap body{min-height:var(--fullh)}
 .pill:hover{background:rgba(255,255,255,.10)}
 .pill:active{transform:scale(.95)}
 .pill svg{flex:none;width:16px;height:16px;filter:drop-shadow(0 0 3px rgba(0,8,20,.9))}
-#dayBtn,#catBtn{opacity:0;pointer-events:none;transition:opacity .8s 1s}
-.started #dayBtn,.started #catBtn{opacity:1;pointer-events:auto}
+#dayBtn,#catBtn,#fpBtn{opacity:0;pointer-events:none;transition:opacity .8s 1s}
+.started #dayBtn,.started #catBtn,.started #fpBtn{opacity:1;pointer-events:auto}
+body.fpon #fpBtn{color:var(--warm)}
+#fpBtn svg{fill:currentColor;stroke:none}
 #dayBtn[aria-pressed="true"]{color:var(--warm)}
 
 #start{
@@ -183,7 +185,7 @@ body:not(.loading) #loading{opacity:0}
 /* 窄屏手机：收紧顶栏间距，保证按钮不折行、不挤出屏幕 */
 @media (max-width:430px){.brand{letter-spacing:.3em}.tr{gap:0}.pill{padding:8px 7px}.search{margin-right:0}}
 @media (max-width:380px){.brand{letter-spacing:.24em;font-size:20px}}
-@media (max-width:420px){#catBtn span{display:none}#catBtn{padding:8px 8px}}
+@media (max-width:420px){#catBtn span,#fpBtn span{display:none}#catBtn,#fpBtn{padding:8px 8px}}
 @media (max-width:340px){#dayBtn span{display:none}#dayBtn{padding:8px 8px}}
 @media (max-width:360px){html[lang="en"] #dayBtn span{display:none}html[lang="en"] #dayBtn{padding:8px 8px}}
 
@@ -256,7 +258,7 @@ button{-webkit-tap-highlight-color:transparent}
     background:rgba(118,118,128,.36);box-shadow:inset 0 .5px 0 rgba(255,255,255,.18)}
   .top.sopen .search input{display:block}
   .top.sopen .search .clr:not([hidden]){display:grid}
-  .top.sopen #dayBtn,.top.sopen #catBtn,.top.sopen #acctBtn{opacity:0!important;pointer-events:none!important;transition:opacity .15s!important}
+  .top.sopen #dayBtn,.top.sopen #catBtn,.top.sopen #fpBtn,.top.sopen #acctBtn{opacity:0!important;pointer-events:none!important;transition:opacity .15s!important}
   .top.sopen #qCancel{display:inline-flex;position:absolute;right:max(8px,env(safe-area-inset-right,0px));top:calc(14px + env(safe-area-inset-top,0px));color:#0A84FF;text-shadow:none;font-size:16px;letter-spacing:0}
   #sugg{left:16px!important;width:calc(100vw - 32px)!important}
 }
@@ -273,7 +275,7 @@ button{-webkit-tap-highlight-color:transparent}
 .cityv.bgout{background-color:rgba(255,255,255,0)}
 .cityv.closing .cv-wrap,.cityv.closing .cv-back,.cityv.closing .cv-bar{opacity:0!important;transition:opacity .22s ease!important}
 body.cityopen .brand{opacity:0}
-body.cityopen #dayBtn,body.cityopen #catBtn{display:none}
+body.cityopen #dayBtn,body.cityopen #catBtn,body.cityopen #fpBtn{display:none}
 body.cityopen #tip{opacity:0!important}
 body.cityopen #labels,body.cityopen #hit{opacity:0;transition:opacity .3s}
 /* 白色页面上的顶栏控件 */
@@ -1391,7 +1393,8 @@ body.cityopen .hp,body.catopen .hp{opacity:0;pointer-events:none}
       <button type="button" class="clr" id="qClear" hidden aria-label="清除" data-i18n-aria="clear"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 7.5l9 9M16.5 7.5l-9 9"/></svg></button>
     </div>
     <button type="button" class="pill" id="qCancel" data-i18n="cancel">取消</button>
-    <button type="button" class="pill" id="catBtn" aria-label="名录" data-i18n-aria="catB"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6.6" height="6.6" rx="1.6"/><rect x="13.4" y="4" width="6.6" height="6.6" rx="1.6"/><rect x="4" y="13.4" width="6.6" height="6.6" rx="1.6"/><rect x="13.4" y="13.4" width="6.6" height="6.6" rx="1.6"/></svg><span data-i18n="catB">目录</span></button>
+    <button type="button" class="pill" id="fpBtn" aria-label="我的足迹" data-i18n-aria="myMap"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="6.9" cy="6.9" rx="3.1" ry="4.6" transform="rotate(-10 6.9 6.9)"/><ellipse cx="7.9" cy="14.6" rx="2.3" ry="2.5"/><ellipse cx="17.1" cy="9.9" rx="3.1" ry="4.6" transform="rotate(10 17.1 9.9)"/><ellipse cx="16.1" cy="17.6" rx="2.3" ry="2.5"/></svg><span data-i18n="myMap">我的足迹</span></button>
+    <button type="button" class="pill" id="catBtn" aria-label="名录" data-i18n-aria="catB"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6.6" height="6.6" rx="1.6"/><rect x="13.4" y="4" width="6.6" height="6.6" rx="1.6"/><rect x="4" y="13.4" width="6.6" height="6.6" rx="1.6"/><rect x="13.4" y="13.4" width="6.6" height="6.6" rx="1.6"/></svg><span data-i18n="catB">名录</span></button>
     <button type="button" class="pill" id="dayBtn" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg><span id="dayTxt">全球白天</span></button>
     <button type="button" class="pill" id="acctBtn" aria-expanded="false" aria-controls="acct" aria-label="账户"></button>
   </div>
@@ -3436,7 +3439,6 @@ function renderAcct(){
   }else{
     h='<button type="button" class="me-row" data-a="me">'+avHTML(C.me)+'<span><b>'+esc(uname(C.me))+'</b><small>'+tr("pfEdit")+'</small></span>'+ICN.chev+'</button>'+
       '<div class="mlist">'+
-      '<button type="button" class="mli" data-a="map"><span class="ico" style="--k:#30D158">'+ICN.globe+'</span><span>'+tr("showMap")+'</span>'+ICN.chev+'</button>'+
       (isAdmin()?'<button type="button" class="mli" data-a="admin"><span class="ico" style="--k:#FF9F0A">'+ICN.flag+'</span><span>'+tr("admin")+'</span>'+ICN.chev+'</button>':"")+
       '<button type="button" class="mli red" data-a="out"><span>'+tr("signOut")+'</span></button></div>';
   }
@@ -4729,6 +4731,8 @@ function fpClose(){
   C.fp=null;document.body.classList.remove("fpon");layerOut($("#fpbar"));refreshPins();S.hold=false;LIT.t=0;
   if(/^#map$/.test(location.hash))setHash("");
 }
+/* 顶栏的“我的足迹”：开着就关，关着就打开 */
+$("#fpBtn").addEventListener("click",function(){if(C.fp)fpClose();else fpOpen();});
 $("#fpbar").addEventListener("click",function(e){
   var b=e.target.closest("[data-f]");if(!b||!C.fp)return;var a=b.getAttribute("data-f");
   if(a==="x")fpClose();else if(a==="add")fpAddOpen();else if(a==="home"){if(hpOn())hpClose();else hpOpen();}
