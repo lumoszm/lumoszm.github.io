@@ -1280,6 +1280,19 @@ html[lang="en"] .ct-dd{font-size:16.5px;line-height:1.55}
 .cv-pl button[aria-pressed="true"]{background:#1d1d1f;border-color:#1d1d1f;color:#fff}
 .cv-pl button[aria-pressed="true"] small{color:rgba(255,255,255,.7)}
 
+/* 添加去过的地方：关闭按钮再往上一点，不压住搜索框；年月分开输入；照片入口和公开选项直接放在窗口里 */
+.mcard.fa .mx{margin-top:-26px}
+.fa-date{display:flex;align-items:center;gap:8px}
+.fa-date input{width:auto;flex:0 1 110px;min-width:0;text-align:center}
+.fa-date input.fa-m{flex-basis:80px}
+.fa-date i{font-style:normal;color:var(--mf2);font-size:15px}
+.fa-pick{display:flex;align-items:center;justify-content:center;gap:8px}
+.fa-pick svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fa-grid{margin:0}
+.fa-more{aspect-ratio:1;border:1.5px dashed var(--mf3);border-radius:10px;background:none;color:var(--mf2);display:grid;place-items:center;cursor:pointer}
+.fa-more svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+#faUp .mseg{margin-top:4px}
+
 </style>
 </head>
 <body>
@@ -3221,7 +3234,7 @@ function mOpen(kind,html,opt){
   opt=opt||{};
   if(mdl.hidden||mdl.classList.contains("out"))M.lastFocus=document.activeElement;
   M.kind=kind;M.onclose=opt.onclose||null;M.guard=opt.guard||null;
-  mcard.className="mcard"+(opt.wide?" wide":"");
+  mcard.className="mcard"+(opt.wide?" wide":"")+(opt.cls?" "+opt.cls:"");
   mcard.innerHTML=html;mcard.scrollTop=0;
   layerIn(mdl);closePop();
   if(acctOpen())toggleAcct(false);
@@ -3795,21 +3808,19 @@ function vidType(f){
 }
 
 var UP={items:[],preset:null,pub:false,cat:null,cap:"",busy:false,phase:"edit",pick:null,q:Promise.resolve(),lastCity:null};
-function upStart(preset,noPick,force){
+function upStart(preset,noPick){
   /* 登录后接着打开上传窗口；这时已不在用户点击的瞬间，浏览器可能不允许直接弹出选文件，所以只显示“选择照片”按钮 */
   if(!needLogin(function(){upStart(preset,true);}))return;
   if(UP.busy){upOpen();return;}
   if(!UP.items.length||UP.phase==="done"){upReset();}
   UP.preset=preset||UP.preset;
-  /* 从“添加足迹”过来：照片一律归到选好的地方，不按照片里的拍摄位置分 */
-  if(preset&&!UP.busy)UP.force=!!force;
   upOpen();
   if(!noPick){var f=$("#upFile");f.value="";f.click();}
   loadPlaces().catch(function(){});
 }
 function upReset(){
   UP.items.forEach(function(it){if(it.prev)URL.revokeObjectURL(it.prev);});
-  UP.items=[];UP.cap="";UP.phase="edit";UP.pick=null;UP.preset=null;UP.force=false;UP.pub=false;UP.cat=null;
+  UP.items=[];UP.cap="";UP.phase="edit";UP.pick=null;UP.preset=null;UP.pub=false;UP.cat=null;
 }
 function upOpen(){
   mOpen("up",upHTML(),{wide:true,guard:function(){
@@ -3866,7 +3877,6 @@ function prep(it){
 }
 function assignCity(it){
   if(it.err||it.cityId)return;
-  if(UP.force&&UP.preset){it.cityId=UP.preset;return;}
   if(it.lat!==undefined&&C.P){var c=nearPlaces(it.lat,it.lng,1)[0];if(c){it.cityId=c.p.id;return;}}
   if(it.lat!==undefined&&!C.P){loadPlaces().then(function(){assignCity(it);upRefresh();});return;}
   if(UP.preset)it.cityId=UP.preset;
@@ -3928,6 +3938,7 @@ function upHTML(){
 function upRefresh(){
   /* 处理和上传照片时暂停绘制地球，把手机的算力留给压缩和上传 */
   S.pauseGL=UP.busy||UP.items.some(function(it){return it.st==="prep";});
+  if(mOn("fpadd")){faUp();return;}
   if(!mOn("up"))return;
   var ta=$("#upCap");if(ta)UP.cap=ta.value;
   var st=mcard.scrollTop;mcard.innerHTML=upHTML();mcard.scrollTop=st;
@@ -4074,7 +4085,7 @@ Object.assign(I18N.zh,{
   delAcctType:"输入“注销”两个字以确认",delAcctWord:"注销",delAcctGo:"永久注销",delAcctDone:"账号已注销",
   trackRow:"记录旅行足迹",trackRowSub:"关闭后，你手动添加的足迹会被删除，足迹地图也会停止显示",banUser:"封禁上传者",
   fpMine:"我的足迹",fpStat:function(c,k){return c+" 座城市 · "+k+" 个国家和地区";},fpEmpty:"还没有足迹，上传照片或手动添加去过的地方",
-  fpAdd:"添加",fpAddH:"添加去过的地方",fpWhen:"什么时候去的（可选）",fpAdded:"已加入足迹",fpExit:"退出足迹",fpPhoto:"同时上传这里的照片",fpPhotoSub:"可选。添加后接着选照片，照片都会归到这个地方，默认只有自己能看到",
+  fpAdd:"添加",fpAddH:"添加去过的地方",fpWhen:"什么时候去的（可选）",fpAdded:"已加入足迹",fpExit:"退出足迹",fpPhoto:"上传照片（可选）",fpPick:"选择照片或视频",fpYear:"年份",fpMonth:"月份",fpY:"年",fpM:"月",fpBadDate:"请填写正确的年份和月份，比如 2024 年 6 月",
   fpOpenAlbum:"打开城市相册",fpDelVisit:"从足迹中删除",
   consentH:"记录旅行足迹",consentOK:"同意并开启",notNow:"暂不",
   consentBody:"<p>开启后，ATLAS 会根据你上传照片时选择的城市和拍摄日期，以及你手动添加的地方，在地球上画出你的旅行足迹。</p><p>行踪信息属于敏感个人信息，所以需要你单独同意。足迹只有你自己能看到；我们只记录到城市一级，不保存照片里的精确坐标。</p><p>你可以随时在“编辑资料”里关闭这项功能，关闭后手动添加的足迹会被删除。</p>",
@@ -4102,7 +4113,7 @@ Object.assign(I18N.en,{
   delAcctType:"Type DELETE to confirm",delAcctWord:"DELETE",delAcctGo:"Delete permanently",delAcctDone:"Your account has been deleted",
   trackRow:"Record my travel map",trackRowSub:"Turning this off deletes the places you added by hand and hides your travel map",banUser:"Ban uploader",
   fpMine:"My travel map",fpStat:function(c,k){return c+(c===1?" city":" cities")+" · "+k+(k===1?" country":" countries");},fpEmpty:"Nothing here yet. Upload photos or add places you’ve been.",
-  fpAdd:"Add",fpAddH:"Add a place you’ve been",fpWhen:"When (optional)",fpAdded:"Added to your map",fpExit:"Close map",fpPhoto:"Also upload photos from here",fpPhotoSub:"Optional. Pick photos right after adding. They’ll all be filed under this place and stay private by default",
+  fpAdd:"Add",fpAddH:"Add a place you’ve been",fpWhen:"When (optional)",fpAdded:"Added to your map",fpExit:"Close map",fpPhoto:"Upload photos (optional)",fpPick:"Choose photos or videos",fpYear:"Year",fpMonth:"Month",fpY:"",fpM:"",fpBadDate:"Enter a valid year and month, like 2024 and 6",
   fpOpenAlbum:"Open city album",fpDelVisit:"Remove from my map",
   consentH:"Record your travel map",consentOK:"Agree and turn on",notNow:"Not now",
   consentBody:"<p>When this is on, ATLAS draws your journeys on the globe from the cities and dates of the photos you upload and the places you add by hand.</p><p>Travel history is sensitive personal information, so we ask for your separate consent. Your map is visible only to you, and we only record places at city level — never the exact coordinates from your photos.</p><p>You can turn this off at any time in Edit profile; the places you added by hand are then deleted.</p>",
@@ -4624,14 +4635,29 @@ $("#fpbar").addEventListener("click",function(e){
 });
 var FA={city:null,q:"",photo:false};
 function fpAddOpen(){
-  FA={city:null,q:"",photo:false};
+  FA={city:null,q:"",sent:false};
+  /* 上传沿用“分享照片”的处理流程（压缩、去掉定位信息），选好的照片先放在这里，点“添加”时再上传 */
+  if(!UP.busy)upReset();
   loadPlaces().catch(function(){});
-  mOpen("fpadd",mx()+'<h2 id="mH">'+tr("fpAddH")+'</h2><div class="cpk" style="margin-top:12px"><input class="tin" id="faQ" type="search" autocomplete="off" placeholder="'+tr("pickPh")+'" autofocus><div id="faList"></div></div>'+
-    '<label class="fld" style="margin-top:14px"><span>'+tr("fpWhen")+'</span><input id="faWhen" type="month"></label>'+
-    '<div class="fld" style="flex-direction:row;align-items:center;gap:14px"><span style="flex:1;display:flex;flex-direction:column;gap:3px;padding:0 4px"><b style="color:var(--mf);font-weight:500;font-size:15px">'+tr("fpPhoto")+'</b><small style="padding:0">'+tr("fpPhotoSub")+'</small></span>'+
-    '<button type="button" class="tg" role="switch" id="faPh" aria-checked="false" aria-label="'+tr("fpPhoto")+'"></button></div>'+
-    '<button type="button" class="mbtn" id="faGo" disabled>'+tr("fpAdd")+'</button><p class="merr" id="faErr"></p>');
-  faList();
+  var yr='<input id="faY" class="fa-y" type="text" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="'+tr("fpYear")+'" aria-label="'+tr("fpYear")+'">';
+  var mo='<input id="faM" class="fa-m" type="text" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="'+tr("fpMonth")+'" aria-label="'+tr("fpMonth")+'">';
+  mOpen("fpadd",mx()+'<h2 id="mH">'+tr("fpAddH")+'</h2><div class="cpk" style="margin-top:16px"><input class="tin" id="faQ" type="search" autocomplete="off" placeholder="'+tr("pickPh")+'" autofocus><div id="faList"></div></div>'+
+    '<div class="fld" style="margin-top:14px"><span>'+tr("fpWhen")+'</span><div class="fa-date">'+yr+(tr("fpY")?'<i>'+tr("fpY")+'</i>':"")+mo+(tr("fpM")?'<i>'+tr("fpM")+'</i>':"")+'</div></div>'+
+    '<div class="fld" id="faUp"></div>'+
+    '<button type="button" class="mbtn" id="faGo" disabled>'+tr("fpAdd")+'</button><p class="merr" id="faErr"></p>',
+    {cls:"fa",onclose:function(){if(!FA.sent&&!UP.busy)upReset();}});
+  faList();faUp();
+}
+function faUp(){
+  var el=$("#faUp");if(!el)return;
+  if(UP.busy||UP.phase!=="edit"){el.hidden=true;return;}
+  var its=UP.items;
+  el.innerHTML='<span>'+tr("fpPhoto")+'</span>'+
+    (its.length?'<div class="up-grid fa-grid">'+its.map(upItemHTML).join("")+'<button type="button" class="fa-more" data-fu aria-label="'+tr("upAdd")+'">'+ICN.plus+'</button></div>'
+      :'<button type="button" class="mbtn sec fa-pick" data-fu>'+ICN.photo+'<span>'+tr("fpPick")+'</span></button>')+
+    '<div class="mseg" role="radiogroup" aria-label="'+tr("upVis")+'"><button type="button" role="radio" data-fv="0" aria-checked="'+!UP.pub+'">'+tr("upPriv")+'</button><button type="button" role="radio" data-fv="1" aria-checked="'+UP.pub+'">'+tr("upPub")+'</button></div>'+
+    '<small>'+tr(UP.pub?"upPubNote":"upPrivNote")+'</small>';
+  var go=$("#faGo");if(go)go.disabled=!FA.city||its.some(function(it){return it.st==="prep";});
 }
 function faList(){
   var l=$("#faList");if(!l)return;
@@ -4640,24 +4666,42 @@ function faList(){
   if(FA.city&&!FA.q.trim())rows=[FA.city];
   l.innerHTML=rows.length?'<div class="cpk-list">'+rows.map(function(p){return '<button type="button" data-fa="'+esc(p.id)+'" aria-selected="'+(FA.city&&FA.city.id===p.id)+'"><span><b>'+esc(pName(p))+'</b><small>'+esc([pSub(p),pOther(p)].filter(Boolean).join(" · "))+'</small></span></button>';}).join("")+'</div>':(FA.q.trim()?'<div class="cpk-list"><div class="cpk-empty">'+tr("pickNone")+'</div></div>':"");
 }
-mcard.addEventListener("input",function(e){if(M.kind==="fpadd"&&e.target.id==="faQ"){FA.q=e.target.value;FA.city=null;$("#faGo").disabled=true;faList();}});
+mcard.addEventListener("input",function(e){
+  if(M.kind!=="fpadd")return;
+  if(e.target.id==="faQ"){FA.q=e.target.value;FA.city=null;$("#faGo").disabled=true;faList();}
+  /* 年份、月份只收数字；年份填满 4 位自动跳到月份 */
+  else if(e.target.id==="faY"||e.target.id==="faM"){
+    var v=e.target.value.replace(/\D/g,"");if(v!==e.target.value)e.target.value=v;
+    if(e.target.id==="faY"&&v.length===4)$("#faM").focus();
+    $("#faErr").textContent="";
+  }
+});
 mcard.addEventListener("click",function(e){
   if(M.kind!=="fpadd")return;
   var b=e.target.closest("[data-fa]");
-  if(b){FA.city=C.PI[b.getAttribute("data-fa")];FA.q="";$("#faQ").value=pName(FA.city);$("#faGo").disabled=false;faList();return;}
-  var tg=e.target.closest("#faPh");
-  if(tg){FA.photo=!FA.photo;tg.setAttribute("aria-checked",FA.photo?"true":"false");return;}
+  if(b){FA.city=C.PI[b.getAttribute("data-fa")];FA.q="";$("#faQ").value=pName(FA.city);faList();faUp();return;}
+  if(e.target.closest("[data-fu]")){var f=$("#upFile");f.value="";f.click();return;}
+  var fv=e.target.closest("[data-fv]");if(fv){UP.pub=fv.getAttribute("data-fv")==="1";faUp();return;}
+  var rm=e.target.closest("[data-rm]");
+  if(rm){var rid=rm.getAttribute("data-rm");UP.items=UP.items.filter(function(it){if(it.id===rid&&it.prev)URL.revokeObjectURL(it.prev);return it.id!==rid;});faUp();return;}
   if(e.target.closest("#faGo")&&FA.city){
-    var p=FA.city,w=$("#faWhen").value,go=$("#faGo"),ph=FA.photo;go.disabled=true;
-    /* 要上传照片：趁这次点击马上打开选照片（浏览器只允许在点击的瞬间弹出），足迹同时在后台加上 */
-    if(ph){mClose(true);upStart(p.id,false,true);}
-    C.sb.from("visits").insert({city_id:p.id,city_zh:p.zh.slice(0,80),city_en:p.en.slice(0,80),cc:p.cc,clat:p.lat,clng:p.lon,visited_on:w?w+"-01":null}).then(function(r){
-      if(r.error){
-        if(ph){toast(errText(r.error));return;}
-        go.disabled=false;$("#faErr").textContent=errText(r.error);return;
-      }
-      if(!ph)mClose(true);
-      toast(tr("fpAdded"));if(C.fp)C.fp.t0=performance.now()-1e5;fpOpen(ph);
+    var p=FA.city,y=$("#faY").value.trim(),m=$("#faM").value.trim(),day=null,go=$("#faGo");
+    if(y||m){
+      var yi=+y,mi=+m;
+      if(y.length!==4||yi<1900||yi>new Date().getFullYear()||!(mi>=1&&mi<=12)){$("#faErr").textContent=tr("fpBadDate");return;}
+      day=y+"-"+(mi<10?"0":"")+mi+"-01";
+    }
+    var its=UP.items.filter(function(it){return it.st==="ready";});
+    go.disabled=true;
+    C.sb.from("visits").insert({city_id:p.id,city_zh:p.zh.slice(0,80),city_en:p.en.slice(0,80),cc:p.cc,clat:p.lat,clng:p.lon,visited_on:day}).then(function(r){
+      if(r.error){go.disabled=false;$("#faErr").textContent=errText(r.error);return;}
+      if(C.fp)C.fp.t0=performance.now()-1e5;
+      if(!its.length){mClose(true);toast(tr("fpAdded"));fpOpen();return;}
+      /* 有照片：全部归到这个地方，换到上传进度窗口 */
+      FA.sent=true;UP.preset=p.id;UP.cap="";
+      UP.items=its;UP.items.forEach(function(it){it.cityId=p.id;});
+      mClose(true);upOpen();upPublish();
+      fpOpen(true);
     });
   }
 });
