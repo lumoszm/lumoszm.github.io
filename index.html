@@ -91,13 +91,13 @@ html.iosgap,html.iosgap body{min-height:var(--fullh)}
 }
 .lab.on{opacity:1;pointer-events:auto}
 .cnt{
-  padding:5px 7px;cursor:pointer;
+  padding:5px 7px;
   color:#F1F5F8;font-weight:500;letter-spacing:.08em;
   text-shadow:0 0 5px rgba(0,8,20,.95),0 0 2px rgba(0,8,20,.95),0 1px 2px rgba(0,8,20,.9);
 }
 .cnt.t1{font-size:16px}.cnt.t2{font-size:14px}.cnt.t3{font-size:12.5px}
 .cnt.has{color:var(--warm)}
-.cnt:hover{color:#fff;text-decoration:underline;text-underline-offset:4px}
+.lab.cnt,.lab.cnt.on{pointer-events:none;cursor:default}
 .cont{
   font:500 13px var(--f-body);letter-spacing:.55em;color:rgba(235,243,250,.62);
   text-shadow:0 0 6px rgba(0,8,20,.9);
@@ -2064,7 +2064,8 @@ function buildLabels(){
     var has=HAS_COUNTRY[c[0]];
     var nm=cName(c[0]);
     LABS.push({k:"country",id:c[0],v:llv(c[2],c[1]),name:nm,tier:c[3],z:has?Math.min(minZ[c[3]],1.5):minZ[c[3]]});
-    html+='<button type="button" class="lab cnt t'+c[3]+(has?' has':'')+'" data-i="'+(LABS.length-1)+'" data-country="'+esc(c[0])+'">'+esc(nm)+'</button>';
+    /* 国家名只是地图上的文字，不能点 */
+    html+='<span class="lab cnt t'+c[3]+(has?' has':'')+'" data-i="'+(LABS.length-1)+'">'+esc(nm)+'</span>';
   });
   CONTINENTS.forEach(function(c){
     var nm=LANG==="en"?CONTINENTS_EN[c[0]]:c[0];
@@ -2440,7 +2441,7 @@ window.addEventListener("resize",resize);
 /* 地名点击 */
 $("#labels").addEventListener("click",function(e){
   if(S.moved)return;
-  var b=e.target.closest("[data-pin],[data-city],[data-country]");if(!b)return;
+  var b=e.target.closest("[data-pin],[data-city]");if(!b)return;
   if(b.hasAttribute("data-pin")){
     var pid=b.getAttribute("data-pin");
     if(REP.on)repJumpTo(pid);
@@ -2450,10 +2451,6 @@ $("#labels").addEventListener("click",function(e){
   if(b.hasAttribute("data-city")){
     var p=byId(b.getAttribute("data-city"));
     flyTo(p.lat,p.lon,Math.max(S.zoomT,3));openCity(p.id);
-  }else{
-    var nm=b.getAttribute("data-country"),c=COUNTRIES.filter(function(x){return x[0]===nm;})[0];
-    if(c)flyTo(c[2],c[1],Math.max(S.zoomT,1.9));
-    openCountry(nm);
   }
 });
 
