@@ -1350,7 +1350,8 @@ body.cityopen .hp,body.catopen .hp{opacity:0;pointer-events:none}
 .hp-cnt{align-self:flex-end;color:var(--mf3);font-size:12px;margin-top:-4px}
 .hp-ed .mseg button{display:flex;align-items:center;justify-content:center;gap:6px}
 .hp-ed .mseg svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.hp-pn{color:var(--mf3);font-size:12.5px;padding:0 4px}
+.hp-pn{display:flex;align-items:center;gap:5px;color:var(--mf3);font-size:12.5px;padding:0 4px}
+.hp-pn svg{width:13px;height:13px;flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .hp-eb{display:flex;align-items:center;gap:8px}
 .hp-eb>span{flex:1}
 .hp-eb .mlink.red{color:var(--mred)}
@@ -1366,30 +1367,6 @@ body.cityopen .hp,body.catopen .hp{opacity:0;pointer-events:none}
   body.hpon #fpbar{opacity:0;pointer-events:none}
 }
 
-/* ---------- 城市页：旅行者手记 ---------- */
-.nt{margin:34px 0 10px}
-.nt-h{display:flex;align-items:baseline;gap:8px;margin:0 0 14px;font:700 21px/1.25 var(--f-body);color:var(--ink)}
-.nt-h small{font:500 14px/1 var(--f-body);color:var(--ink3)}
-.nt-it{padding:16px 18px;border-radius:18px;background:#f5f5f7;margin-bottom:12px}
-.nt-au{display:flex;align-items:center;gap:10px}
-.nt-au .av{width:34px;height:34px;font-size:14px}
-.nt-au .av{flex:none}
-.nt-au>span:not(.av){flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
-.nt-au b{font:600 14.5px/1.3 var(--f-body);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.nt-au small{font-size:12.5px;color:var(--ink2)}
-.nt-rp{flex:none;width:32px;height:32px;border:0;border-radius:50%;background:none;color:var(--ink3);display:grid;place-items:center;cursor:pointer}
-.nt-rp:hover{background:rgba(0,0,0,.05)}
-.nt-rp svg{width:18px;height:18px;fill:currentColor}
-.nt-b{margin:10px 0 0;color:var(--ink);font-size:15.5px;line-height:1.65;white-space:pre-wrap;word-break:break-word;display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden}
-.nt-b.open{display:block;-webkit-line-clamp:unset}
-.nt-mo{margin-top:4px;padding:0;border:0;background:none;color:#0071E3;font:500 14px/1.4 var(--f-body);cursor:pointer}
-.nt-f{display:flex;justify-content:flex-end;margin-top:8px}
-.nt-lk{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:0 12px;border:0;border-radius:999px;background:#fff;color:var(--ink2);font:600 14px/1 var(--f-body);cursor:pointer;box-shadow:0 0 0 .5px rgba(0,0,0,.08);transition:color .2s,transform .15s}
-.nt-lk:active{transform:scale(.94)}
-.nt-lk svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2}
-.nt-lk.on{color:#FF2D55}
-.nt-lk.on svg{fill:#FF2D55;stroke:#FF2D55}
-.nt-lk:disabled{cursor:default;opacity:.75;box-shadow:none;background:transparent}
 
 </style>
 </head>
@@ -4302,7 +4279,6 @@ function cvComm(id,keep){
   var fg=C.fp&&C.fp.self&&(C.fp.groups||[]).filter(function(x){return x.id===id;})[0];
   var own=!!(fg&&myId());
   var ids=fg?[id].concat(fg.subs.map(function(q){return q.id;}).filter(function(x){return x!==id;})):[id].concat((C.subs&&C.subs[id])||[]);
-  if(!keep&&typeof ntLoad==="function")ntLoad(ids);
   if(!keep){CVC.id=id;CVC.ids=ids;CVC.own=own;CVC.items=[];CVC.more=false;CVC.stats=null;CVC.tab="all";CVC.pl="";CVC.sub=null;}
   if(own&&!keep)PHOTOS[id]=[];
   CVC.loading=true;CVC.cur=own?[]:curItems(id);cvTabs();cvGridRender();
@@ -4849,10 +4825,10 @@ function adminOpen(){
     if(!order.length){l.innerHTML='<div class="pf-empty">'+tr("admEmpty")+'</div>';return;}
     l.innerHTML=order.map(function(k){
       var g=by[k],x=g.x,img=x.kind==="media"&&x.preview?'<img src="'+esc(pubURL(x.preview))+'" alt="" onerror="this.style.visibility=\'hidden\'">':"";
-      return '<div class="adm-it" data-k="'+esc(x.kind)+'" data-t="'+x.target+'" data-o="'+(x.owner||"")+'">'+img+'<div><b>'+(x.kind==="media"?tr("admMedia"):x.kind==="note"?tr("admNote"):tr("admUser"))+' · '+esc(tr("admN")(+x.n))+(x.hidden?' · '+tr("admAuto"):"")+'</b>'+
+      return '<div class="adm-it" data-k="'+esc(x.kind)+'" data-t="'+x.target+'" data-o="'+(x.owner||"")+'">'+img+'<div><b>'+(x.kind==="media"?tr("admMedia"):tr("admUser"))+' · '+esc(tr("admN")(+x.n))+(x.hidden?' · '+tr("admAuto"):"")+'</b>'+
         (x.kind!=="media"&&x.preview?'<span class="q">'+esc(x.preview)+'</span>':"")+'<small>'+esc(g.rs.join(" / "))+' · '+ago(x.created_at)+'</small><div class="bt">'+
-        (x.kind!=="user"?'<button type="button" class="mbtn sm" data-ad="hide">'+tr("hide")+'</button>':"")+
-        (x.kind!=="user"&&x.hidden?'<button type="button" class="mbtn sec sm" data-ad="unhide">'+tr("unhide")+'</button>':"")+
+        (x.kind==="media"?'<button type="button" class="mbtn sm" data-ad="hide">'+tr("hide")+'</button>':"")+
+        (x.kind==="media"&&x.hidden?'<button type="button" class="mbtn sec sm" data-ad="unhide">'+tr("unhide")+'</button>':"")+
         '<button type="button" class="mbtn sec sm" data-ad="dismiss">'+tr("admDismiss")+'</button>'+
         (x.owner?'<button type="button" class="mbtn red sm" data-ad="ban">'+tr("banUser")+'</button>':"")+'</div></div></div>';
     }).join("");
@@ -5596,31 +5572,27 @@ window.addEventListener("keydown",function(e){
 },true);
 
 /* ---------- 个人主页（从“我的足迹”打开）：地球退到左边，右边按地方列出照片和文字；
-   文字可以公开到城市页，别人能点赞、不能评论 ---------- */
+   文字只有自己能看到 ---------- */
 Object.assign(I18N.zh,{
   hpB:"主页",hpH:"个人主页",hpEmpty:"还没有足迹。点下方的“添加”记下去过的地方。",
   hpNoPh:"这里还没有照片",hpPhHint:"点照片可以看大图，并设置公开或删除",hpAddPh:"上传照片",
   hpWrite:"写点文字",hpNotePh:"写下这里的故事、日记或感受…",hpEdit:"编辑",hpSave:"保存",hpCancel:"取消",hpDelNote:"删除这段文字",
-  hpDelNoteQ:"确定删除这段文字吗？",hpSaved:"已保存",hpPub:"公开到城市页",hpPriv:"仅自己可见",
-  hpPubNote:"公开后，别人在这座城市的页面上能看到这段文字并点赞，但不能评论。",hpPrivNote:"只有你自己能看到。",
-  hpLikes:function(n){return n+" 人点赞";},hpNoNotes:"文字功能还没开通：需要先在 Supabase 里运行数据库更新。",
-  hpGo:"在地球上看",ntH:"旅行者手记",ntLike:"点赞",ntUnlike:"取消点赞",ntMore:"展开",ntLess:"收起",ntMine:"我写的",admNote:"文字"
+  hpDelNoteQ:"确定删除这段文字吗？",hpSaved:"已保存",hpPrivNote:"文字只有你自己能看到。",hpNoNotes:"文字功能还没开通：需要先在 Supabase 里运行数据库更新。",
+  hpGo:"在地球上看"
 });
 Object.assign(I18N.en,{
   hpB:"Profile",hpH:"My profile",hpEmpty:"No places yet. Tap “Add” below to record where you’ve been.",
   hpNoPh:"No photos here yet",hpPhHint:"Tap a photo to view it, share it or delete it",hpAddPh:"Upload photos",
   hpWrite:"Write something",hpNotePh:"The story, a diary entry, how it felt…",hpEdit:"Edit",hpSave:"Save",hpCancel:"Cancel",hpDelNote:"Delete this text",
-  hpDelNoteQ:"Delete this text?",hpSaved:"Saved",hpPub:"Share on the city page",hpPriv:"Only me",
-  hpPubNote:"Others will see this on the city page and can like it, but can’t comment.",hpPrivNote:"Only you can see this.",
-  hpLikes:function(n){return n===1?"1 like":n+" likes";},hpNoNotes:"Writing isn’t available yet: the database update needs to be run in Supabase first.",
-  hpGo:"Show on globe",ntH:"Travelers’ notes",ntLike:"Like",ntUnlike:"Unlike",ntMore:"More",ntLess:"Less",ntMine:"Mine",admNote:"Text"
+  hpDelNoteQ:"Delete this text?",hpSaved:"Saved",hpPrivNote:"Only you can see your writing.",hpNoNotes:"Writing isn’t available yet: the database update needs to be run in Supabase first.",
+  hpGo:"Show on globe"
 });
 ICN.edit='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5h4l10-10a2.8 2.8 0 0 0-4-4l-10 10z"/><path d="M13 7l4 4"/></svg>';
 
-var NT_COLS="id,user_id,city_id,city_zh,city_en,cc,body,is_public,hidden,n_likes,created_at,updated_at";
+var NT_COLS="id,user_id,city_id,city_zh,city_en,cc,body,created_at,updated_at";
 /* 表还没建好（数据库没更新）时，文字功能整个藏起来 */
 function ntMissing(e){var s=String((e&&(e.code||""))+" "+(e&&e.message||""));return /PGRST205|42P01|notes/.test(s);}
-var HP={el:null,media:[],notes:{},edit:null,ok:true,pub:false,busy:false,gen:0};
+var HP={el:null,media:[],notes:{},edit:null,ok:true,busy:false,gen:0};
 
 function hpOn(){return !!(HP.el&&!HP.el.hidden&&!HP.el.classList.contains("out"));}
 function hpEl(){
@@ -5714,27 +5686,19 @@ function hpBlock(q){
 function hpNote(n){
   if(!n)return '<button type="button" class="hp-write" data-h="write">'+ICN.edit+'<span>'+esc(tr("hpWrite"))+'</span></button>';
   return '<div class="hp-note"><p>'+esc(n.body)+'</p><div class="hp-nm">'+
-    '<span class="hp-vis'+(n.is_public?" pub":"")+'">'+(n.is_public?ICN.globe:ICN.lock)+esc(tr(n.is_public?"pubTag":"privTag"))+'</span>'+
-    (n.is_public?'<span class="hp-lk">'+ICN.heart+esc(tr("hpLikes")(n.n_likes||0))+'</span>':"")+(n.hidden?'<span class="hp-vis">'+esc(tr("hiddenTag"))+'</span>':"")+
+    '<span class="hp-vis">'+ICN.lock+esc(tr("privTag"))+'</span>'+
     '<button type="button" class="mlink" data-h="write">'+esc(tr("hpEdit"))+'</button></div></div>';
 }
 function hpEditor(n){
-  var pub=HP.pub;
   return '<div class="hp-ed"><textarea id="hpTa" maxlength="2000" rows="5" placeholder="'+esc(tr("hpNotePh"))+'">'+esc(n?n.body:"")+'</textarea>'+
     '<small id="hpCnt" class="hp-cnt">'+(n?n.body.length:0)+' / 2000</small>'+
-    '<div class="mseg" role="radiogroup"><button type="button" role="radio" data-hv="0" aria-checked="'+!pub+'">'+ICN.lock+esc(tr("hpPriv"))+'</button>'+
-    '<button type="button" role="radio" data-hv="1" aria-checked="'+pub+'">'+ICN.globe+esc(tr("hpPub"))+'</button></div>'+
-    '<small class="hp-pn">'+esc(tr(pub?"hpPubNote":"hpPrivNote"))+'</small>'+
+    '<small class="hp-pn">'+ICN.lock+esc(tr("hpPrivNote"))+'</small>'+
     '<div class="hp-eb">'+(n?'<button type="button" class="mlink red" data-h="del">'+esc(tr("hpDelNote"))+'</button>':"")+'<span></span>'+
     '<button type="button" class="mbtn sec sm" data-h="cancel">'+esc(tr("hpCancel"))+'</button>'+
     '<button type="button" class="mbtn sm" data-h="save">'+esc(tr("hpSave"))+'</button></div><p class="merr" id="hpErr"></p></div>';
 }
-function hpKeep(){var ta=$("#hpTa");return ta?ta.value:null;}
 function hpClick(e){
-  var b=e.target.closest("[data-h],[data-hv]");if(!b)return;
-  if(b.hasAttribute("data-hv")){
-    var t=hpKeep();HP.pub=b.getAttribute("data-hv")==="1";hpRender();var ta=$("#hpTa");if(ta&&t!==null){ta.value=t;$("#hpCnt").textContent=t.length+" / 2000";}return;
-  }
+  var b=e.target.closest("[data-h]");if(!b)return;
   var a=b.getAttribute("data-h"),sec=b.closest("[data-pl]"),id=sec&&sec.getAttribute("data-pl");
   if(a==="x"){hpClose();return;}
   if(a==="go"){var q=(C.fp.list||[]).filter(function(x){return x.id===id;})[0];if(q){flyTo(q.lat,q.lon,3);S.hold=true;}return;}
@@ -5742,7 +5706,7 @@ function hpClick(e){
   if(a==="up"){upStart(id);return;}
   if(a==="write"){
     if(HP.edit&&HP.edit!==id&&!hpLeaveOK())return;
-    HP.edit=id;HP.pub=!!(HP.notes[id]&&HP.notes[id].is_public);hpRender();return;
+    HP.edit=id;hpRender();return;
   }
   if(a==="cancel"){HP.edit=null;hpRender();return;}
   if(a==="save"){hpSave(id,b);return;}
@@ -5762,14 +5726,13 @@ function hpLeaveOK(){
 }
 function hpSave(id,btn){
   var ta=$("#hpTa");if(!ta||HP.busy)return;
-  var body=ta.value.trim(),n=HP.notes[id],pub=HP.pub;
+  var body=ta.value.trim(),n=HP.notes[id];
   var q=(C.fp.list||[]).filter(function(x){return x.id===id;})[0]||{},p=place(id)||{};
   var done=function(r){
     HP.busy=false;btn.disabled=false;
     if(r.error){$("#hpErr").textContent=ntMissing(r.error)?tr("hpNoNotes"):errText(r.error);return;}
     if(r.data)HP.notes[id]=r.data;else delete HP.notes[id];
     HP.edit=null;hpRender();toast(tr("hpSaved"));
-    if(CVC.id)ntLoad(CVC.ids||[CVC.id]);
   };
   HP.busy=true;btn.disabled=true;
   if(!body){
@@ -5777,10 +5740,10 @@ function hpSave(id,btn){
     C.sb.from("notes").delete().eq("id",n.id).then(function(r){done({error:r.error,data:null});});
     return;
   }
-  if(n)C.sb.from("notes").update({body:body,is_public:pub}).eq("id",n.id).select(NT_COLS).single().then(done);
+  if(n)C.sb.from("notes").update({body:body}).eq("id",n.id).select(NT_COLS).single().then(done);
   else{
     var m=hpMediaOf(id)[0]||{};
-    C.sb.from("notes").insert({city_id:id,city_zh:(p.zh||m.city_zh||q.name||"").slice(0,80),city_en:(p.en||m.city_en||"").slice(0,80),cc:p.cc||q.cc||"",body:body,is_public:pub})
+    C.sb.from("notes").insert({city_id:id,city_zh:(p.zh||m.city_zh||q.name||"").slice(0,80),city_en:(p.en||m.city_en||"").slice(0,80),cc:p.cc||q.cc||"",body:body})
       .select(NT_COLS).single().then(done);
   }
 }
@@ -5790,70 +5753,6 @@ window.addEventListener("keydown",function(e){
   var tg=e.target&&e.target.tagName;if(tg==="TEXTAREA")return;
   hpClose();e.stopImmediatePropagation();
 },true);
-
-/* ---------- 城市页：旅行者公开的文字，可以点赞 ---------- */
-var NT={gen:0,list:[],liked:{}};
-function ntHost(){
-  var h=$("#cvNotes");
-  if(!h){var c=$("#cvComm");if(!c)return null;h=document.createElement("div");h.id="cvNotes";h.className="nt";h.hidden=true;c.appendChild(h);}
-  return h;
-}
-function ntLoad(ids){
-  var host=ntHost();if(!host)return;
-  var g=++NT.gen;host.hidden=true;host.innerHTML="";NT.list=[];
-  if(!cOK()||!ids||!ids.length)return;
-  var q=C.sb.from("notes").select(NT_COLS+",author:profiles!notes_user_id_fkey(id,name,avatar)").eq("is_public",true).eq("hidden",false);
-  q=ids.length>1?q.in("city_id",ids):q.eq("city_id",ids[0]);
-  q.order("n_likes",{ascending:false}).order("created_at",{ascending:false}).limit(50).then(function(r){
-    if(g!==NT.gen||r.error)return;
-    NT.list=r.data||[];
-    if(!NT.list.length||!myId())return {data:[]};
-    return C.sb.from("note_likes").select("note_id").in("note_id",NT.list.map(function(n){return n.id;}));
-  }).then(function(r){
-    if(g!==NT.gen||!r)return;
-    NT.liked={};(r.data||[]).forEach(function(x){NT.liked[x.note_id]=1;});
-    ntRender();
-  }).catch(function(){});
-}
-function ntRender(){
-  var host=ntHost();if(!host)return;
-  if(!NT.list.length){host.hidden=true;host.innerHTML="";return;}
-  host.hidden=false;
-  host.innerHTML='<h3 class="nt-h">'+esc(tr("ntH"))+'<small>'+NT.list.length+'</small></h3>'+NT.list.map(function(n){
-    var mine=n.user_id===myId(),lk=!!NT.liked[n.id];
-    return '<article class="nt-it" data-nt="'+n.id+'"><div class="nt-au">'+avHTML(n.author)+'<span><b>'+esc(uname(n.author))+'</b><small>'+
-      esc([CVC.ids&&CVC.ids.length>1?rowCity(n):"",ymText((n.updated_at||n.created_at).slice(0,10)),mine?tr("ntMine"):""].filter(Boolean).join(" · "))+'</small></span>'+
-      (mine?"":'<button type="button" class="nt-rp" data-nr aria-label="'+esc(tr("report"))+'">'+ICN.dots+'</button>')+'</div>'+
-      '<p class="nt-b">'+esc(n.body)+'</p><button type="button" class="nt-mo" data-nm hidden>'+esc(tr("ntMore"))+'</button>'+
-      '<div class="nt-f"><button type="button" class="nt-lk'+(lk?" on":"")+'" data-nl'+(mine?' disabled':"")+' aria-pressed="'+lk+'" aria-label="'+esc(tr(lk?"ntUnlike":"ntLike"))+'">'+ICN.heart+'<span>'+(n.n_likes||0)+'</span></button></div></article>';
-  }).join("");
-  /* 很长的文字先收起，点“展开”看全部 */
-  Array.prototype.forEach.call(host.querySelectorAll(".nt-b"),function(p){if(p.scrollHeight>p.clientHeight+4)p.nextSibling.hidden=false;});
-}
-$("#cityv").addEventListener("click",function(e){
-  var b=e.target.closest("#cvNotes button");if(!b)return;
-  var it=b.closest("[data-nt]"),id=it&&it.getAttribute("data-nt"),n=NT.list.filter(function(x){return x.id===id;})[0];if(!n)return;
-  if(b.hasAttribute("data-nm")){var p=$(".nt-b",it),open=p.classList.toggle("open");b.textContent=tr(open?"ntLess":"ntMore");return;}
-  if(b.hasAttribute("data-nr")){reportMenu(b,"note",n.id,false);return;}
-  if(b.hasAttribute("data-nl")){
-    if(n.user_id===myId())return;
-    if(!needLogin(function(){ntLoad(CVC.ids||[CVC.id]);}))return;
-    var on=!NT.liked[n.id];
-    /* 先改界面，失败了再改回来 */
-    NT.liked[n.id]=on?1:0;n.n_likes=Math.max(0,(n.n_likes||0)+(on?1:-1));ntPaint(it,n);
-    var q=on?C.sb.from("note_likes").insert({note_id:n.id}):C.sb.from("note_likes").delete().eq("note_id",n.id).eq("user_id",myId());
-    q.then(function(r){
-      if(r.error&&!(on&&/duplicate|unique/i.test(r.error.message||""))){
-        NT.liked[n.id]=on?0:1;n.n_likes=Math.max(0,n.n_likes+(on?-1:1));ntPaint(it,n);toast(errText(r.error));
-      }
-    });
-  }
-});
-function ntPaint(it,n){
-  var b=$("[data-nl]",it),lk=!!NT.liked[n.id];
-  b.classList.toggle("on",lk);b.setAttribute("aria-pressed",lk);b.setAttribute("aria-label",tr(lk?"ntUnlike":"ntLike"));
-  $("span",b).textContent=n.n_likes||0;
-}
 
 
 applyLang();
