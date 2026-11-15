@@ -2056,7 +2056,7 @@ function buildLabels(){
   var host=$("#labels"),html="";
   LABS=[];
   commPins().forEach(function(q){
-    LABS.push({k:"pin",id:q.id,lat:q.lat,lon:q.lon,v:llv(q.lat,q.lon),name:q.name,img:q.img,nw:q.name.length*(LANG==="en"?8.2:15)+6});
+    LABS.push({k:"pin",id:q.id,lat:q.lat,lon:q.lon,v:llv(q.lat,q.lon),name:q.name,img:q.img,t:q.fp?1:(q.t||3),nw:q.name.length*(LANG==="en"?8.2:15)+6});
     html+='<button type="button" class="lab pin'+(q.fp?' fp':'')+'" data-i="'+(LABS.length-1)+'" data-pin="'+esc(q.id)+'" aria-label="'+esc(q.name)+'"><span class="ph"><img alt="" decoding="async"><b>'+esc(q.badge||"")+'</b></span><span class="pn">'+esc(q.name)+'</span></button>';
   });
   var minZ={1:1.2,2:1.7,3:2.4};
@@ -2081,6 +2081,8 @@ function updateLabels(VP,eye,d,z){
   var fs={1:16,2:14,3:12.5};
   /* 城市标记：放得下的显示照片圆，和别的圆重叠时缩成小白点；白点压在照片圆上或挤在一起时不显示 */
   var R=17,np=0,circ=[],dots=[];
+  /* 足迹和旅程回放里的地点不分级；缩得越小，白点之间留的空越大 */
+  var tierAll=!!(C.fp||REP.on),dotGap=tierAll||z>=2.1?8:z>=1.5?12:16;
   for(var i=0;i<LABS.length&&LABS[i].k==="pin";i++){
     var L=LABS[i];np=i+1;L.vis=false;L.nmv=false;
     if(!vis)continue;
@@ -2090,12 +2092,13 @@ function updateLabels(VP,eye,d,z){
     var x=((VP[0]*v[0]+VP[4]*v[1]+VP[8]*v[2]+VP[12])/cw*.5+.5)*W,y=(.5-(VP[1]*v[0]+VP[5]*v[1]+VP[9]*v[2]+VP[13])/cw*.5)*H;
     L.x=x;L.y=y;
     if(x<-40||x>W+40||y<-30||y>H+30)continue;
-    var free=true;
-    for(var j=0;j<circ.length;j++){var c0=circ[j];if(Math.abs(c0[0]-x)<2*R+2&&Math.abs(c0[1]-y)<2*R+2){free=false;break;}}
+    /* 缩小时只给知名的地方画照片圆（第 2 级放大到 1.5、第 3 级放大到 2.1 才画），其余先缩成小白点 */
+    var free=tierAll||L.t===1||(L.t===2?z>=1.5:z>=2.1);
+    for(var j=0;free&&j<circ.length;j++){var c0=circ[j];if(Math.abs(c0[0]-x)<2*R+2&&Math.abs(c0[1]-y)<2*R+2){free=false;break;}}
     if(free){L.vis=true;L.dot=false;circ.push([x,y,i]);placed.push([x-R,y-R,x+R,y+R]);continue;}
     var ok=true;
     for(var j2=0;ok&&j2<circ.length;j2++){if(Math.hypot(circ[j2][0]-x,circ[j2][1]-y)<R+6)ok=false;}
-    for(var j3=0;ok&&j3<dots.length;j3++){if(Math.hypot(dots[j3][0]-x,dots[j3][1]-y)<8)ok=false;}
+    for(var j3=0;ok&&j3<dots.length;j3++){if(Math.hypot(dots[j3][0]-x,dots[j3][1]-y)<dotGap)ok=false;}
     if(ok){L.vis=true;L.dot=true;dots.push([x,y]);}
   }
   /* 名字：不压住别的标记和别的名字时才显示 */
@@ -3685,7 +3688,10 @@ function pinSource(){
   });
   /* 重叠时谁优先显示：城市知名度为主，照片多的往前提 */
   out.forEach(function(q){q.sc=q.pc+0.8*Math.log(1+q.n)/Math.LN2;});
-  out.sort(function(a,b){return b.sc-a.sc||b.n-a.n;});
+  /* 知名度分级（1 最知名）：缩小时只显示最知名的，放大后逐级显示更多 */
+  var tr0=(typeof CUR!=="undefined"&&CUR.tier)||{};
+  out.forEach(function(q){q.t=tr0[q.id]||3;});
+  out.sort(function(a,b){return a.t-b.t||b.sc-a.sc||b.n-a.n;});
   return out;
 }
 function commPins(){
@@ -3699,7 +3705,7 @@ function commPins(){
     });
   }
   var L=pinSource().slice(0,600).map(function(q){
-    return {id:q.id,lat:q.lat,lon:q.lon,name:q.name,badge:"",img:q.img};
+    return {id:q.id,lat:q.lat,lon:q.lon,name:q.name,badge:"",img:q.img,t:q.t};
   });
   /* 等地球贴图都加载完再预载，免得抢带宽 */
   (function go(){if(!S.ready){setTimeout(go,800);return;}setTimeout(function(){pinPreload(L.map(function(q){return q.img;}));},600);})();
@@ -4234,7 +4240,7 @@ var CUR={p:null,base:"photos/"},curP=null;
 function loadCurated(){
   if(curP)return curP;
   curP=(window.__ATLAS_PHOTOS?Promise.resolve(window.__ATLAS_PHOTOS):fetchRetry("photos.json"))
-    .then(function(d){CUR.p=d.p||{};CUR.base=d.base||"photos/";
+    .then(function(d){CUR.p=d.p||{};CUR.tier=d.tier||{};CUR.base=d.base||"photos/";
       /* 地名库还没到时，先用清单里自带的名字和坐标把城市标记画出来 */
       if(d.pl&&!C.P){Object.keys(d.pl).forEach(function(id){var f=d.pl[id];if(!C.PI[id])C.PI[id]={id:id,zh:f[0],en:f[1],lat:f[2],lon:f[3],cc:f[4],tz:f[5],pc:f[6],k:f[7],alt:""};});}
       refreshPins();return CUR.p;},function(){CUR.p={};return CUR.p;});
