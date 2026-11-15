@@ -937,7 +937,8 @@ body.cvlight .pop:not(.dk) hr{background:rgba(0,0,0,.1)}
 .pf-g .gi img{height:100%;object-fit:cover}
 .pf-g .gi small{position:absolute;left:8px;bottom:8px;color:#fff;font:600 12px/1.2 var(--f-body);text-shadow:0 1px 4px rgba(0,0,0,.6)}
 .pf-empty{padding:26px 22px 34px;text-align:center;color:var(--mf2);font-size:15px}
-.pf-edit{padding:30px 22px 22px}
+.pf-edit{padding:4px 22px 22px}
+.pf-edit h2{margin:0 52px 22px 0}
 .pf-avedit{display:flex;align-items:center;gap:14px;margin:0 0 18px}
 .pf-avedit .av{width:72px;height:72px;font-size:28px}
 .pf-danger{margin-top:26px;padding-top:18px;border-top:.5px solid var(--mline)}
@@ -1330,12 +1331,12 @@ body.cityopen .hp,body.catopen .hp{opacity:0;pointer-events:none}
 .hp-g .pv{position:absolute;right:5px;top:5px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.45);color:#fff}
 .hp-g .pv.pub{background:rgba(10,132,255,.85)}
 .hp-g .pv svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.hp-add{aspect-ratio:1;border:1.5px dashed var(--mf3);border-radius:10px;background:none;color:var(--mf2);display:grid;place-items:center;cursor:pointer}
+.hp-add{aspect-ratio:1;border:0;border-radius:10px;background:rgba(0,0,0,.32);color:var(--mf2);display:grid;place-items:center;cursor:pointer}
 .hp-add svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
 .hp-noph{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:12px;background:var(--mfill);color:var(--mf2);font-size:14px}
 .hp-noph .mbtn svg,.hp-write svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.hp-write{display:flex;align-items:center;gap:8px;width:100%;margin-top:10px;padding:12px 14px;border:1.5px dashed var(--mline);border-radius:12px;background:none;color:var(--mf2);font:500 14.5px/1.3 var(--f-body);cursor:pointer;text-align:left}
-.hp-write:hover{background:var(--mfill);color:var(--mf)}
+.hp-write{display:flex;align-items:center;gap:8px;width:100%;margin-top:10px;padding:12px 14px;border:0;border-radius:12px;background:rgba(0,0,0,.32);color:var(--mf2);font:500 14.5px/1.3 var(--f-body);cursor:pointer;text-align:left}
+.hp-write:hover,.hp-add:hover{background:rgba(0,0,0,.45);color:var(--mf)}
 .hp-note{margin-top:10px;padding:12px 14px;border-radius:12px;background:var(--mfill)}
 .hp-note p{margin:0;white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.6}
 .hp-nm{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;margin-top:10px;font-size:12.5px;color:var(--mf2)}
@@ -1639,7 +1640,7 @@ function sunPos(ms){
 /* ---------- 状态 ---------- */
 var S={
   W:innerWidth,H:innerHeight,dpr:1,
-  started:false,layoutE:0,layoutAnim:null,sideT:0,sideK:0,
+  started:false,layoutE:0,layoutAnim:null,sideT:0,sideK:0,liftK:0,
   lat:22,lon:0,zoom:1,zoomT:1,
   spin:!reduced(),labels:true,spinK:1,spinAccum:0,
   dragging:false,moved:false,lonV:0,latV:0,lastInteract:0,
@@ -2028,11 +2029,14 @@ function layout(){
   var k=S.sideK;
   if(k>0.0005){
     var cx2,cy2,R2;
-    if(W>=760){var pw=Math.min(480,W*0.44)+32,Wl=W-pw;cx2=Wl*0.5+8;cy2=H*0.53;R2=Math.min(.40*H,.42*Wl);}
+    if(W>=760){var pw=Math.min(480,W*0.44)+32,Wl=W-pw;cx2=Wl*0.5+8;cy2=H*0.465;R2=Math.min(.37*H,.42*Wl);}
     else{var top=64,Ht=H*0.40;cx2=W*0.5;cy2=top+(Ht-top)*0.5+6;R2=Math.min(.42*W,.46*(Ht-top));}
     var Rc2=lerp(Rc,R2,k),f=Rc2/Rc;
     o={cx:lerp(o.cx,cx2,k),cy:lerp(o.cy,cy2,k),R:o.R*f,Rc:Rc2};
   }
+  /* 我的足迹打开时下方有足迹栏：地球整体往上提一点，看起来不挤 */
+  var lf=S.liftK*(1-k);
+  if(lf>0.0005)o.cy-=H*0.04*lf;
   return o;
 }
 function zoomMax(){
@@ -2162,6 +2166,8 @@ function render(now){
     if(S.layoutAnim.t>=1){S.layoutAnim=null;S.layoutE=1;}else S.layoutE=ease(S.layoutAnim.t);
   }
   /* 个人主页开合时地球平滑移位 */
+  var lt=(typeof C!=="undefined"&&C.fp)?1:0;
+  if(S.liftK!==lt){S.liftK+=(lt-S.liftK)*(1-Math.exp(-dta*4));if(Math.abs(lt-S.liftK)<0.001)S.liftK=lt;}
   if(S.sideK!==S.sideT){S.sideK+=(S.sideT-S.sideK)*(1-Math.exp(-dta*5.5));if(Math.abs(S.sideT-S.sideK)<0.001)S.sideK=S.sideT;}
   /* 缩放 */
   S.zoomT=clamp(S.zoomT,0.7,zoomMax());
