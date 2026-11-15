@@ -4591,13 +4591,10 @@ function pfBatch(pub){
   });
 }
 function pfEditHTML(){
-  var me=C.me||{},on=!!me.track_at;
+  var me=C.me||{};
   return mx()+'<div class="pf-edit"><h2 id="mH">'+tr("pfEdit")+'</h2><form id="pfForm" novalidate>'+
     '<div class="pf-avedit"><span id="pfAv">'+avHTML(me)+'</span><button type="button" class="mbtn sec sm" data-pf="av">'+tr(me.avatar?"changeAv":"addAv")+'</button></div>'+
     '<label class="fld"><span>'+tr("nick")+'</span><input id="pfName" maxlength="24" value="'+esc(me.name||"")+'" placeholder="'+tr("nickPh")+'"></label>'+
-    '<label class="fld"><span>'+tr("bio")+'</span><textarea id="pfBio" maxlength="160" rows="2" placeholder="'+tr("bioPh")+'">'+esc(me.bio||"")+'</textarea></label>'+
-    '<div class="fld" style="flex-direction:row;align-items:center;gap:14px"><span style="flex:1;display:flex;flex-direction:column;gap:3px;padding:0 4px"><b style="color:var(--mf);font-weight:500;font-size:15px">'+tr("trackRow")+'</b><small style="padding:0">'+tr("trackRowSub")+'</small></span>'+
-    '<button type="button" class="tg" role="switch" data-pf="track" aria-checked="'+on+'" aria-label="'+tr("trackRow")+'"></button></div>'+
     '<button class="mbtn" id="pfSave">'+tr("save")+'</button><p class="merr" id="pfErr"></p></form>'+
     '<div class="pf-danger"><button type="button" class="mbtn red" data-pf="del">'+tr("delAcct")+'</button></div></div>';
 }
@@ -4636,10 +4633,10 @@ mcard.addEventListener("click",function(e){
 });
 mcard.addEventListener("submit",function(e){
   if(M.kind!=="pf")return;e.preventDefault();
-  var nm=($("#pfName").value||"").trim(),bio=($("#pfBio").value||"").trim(),btn=$("#pfSave");
+  var nm=($("#pfName").value||"").trim(),btn=$("#pfSave");
   if(!nm){$("#pfErr").textContent=tr("nameReq");return;}
   btn.disabled=true;
-  saveProfile({name:nm.slice(0,24),bio:bio.slice(0,160)},pfAvBlob).then(function(){pfAvBlob=null;toast(tr("saved"));mClose(true);if(typeof hpOn==="function"&&hpOn())hpRender();},function(er){btn.disabled=false;$("#pfErr").textContent=errText(er);});
+  saveProfile({name:nm.slice(0,24)},pfAvBlob).then(function(){pfAvBlob=null;toast(tr("saved"));mClose(true);if(typeof hpOn==="function"&&hpOn())hpRender();},function(er){btn.disabled=false;$("#pfErr").textContent=errText(er);});
 });
 function delAcctView(){
   mSet(mx()+'<div class="pf-edit"><h2 id="mH">'+tr("delAcct")+'</h2><p class="msub">'+tr("delAcctSub")+'</p>'+
@@ -5641,7 +5638,7 @@ function hpClose(){
 }
 function hpHead(){
   var p=C.me||{};
-  return '<header class="hp-head">'+avHTML(p)+'<div><h2 id="hpH">'+esc(uname(p))+'</h2><small>'+esc(tr("hpH"))+(p.bio?" · "+esc(p.bio):"")+'</small></div>'+
+  return '<header class="hp-head">'+avHTML(p)+'<div><h2 id="hpH">'+esc(uname(p))+'</h2><small>'+esc(tr("hpH"))+'</small></div>'+
     '<button type="button" class="mx" data-h="x" aria-label="'+esc(tr("close"))+'">'+ICN.x+'</button></header>';
 }
 /* “2024年6月” / “2024年6月 – 2025年3月” */
