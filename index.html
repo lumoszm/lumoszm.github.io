@@ -2082,7 +2082,7 @@ function updateLabels(VP,eye,d,z){
   /* 城市标记：放得下的显示照片圆，和别的圆重叠时缩成小白点；白点压在照片圆上或挤在一起时不显示 */
   var R=17,np=0,circ=[],dots=[];
   /* 足迹和旅程回放里的地点不分级；缩得越小，白点之间留的空越大 */
-  var tierAll=!!(C.fp||REP.on),dotGap=tierAll||z>=2.0?8:12;
+  var tierAll=!!(C.fp||REP.on),dotGap=tierAll||z>=2.0?8:z>=1.35?12:64;
   for(var i=0;i<LABS.length&&LABS[i].k==="pin";i++){
     var L=LABS[i];np=i+1;L.vis=false;L.nmv=false;
     if(!vis)continue;
@@ -2097,8 +2097,9 @@ function updateLabels(VP,eye,d,z){
     var free=tierAll||L.t===1||z>=2.0;
     for(var j=0;free&&j<circ.length;j++){var c0=circ[j];if(Math.abs(c0[0]-x)<2*R+2&&Math.abs(c0[1]-y)<2*R+2){free=false;break;}}
     if(free){L.vis=true;L.dot=false;circ.push([x,y,i]);placed.push([x-R,y-R,x+R,y+R]);continue;}
-    var ok=tierAll||z>=1.35;
-    for(var j2=0;ok&&j2<circ.length;j2++){if(Math.hypot(circ[j2][0]-x,circ[j2][1]-y)<R+6)ok=false;}
+    /* 最初阶段只留少量白点：只给第 2 级的大城市，而且彼此、和照片圆之间都隔得很开 */
+    var st1=!tierAll&&z<1.35,ok=!st1||L.t===2;
+    for(var j2=0;ok&&j2<circ.length;j2++){if(Math.hypot(circ[j2][0]-x,circ[j2][1]-y)<(st1?R+34:R+6))ok=false;}
     for(var j3=0;ok&&j3<dots.length;j3++){if(Math.hypot(dots[j3][0]-x,dots[j3][1]-y)<dotGap)ok=false;}
     if(ok){L.vis=true;L.dot=true;dots.push([x,y]);}
   }
