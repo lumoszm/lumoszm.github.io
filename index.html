@@ -2082,7 +2082,8 @@ function updateLabels(VP,eye,d,z){
   /* 城市标记：放得下的显示照片圆，和别的圆重叠时缩成小白点；白点压在照片圆上或挤在一起时不显示 */
   var R=17,np=0,circ=[],dots=[];
   /* 足迹和旅程回放里的地点不分级；缩得越小，白点之间留的空越大 */
-  var tierAll=!!(C.fp||REP.on),gk=Math.max(0.45,Math.min(1,Math.min(W,H)/800)),dotGap=tierAll||z>=2.0?8:z>=1.35?12:52*gk;
+  /* 分级显示先关掉（用户要求恢复原来的显示方式）；想再打开，把 true 换回 !!(C.fp||REP.on) */
+  var tierAll=true,gk=Math.max(0.45,Math.min(1,Math.min(W,H)/800)),dotGap=tierAll||z>=2.0?8:z>=1.35?12:52*gk;
   for(var i=0;i<LABS.length&&LABS[i].k==="pin";i++){
     var L=LABS[i];np=i+1;L.vis=false;L.nmv=false;
     if(!vis)continue;
@@ -3693,7 +3694,7 @@ function pinSource(){
   /* 知名度分级（1 最知名）：缩小时只显示最知名的，放大后逐级显示更多 */
   var tr0=(typeof CUR!=="undefined"&&CUR.tier)||{};
   out.forEach(function(q){q.t=tr0[q.id]||3;});
-  out.sort(function(a,b){return a.t-b.t||b.sc-a.sc||b.n-a.n;});
+  out.sort(function(a,b){return b.sc-a.sc||b.n-a.n;});
   return out;
 }
 function commPins(){
