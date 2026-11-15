@@ -3428,7 +3428,7 @@ function renderAcct(){
   else if(!C.me){
     h='<div class="acct-login"><p>'+tr("loginLead")+'</p><button type="button" class="btn" data-a="login">'+tr("loginBtn")+'</button></div>';
   }else{
-    h='<button type="button" class="me-row" data-a="me">'+avHTML(C.me)+'<span><b>'+esc(uname(C.me))+'</b><small>'+tr("myAlbum")+'</small></span>'+ICN.chev+'</button>'+
+    h='<button type="button" class="me-row" data-a="me">'+avHTML(C.me)+'<span><b>'+esc(uname(C.me))+'</b><small>'+tr("pfEdit")+'</small></span>'+ICN.chev+'</button>'+
       '<div class="mlist">'+
       '<button type="button" class="mli" data-a="map"><span class="ico" style="--k:#30D158">'+ICN.globe+'</span><span>'+tr("showMap")+'</span>'+ICN.chev+'</button>'+
       (isAdmin()?'<button type="button" class="mli" data-a="admin"><span class="ico" style="--k:#FF9F0A">'+ICN.flag+'</span><span>'+tr("admin")+'</span>'+ICN.chev+'</button>':"")+
@@ -3443,7 +3443,7 @@ acct.addEventListener("click",function(e){
   var b=e.target.closest("[data-a]");if(!b)return;
   var a=b.getAttribute("data-a");toggleAcct(false);
   if(a==="login")authOpen();
-  else if(a==="me")profileOpen();
+  else if(a==="me")pfEditOpen();
   else if(a==="map")fpOpen();
   else if(a==="admin")adminOpen();
   else if(a==="out"){C.sb.auth.signOut().then(function(){toast(tr("signedOut"));if(C.fp&&C.fp.self)fpClose();});}
@@ -4602,6 +4602,12 @@ function pfEditHTML(){
     '<div class="pf-danger"><button type="button" class="mbtn red" data-pf="del">'+tr("delAcct")+'</button></div></div>';
 }
 var pfAvBlob=null;
+/* 账户菜单里点自己的名字：直接编辑资料（不再有“我的地图册”） */
+function pfEditOpen(){
+  if(!cOK()||!C.me)return;
+  PF={items:[],st:null,sel:null,busy:null};pfAvBlob=null;
+  mOpen("pf",pfEditHTML());
+}
 mcard.addEventListener("click",function(e){
   if(M.kind!=="pf")return;
   var g=e.target.closest("[data-pg]");
@@ -4622,7 +4628,7 @@ mcard.addEventListener("click",function(e){
   else if(a==="av")pickAvatar(function(blob){pfAvBlob=blob;$("#pfAv").innerHTML='<span class="av"><img src="'+URL.createObjectURL(blob)+'" alt=""></span>';});
   else if(a==="track"){
     var on=b.getAttribute("aria-checked")!=="true";
-    if(on){consentOpen(function(){profileOpen();});return;}
+    if(on){consentOpen(function(){pfEditOpen();});return;}
     C.sb.from("profiles").update({track_at:null}).eq("id",myId()).select().single().then(function(r){if(r.error){toast(errText(r.error));return;}C.me=r.data;meChanged();b.setAttribute("aria-checked","false");if(C.fp)fpClose();});
   }
   else if(a==="del")delAcctView();
@@ -4633,7 +4639,7 @@ mcard.addEventListener("submit",function(e){
   var nm=($("#pfName").value||"").trim(),bio=($("#pfBio").value||"").trim(),btn=$("#pfSave");
   if(!nm){$("#pfErr").textContent=tr("nameReq");return;}
   btn.disabled=true;
-  saveProfile({name:nm.slice(0,24),bio:bio.slice(0,160)},pfAvBlob).then(function(){pfAvBlob=null;toast(tr("saved"));profileOpen();},function(er){btn.disabled=false;$("#pfErr").textContent=errText(er);});
+  saveProfile({name:nm.slice(0,24),bio:bio.slice(0,160)},pfAvBlob).then(function(){pfAvBlob=null;toast(tr("saved"));mClose(true);if(typeof hpOn==="function"&&hpOn())hpRender();},function(er){btn.disabled=false;$("#pfErr").textContent=errText(er);});
 });
 function delAcctView(){
   mSet(mx()+'<div class="pf-edit"><h2 id="mH">'+tr("delAcct")+'</h2><p class="msub">'+tr("delAcctSub")+'</p>'+
