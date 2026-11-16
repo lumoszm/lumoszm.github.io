@@ -181,7 +181,7 @@ body:not(.loading) #loading{opacity:0}
 .started #moonBtn{opacity:1;pointer-events:auto}
 #moonBtn:hover{background:rgba(40,52,76,.6)}
 #moonBtn[aria-pressed="true"]{color:var(--warm)}
-#moonBtn.busy{opacity:.55!important;pointer-events:none}
+#moonBtn.busy{opacity:.8!important;pointer-events:none}
 body.cityopen #moonBtn,body.catopen #moonBtn,body.fpon #moonBtn,body.repon #moonBtn,body.hpon #moonBtn{display:none}
 body.moon #search,body.moon #fpBtn,body.moon #catBtn,body.moon #acctBtn{display:none}
 /* 月面地名 */
@@ -1545,14 +1545,14 @@ var HAS_COUNTRY={};
 var I18N={
   zh:{globe:"可旋转缩放的三维地球",settings:"设置",language:"语言",about:"ATLAS：转动三维地球，挑一座城市，学一句当地话，看看那里的节日、食物和手艺。",
       start:"点击地球以开始",loading:"正在载入地球…",tip:"拖拽转动 · 滚轮缩放 · 点击地名进入",tipTouch:"拖动转动 · 双指缩放 · 点击地名进入",
-      fbTitle:"这台设备打不开三维地球",fbText:"浏览器没有启用 WebGL。请换用最新版的 Chrome、Edge 或 Safari 再打开。",moonB:"月球",earthB:"地球",moonT:"去月球看看",earthT:"回到地球",moonLoad:"正在载入月球…",moonErr:"月球没有载入，请稍后再试",tipMoon:"拖拽转动 · 滚轮缩放 · 点击名字查看介绍",tipMoonTouch:"拖动转动 · 双指缩放 · 点击名字查看介绍",mk_m:"月海",mk_c:"环形山",mk_l:"着陆点",mk_r:"区域",mk_t:"山脉",moonImg:"月面影像：NASA / GSFC / 亚利桑那州立大学（LRO）",fbNetT:"地球没有载入完",fbNetP:"网络不稳定，地球贴图没有下载下来。检查一下网络后再试一次。",fbRetry:"重新载入",
+      fbTitle:"这台设备打不开三维地球",fbText:"浏览器没有启用 WebGL。请换用最新版的 Chrome、Edge 或 Safari 再打开。",moonB:"月球",earthB:"地球",moonBusy:"载入中…",moonT:"去月球看看",earthT:"回到地球",moonLoad:"正在载入月球…",moonErr:"月球没有载入，请稍后再试",tipMoon:"拖拽转动 · 滚轮缩放 · 点击名字查看介绍",tipMoonTouch:"拖动转动 · 双指缩放 · 点击名字查看介绍",mk_m:"月海",mk_c:"环形山",mk_l:"着陆点",mk_r:"区域",mk_t:"山脉",moonImg:"月面影像：NASA / GSFC / 亚利桑那州立大学（LRO）",fbNetT:"地球没有载入完",fbNetP:"网络不稳定，地球贴图没有下载下来。检查一下网络后再试一次。",fbRetry:"重新载入",
       dayOn:"全球白天",dayOff:"昼夜",dayOnT:"让整个地球都处在白天",dayOffT:"恢复昼夜",
       close:"关闭",prev:"上一个",next:"下一个",fest:"节日",food:"美食",craft:"手艺",tipRow:"入乡随俗",fact:"你知道吗",
       country:"国家",cities:"已收录的城市",pending:"介绍内容整理中。",back:"返回",backGlobe:"回到地球",photoSoon:"示意图 · 照片待添加",local:"当地",localTime:"当地时间",imgNote:"地球影像来源：NASA（Blue Marble、Black Marble、GIBS）",slide:"第 %s 张",about2:"介绍",searchPh:"搜索",searchAria:"搜索国家、城市或地点",clear:"清除",cancel:"取消",noRes:"没有找到相关地点",localDay:"当地时间，白天",localNight:"当地时间，夜晚",sep:"，",
       soon:function(n){return n+"的板块还在筹备中。现在先收录了五座试点城市，再往后会按国家逐步补上。";}},
   en:{globe:"Rotatable, zoomable 3D globe",settings:"Settings",language:"Language",about:"ATLAS: turn the globe, pick a city, learn a local greeting, and discover its festivals, food and crafts.",
       start:"Click the globe to begin",startTouch:"Tap the globe to begin",loading:"Loading the Earth…",tip:"Drag to rotate · Scroll to zoom · Click a name to open",tipTouch:"Drag to rotate · Pinch to zoom · Tap a name to open",
-      fbTitle:"This device can’t show the 3D globe",fbText:"WebGL isn’t available in this browser. Please try the latest Chrome, Edge or Safari.",moonB:"Moon",earthB:"Earth",moonT:"Visit the Moon",earthT:"Back to Earth",moonLoad:"Loading the Moon…",moonErr:"The Moon didn’t load. Please try again later.",tipMoon:"Drag to rotate · Scroll to zoom · Click a name for details",tipMoonTouch:"Drag to rotate · Pinch to zoom · Tap a name for details",mk_m:"Mare",mk_c:"Crater",mk_l:"Landing site",mk_r:"Region",mk_t:"Mountains",moonImg:"Lunar imagery: NASA / GSFC / Arizona State University (LRO)",fbNetT:"The globe didn’t finish loading",fbNetP:"The connection dropped while downloading the globe. Check your network and try again.",fbRetry:"Reload",
+      fbTitle:"This device can’t show the 3D globe",fbText:"WebGL isn’t available in this browser. Please try the latest Chrome, Edge or Safari.",moonB:"Moon",earthB:"Earth",moonBusy:"Loading…",moonT:"Visit the Moon",earthT:"Back to Earth",moonLoad:"Loading the Moon…",moonErr:"The Moon didn’t load. Please try again later.",tipMoon:"Drag to rotate · Scroll to zoom · Click a name for details",tipMoonTouch:"Drag to rotate · Pinch to zoom · Tap a name for details",mk_m:"Mare",mk_c:"Crater",mk_l:"Landing site",mk_r:"Region",mk_t:"Mountains",moonImg:"Lunar imagery: NASA / GSFC / Arizona State University (LRO)",fbNetT:"The globe didn’t finish loading",fbNetP:"The connection dropped while downloading the globe. Check your network and try again.",fbRetry:"Reload",
       dayOn:"All daylight",dayOff:"Day & night",dayOnT:"Light up the whole globe",dayOffT:"Back to day and night",
       close:"Close",prev:"Previous",next:"Next",fest:"Festival",food:"Food",craft:"Craft",tipRow:"Etiquette",fact:"Did you know?",
       country:"Country",cities:"Cities on ATLAS",pending:"Details for this city are on the way.",back:"Back",backGlobe:"Back to the globe",photoSoon:"Placeholder · photos coming soon",local:"Local",localTime:"Local time",imgNote:"Earth imagery: NASA (Blue Marble, Black Marble, GIBS)",slide:"Image %s",about2:"About",searchPh:"Search",searchAria:"Search countries, cities or places",clear:"Clear",cancel:"Cancel",noRes:"No matching places",localDay:"Local time, daytime",localNight:"Local time, night",sep:", ",
@@ -2377,17 +2377,26 @@ function moonLoad(){
   if(S.moonP)return S.moonP;
   var small=S.small;S.moonLoading=true;
   S.moonP=Promise.all([
-    loadTex("tex/moon4k.jpg",0,4096,false,function(w,h,im){tileThumb(im);}).then(function(t){S.tMoon=t;}),
-    loadTex("tex/moonh4k.jpg",3,small?2048:4096,true).then(function(t){S.tMoonH=t;})
+    /* 先用两张小图（共约 0.5MB）把月球显示出来，清晰的版本随后在后台换上 */
+    loadTex("tex/moon2k.jpg",0,2048,false,function(w,h,im){tileThumb(im);}).then(function(t){S.tMoon=t;}),
+    loadTex("tex/moonh2k.jpg",3,2048,true).then(function(t){S.tMoonH=t;})
   ]).then(function(){S.moonLoading=false;},function(e){S.moonLoading=false;S.moonP=null;throw e;});
   return S.moonP;
 }
 /* 电脑上再换成 8K 的月面 */
 function moonUpgrade(){
   var cn=navigator.connection||{};
-  if(S.small||S.moon8||cn.saveData||(gl.getParameter(gl.MAX_TEXTURE_SIZE)||0)<8192)return;
-  S.moon8=true;
-  loadTex("tex/moon8k.jpg",0,8192,false).then(function(t){var old=S.tMoon;S.tMoon=t;if(old&&old!==t)gl.deleteTexture(old);},function(){S.moon8=false;});
+  if(S.moonUp||cn.saveData)return;
+  S.moonUp=true;
+  function swapC(t){var old=S.tMoon;S.tMoon=t;if(old&&old!==t)gl.deleteTexture(old);}
+  /* 依次换成 4K 月面、4K 高程；电脑上最后再换 8K 月面 */
+  loadTex("tex/moon4k.jpg",0,4096,false).then(swapC).then(function(){
+    if(S.small)return;
+    return loadTex("tex/moonh4k.jpg",3,4096,true).then(function(t){var old=S.tMoonH;S.tMoonH=t;if(old&&old!==t)gl.deleteTexture(old);});
+  }).then(function(){
+    if(S.small||(gl.getParameter(gl.MAX_TEXTURE_SIZE)||0)<8192)return;
+    return loadTex("tex/moon8k.jpg",0,8192,false).then(swapC);
+  }).catch(function(){S.moonUp=false;});
 }
 var moonBtn=$("#moonBtn");
 function moonUI(){
@@ -2403,9 +2412,11 @@ function setBody(moon){
   if(!!S.moon===!!moon||!S.ready)return;
   if(moon&&!S.tMoon){
     if(moonBtn.classList.contains("busy"))return;
-    moonBtn.classList.add("busy");if(typeof toast==="function")toast(tr("moonLoad"),6000);
+    /* 载入期间按钮上一直显示“载入中…”，提示也一直留着，免得看起来像没反应 */
+    moonBtn.classList.add("busy");moonBtn.querySelector("span").textContent=tr("moonBusy");
+    if(typeof toast==="function")toast(tr("moonLoad"),120000);
     moonLoad().then(function(){moonBtn.classList.remove("busy");var t=$("#toast");if(t)t.classList.remove("on");setBody(true);},
-      function(){moonBtn.classList.remove("busy");if(typeof toast==="function")toast(tr("moonErr"));});
+      function(){moonBtn.classList.remove("busy");moonUI();if(typeof toast==="function")toast(tr("moonErr"),5000);});
     return;
   }
   if(!sheet.hidden)closeSheet();
