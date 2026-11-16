@@ -174,6 +174,28 @@ body.fpon #fpBtn{color:var(--warm)}
 }
 body:not(.loading) #loading{opacity:0}
 
+/* 左下角：月球 / 地球 切换 */
+#moonBtn{left:max(14px,env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));pointer-events:none;opacity:0;transition:opacity .8s 1s;
+  background:rgba(20,28,44,.42);-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);border-radius:999px;padding:8px 14px 8px 11px;box-shadow:0 0 0 .5px rgba(255,255,255,.14)}
+#moonBtn svg{width:18px;height:18px}
+.started #moonBtn{opacity:1;pointer-events:auto}
+#moonBtn:hover{background:rgba(40,52,76,.6)}
+#moonBtn[aria-pressed="true"]{color:var(--warm)}
+#moonBtn.busy{opacity:.55!important;pointer-events:none}
+body.cityopen #moonBtn,body.catopen #moonBtn,body.fpon #moonBtn,body.repon #moonBtn,body.hpon #moonBtn{display:none}
+body.moon #search,body.moon #fpBtn,body.moon #catBtn,body.moon #acctBtn{display:none}
+/* 月面地名 */
+.lab.mn{padding:4px 6px;border:0;background:none;cursor:pointer;color:#EEF2F6;font:500 12.5px/1 var(--f-body);letter-spacing:.06em;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;
+  text-shadow:0 0 5px rgba(0,0,0,.95),0 0 2px rgba(0,0,0,.95),0 1px 2px rgba(0,0,0,.9)}
+.lab.mn:hover span{text-decoration:underline;text-underline-offset:4px}
+.lab.mn-m{font-size:13.5px;letter-spacing:.14em;color:#DCE6F2}
+.lab.mn-r{font-size:13px;letter-spacing:.2em;color:#F3D9A4}
+.lab.mn-c{color:#D6DEE6}
+.lab.mn-l{color:#fff;font-weight:600;letter-spacing:.03em}
+.lab.mn-l i{flex:none;width:9px;height:9px;border-radius:50%;background:var(--warm,#f5c26b);box-shadow:0 0 0 2px rgba(0,0,0,.45),0 0 10px rgba(245,194,107,.9)}
+html[lang="en"] .lab.mn{letter-spacing:.02em}
+.mdesc{margin:14px 0 0;font:400 16px/1.7 var(--f-body);color:var(--fg)}
+.mmeta{margin:10px 0 0;font:500 13px/1.5 var(--f-body);color:var(--label2)}
 #tip{
   left:50%;translate:-50% 0;
   bottom:calc(26px + env(safe-area-inset-bottom,0px));
@@ -1423,6 +1445,7 @@ body.cityopen .hp,body.catopen .hp{opacity:0;pointer-events:none}
 <button type="button" class="ui" id="start" data-i18n="start">点击地球以开始</button>
 <div id="loading" aria-live="polite" data-i18n="loading">正在载入地球…</div>
 
+<button type="button" class="ui pill" id="moonBtn" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.6 6.6 0 0 0 10.5 10.5z"/></svg><span data-i18n="moonB">月球</span></button>
 <div class="ui" id="tip" data-i18n="tip">拖拽转动 · 滚轮缩放 · 点击地名进入</div>
 
 <div id="acct" class="glass" hidden role="dialog" aria-labelledby="acctH">
@@ -1463,7 +1486,7 @@ body.cityopen .hp,body.catopen .hp{opacity:0;pointer-events:none}
 
 
 <script src="lib/supabase-2.117.2.js"></script>
-<script src="lib/docs.js?v=20261115"></script>
+<script src="lib/docs.js?v=20261116"></script>
 <script>
 (function(){
 "use strict";
@@ -1522,14 +1545,14 @@ var HAS_COUNTRY={};
 var I18N={
   zh:{globe:"可旋转缩放的三维地球",settings:"设置",language:"语言",about:"ATLAS：转动三维地球，挑一座城市，学一句当地话，看看那里的节日、食物和手艺。",
       start:"点击地球以开始",loading:"正在载入地球…",tip:"拖拽转动 · 滚轮缩放 · 点击地名进入",tipTouch:"拖动转动 · 双指缩放 · 点击地名进入",
-      fbTitle:"这台设备打不开三维地球",fbText:"浏览器没有启用 WebGL。请换用最新版的 Chrome、Edge 或 Safari 再打开。",fbNetT:"地球没有载入完",fbNetP:"网络不稳定，地球贴图没有下载下来。检查一下网络后再试一次。",fbRetry:"重新载入",
+      fbTitle:"这台设备打不开三维地球",fbText:"浏览器没有启用 WebGL。请换用最新版的 Chrome、Edge 或 Safari 再打开。",moonB:"月球",earthB:"地球",moonT:"去月球看看",earthT:"回到地球",moonLoad:"正在载入月球…",moonErr:"月球没有载入，请稍后再试",tipMoon:"拖拽转动 · 滚轮缩放 · 点击名字查看介绍",tipMoonTouch:"拖动转动 · 双指缩放 · 点击名字查看介绍",mk_m:"月海",mk_c:"环形山",mk_l:"着陆点",mk_r:"区域",mk_t:"山脉",moonImg:"月面影像：NASA / GSFC / 亚利桑那州立大学（LRO）",fbNetT:"地球没有载入完",fbNetP:"网络不稳定，地球贴图没有下载下来。检查一下网络后再试一次。",fbRetry:"重新载入",
       dayOn:"全球白天",dayOff:"昼夜",dayOnT:"让整个地球都处在白天",dayOffT:"恢复昼夜",
       close:"关闭",prev:"上一个",next:"下一个",fest:"节日",food:"美食",craft:"手艺",tipRow:"入乡随俗",fact:"你知道吗",
       country:"国家",cities:"已收录的城市",pending:"介绍内容整理中。",back:"返回",backGlobe:"回到地球",photoSoon:"示意图 · 照片待添加",local:"当地",localTime:"当地时间",imgNote:"地球影像来源：NASA（Blue Marble、Black Marble、GIBS）",slide:"第 %s 张",about2:"介绍",searchPh:"搜索",searchAria:"搜索国家、城市或地点",clear:"清除",cancel:"取消",noRes:"没有找到相关地点",localDay:"当地时间，白天",localNight:"当地时间，夜晚",sep:"，",
       soon:function(n){return n+"的板块还在筹备中。现在先收录了五座试点城市，再往后会按国家逐步补上。";}},
   en:{globe:"Rotatable, zoomable 3D globe",settings:"Settings",language:"Language",about:"ATLAS: turn the globe, pick a city, learn a local greeting, and discover its festivals, food and crafts.",
       start:"Click the globe to begin",startTouch:"Tap the globe to begin",loading:"Loading the Earth…",tip:"Drag to rotate · Scroll to zoom · Click a name to open",tipTouch:"Drag to rotate · Pinch to zoom · Tap a name to open",
-      fbTitle:"This device can’t show the 3D globe",fbText:"WebGL isn’t available in this browser. Please try the latest Chrome, Edge or Safari.",fbNetT:"The globe didn’t finish loading",fbNetP:"The connection dropped while downloading the globe. Check your network and try again.",fbRetry:"Reload",
+      fbTitle:"This device can’t show the 3D globe",fbText:"WebGL isn’t available in this browser. Please try the latest Chrome, Edge or Safari.",moonB:"Moon",earthB:"Earth",moonT:"Visit the Moon",earthT:"Back to Earth",moonLoad:"Loading the Moon…",moonErr:"The Moon didn’t load. Please try again later.",tipMoon:"Drag to rotate · Scroll to zoom · Click a name for details",tipMoonTouch:"Drag to rotate · Pinch to zoom · Tap a name for details",mk_m:"Mare",mk_c:"Crater",mk_l:"Landing site",mk_r:"Region",mk_t:"Mountains",moonImg:"Lunar imagery: NASA / GSFC / Arizona State University (LRO)",fbNetT:"The globe didn’t finish loading",fbNetP:"The connection dropped while downloading the globe. Check your network and try again.",fbRetry:"Reload",
       dayOn:"All daylight",dayOff:"Day & night",dayOnT:"Light up the whole globe",dayOffT:"Back to day and night",
       close:"Close",prev:"Previous",next:"Next",fest:"Festival",food:"Food",craft:"Craft",tipRow:"Etiquette",fact:"Did you know?",
       country:"Country",cities:"Cities on ATLAS",pending:"Details for this city are on the way.",back:"Back",backGlobe:"Back to the globe",photoSoon:"Placeholder · photos coming soon",local:"Local",localTime:"Local time",imgNote:"Earth imagery: NASA (Blue Marble, Black Marble, GIBS)",slide:"Image %s",about2:"About",searchPh:"Search",searchAria:"Search countries, cities or places",clear:"Clear",cancel:"Cancel",noRes:"No matching places",localDay:"Local time, daytime",localNight:"Local time, night",sep:", ",
@@ -1662,7 +1685,7 @@ var FS=[
 "#ifdef GL_FRAGMENT_PRECISION_HIGH","precision highp float;","#else","precision mediump float;","#endif",
 "varying vec3 vP;varying vec2 vUV;",
 "uniform sampler2D uDay,uNight,uWater,uHeight;",
-"uniform vec3 uL,uCam;uniform vec2 uHT;uniform float uDetail,uDayAll,uBump;uniform sampler2D uTile;uniform float uTileOn;uniform vec4 uTR;uniform vec3 uGain;uniform sampler2D uLit;uniform float uLitOn;",
+"uniform vec3 uL,uCam;uniform vec2 uHT;uniform float uDetail,uDayAll,uBump;uniform sampler2D uTile;uniform float uTileOn;uniform vec4 uTR;uniform vec3 uGain;uniform sampler2D uLit;uniform float uLitOn;uniform float uMoon;",
 "float hash(vec3 p){p=fract(p*0.3183099+vec3(.1,.2,.3));p*=17.0;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}",
 "float noise(vec3 x){vec3 i=floor(x),f=fract(x);f=f*f*(3.0-2.0*f);",
 "return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),",
@@ -1676,15 +1699,16 @@ var FS=[
 "float hN=texture2D(uHeight,vUV-vec2(0.0,uHT.y)).r,hS=texture2D(uHeight,vUV+vec2(0.0,uHT.y)).r;",
 "vec3 Nb=normalize(N-uBump*((hE-hW)/cl*E+(hN-hS)*Nn));",
 "float ndl=dot(N,uL),ndb=dot(Nb,uL);",
-"vec3 day=texture2D(uDay,vUV).rgb;vec4 wt=texture2D(uWater,vUV);float water=wt.r;float land=1.0-water;",
+/* 月球：没有海洋、灯光和大气，只有月面影像加地形明暗 */
+"vec3 day=texture2D(uDay,vUV).rgb;vec4 wt=texture2D(uWater,vUV)*(1.0-uMoon);float water=wt.r;float land=1.0-water;",
 /* 高清瓦片：陆地用瓦片的颜色；瓦片里统一涂成深蓝的海洋（以及底图判定为水的地方）仍用底图的海底地形与海冰 */
 "if(uTileOn>0.5){vec3 tr=texture2D(uTile,(vUV-uTR.xy)/uTR.zw).rgb;float oc=1.0-smoothstep(0.035,0.10,distance(tr,vec3(0.008,0.02,0.078)));vec3 tc=min(tr*uGain,vec3(1.0));",
-"float k=max(oc,smoothstep(0.55,0.95,wt.a));day=mix(tc,day,k);}",
+"float k=max(oc,smoothstep(0.55,0.95,wt.a))*(1.0-uMoon);day=mix(tc,day,k);}",
 /* 白天 */
 "float term=smoothstep(-0.10,0.24,ndl);",
 "float lamb=clamp(mix(ndb,ndl,water*0.85),0.0,1.0);",
 "float lit=term*(0.16+0.98*pow(lamb,0.85));",
-"vec3 tint=vec3(1.0,0.80+0.20*smoothstep(0.0,0.35,ndl),0.60+0.40*smoothstep(0.0,0.45,ndl));",
+"vec3 tint=mix(vec3(1.0,0.80+0.20*smoothstep(0.0,0.35,ndl),0.60+0.40*smoothstep(0.0,0.45,ndl)),vec3(1.0),uMoon);",
 "vec3 dayCol=day*lit*tint;",
 "vec3 H=normalize(uL+V);float nh=max(dot(N,H),0.0);float vd=max(dot(N,V),0.0);",
 "float fres=0.02+0.98*pow(1.0-vd,5.0);",
@@ -1692,7 +1716,7 @@ var FS=[
 "dayCol+=water*term*(vec3(1.0,0.92,0.78)*glint*(1.0-0.8*uDayAll)+vec3(0.28,0.46,0.75)*fres*0.30);",
 /* 夜晚 */
 "float nightF=smoothstep(0.06,-0.16,ndl);",
-"float lights=texture2D(uNight,vUV).r;",
+"float lights=texture2D(uNight,vUV).r*(1.0-uMoon);",
 "lights=pow(lights,1.2+0.6*uDetail)*(1.0+0.35*uDetail);",
 "vec3 nightCol=day*vec3(0.042,0.056,0.095)+vec3(1.0,0.72,0.40)*lights*1.45;",
 "vec3 col=mix(dayCol,nightCol,nightF);",
@@ -1703,7 +1727,7 @@ var FS=[
 "col+=vec3(1.0,0.80,0.40)*uLitOn*(edge*0.5+fill*0.07*nightF);}",
 "float tw=smoothstep(-0.14,0.02,ndl)*(1.0-smoothstep(0.02,0.26,ndl));",
 /* 大气：边缘的蓝色散射与晨昏的暖光 */
-"float rim=pow(1.0-vd,2.6);float atmL=smoothstep(-0.35,0.45,ndl);",
+"float rim=pow(1.0-vd,2.6)*(1.0-uMoon);float atmL=smoothstep(-0.35,0.45,ndl);",
 "col=mix(col,vec3(0.33,0.55,0.95)*(0.12+0.88*atmL),rim*0.55*(0.22+0.78*atmL));",
 "col+=vec3(1.0,0.48,0.2)*tw*rim*0.35;",
 "gl_FragColor=vec4(col,1.0);}"
@@ -1758,8 +1782,10 @@ function buildSphere(nu,nv){
 }
 /* ---------- 高清影像瓦片：放大时从 NASA GIBS 按需加载 Blue Marble（EPSG:4326，512 像素，第 z 级每像素 0.5625/2^z 度） ---------- */
 var TL={on:true,dead:false,ok:0,fail:0,cache:{},n:0,queue:[],loading:0,uploads:[],draw:[],need:{},z:0,last:0,frame:0,prog:null,U:{},grid:null,gridN:0,
-  max:7,min:4,cap:80,conc:6,src:null};
+  max:7,min:4,cap:80,conc:6,src:null,span0:288,px:512};
 TL.url=function(z,y,x){
+  /* 月球：NASA Moon Trek 的 LRO 广角相机全月拼图（256 像素瓦片，第 z 级每块 180/2^z 度） */
+  if(S.moon)return "https://trek.nasa.gov/tiles/Moon/EQ/LRO_WAC_Mosaic_Global_303ppd_v02/1.0.0/default/default028mm/"+z+"/"+y+"/"+x+".jpg";
   if(TL.src)return TL.src+z+"/"+y+"/"+x+".jpg";
   return "https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/wmts.cgi?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=BlueMarble_NextGeneration&STYLE=default&TILEMATRIXSET=500m&TILEMATRIX="+z+"&TILEROW="+y+"&TILECOL="+x+"&FORMAT=image%2Fjpeg";
 };
@@ -1771,7 +1797,7 @@ var VS_T=[
 function tileInit(){
   try{
     TL.prog=program(VS_T,FS);
-    ["uVP","uB","uTR","uTile","uTileOn","uGain","uDay","uNight","uWater","uHeight","uL","uCam","uHT","uDetail","uDayAll","uBump","uLit","uLitOn"].forEach(function(n){TL.U[n]=gl.getUniformLocation(TL.prog,n);});
+    ["uVP","uB","uTR","uTile","uTileOn","uGain","uDay","uNight","uWater","uHeight","uL","uCam","uHT","uDetail","uDayAll","uBump","uLit","uLitOn","uMoon"].forEach(function(n){TL.U[n]=gl.getUniformLocation(TL.prog,n);});
     TL.U.aG=gl.getAttribLocation(TL.prog,"aG");
     var n=16,v=new Float32Array((n+1)*(n+1)*2),k=0;
     for(var j=0;j<=n;j++)for(var i=0;i<=n;i++){v[k++]=i/n;v[k++]=j/n;}
@@ -1784,9 +1810,18 @@ function tileInit(){
   }catch(e){TL.on=false;}
 }
 /* 瓦片与底图可能来自不同月份：用两者陆地的平均颜色算一个全局校色系数，让高清瓦片接上底图时不跳色 */
-TL.gain=[1,1,1];TL.gt=[0,0,0];TL.gb=[0,0,0];TL.gn=0;
+TL.gain=[1,1,1];TL.gt=[0,0,0];TL.gb=[0,0,0];TL.gn=0;TL.gen=0;
+/* 换星球：清掉已加载的瓦片，换成对应的瓦片规格 */
+function tileReset(moon){
+  Object.keys(TL.cache).forEach(function(k){var c=TL.cache[k];if(c.tex)gl.deleteTexture(c.tex);});
+  TL.cache={};TL.n=0;TL.uploads=[];TL.draw=[];TL.need={};TL.z=0;TL.ok=0;TL.fail=0;TL.dead=false;TL.loading=0;TL.gen++;
+  TL.gain=[1,1,1];TL.gt=[0,0,0];TL.gb=[0,0,0];TL.gn=0;
+  if(moon){TL.span0=180;TL.px=256;TL.min=3;TL.max=8;TL.cap=S.small?70:150;TL.thumb=TL.thumbM||null;}
+  else{TL.span0=288;TL.px=512;TL.min=4;TL.max=7;TL.cap=S.small?40:80;TL.thumb=TL.thumbE||null;}
+}
 function tileThumb(im){
   try{var c=document.createElement("canvas");c.width=1024;c.height=512;var x=c.getContext("2d");x.drawImage(im,0,0,1024,512);TL.thumb=x.getImageData(0,0,1024,512).data;}catch(e){TL.thumb=null;}
+  if(S.moonLoading)TL.thumbM=TL.thumb;else TL.thumbE=TL.thumb;
 }
 function tileStats(c,im){
   if(!TL.thumb)return;
@@ -1795,18 +1830,20 @@ function tileStats(c,im){
     var x=cv.getContext("2d");x.drawImage(im,0,0,32,32);var d=x.getImageData(0,0,32,32).data,sp=tSpan(c.z),lon0=-180+c.x*sp,lat0=90-c.y*sp;
     for(var j=0;j<32;j++)for(var i=0;i<32;i++){
       var o=(j*32+i)*4,r=d[o],g=d[o+1],b=d[o+2];
-      if(Math.abs(r-2)+Math.abs(g-5)+Math.abs(b-20)<40||r+g+b>600)continue;
+      if(!S.moon&&(Math.abs(r-2)+Math.abs(g-5)+Math.abs(b-20)<40||r+g+b>600))continue;
       var lon=lon0+(i+0.5)/32*sp,lat=lat0-(j+0.5)/32*sp;if(lon>180||lat<-90)continue;
       var px=Math.min(1023,Math.floor((lon+180)/360*1024)),py=Math.min(511,Math.floor((90-lat)/180*512)),q=(py*1024+px)*4;
       var R=TL.thumb[q],G=TL.thumb[q+1],B=TL.thumb[q+2];
-      if(B>G*1.02||b>g*1.02||R+G+B>600||R+G+B<24)continue;
+      /* 月球：瓦片是黑白的广角相机拼图，底图是偏暖的彩色图，直接比较两者的平均亮度和色调 */
+      if(S.moon){if(r+g+b<30||R+G+B<30)continue;}
+      else if(B>G*1.02||b>g*1.02||R+G+B>600||R+G+B<24)continue;
       TL.gt[0]+=r;TL.gt[1]+=g;TL.gt[2]+=b;TL.gb[0]+=R;TL.gb[1]+=G;TL.gb[2]+=B;TL.gn++;
     }
-    if(TL.gn>150)for(var k=0;k<3;k++)TL.gain[k]=clamp(TL.gb[k]/Math.max(TL.gt[k],1),0.8,1.25);
+    if(TL.gn>150)for(var k=0;k<3;k++)TL.gain[k]=S.moon?clamp(TL.gb[k]/Math.max(TL.gt[k],1),0.5,2.6):clamp(TL.gb[k]/Math.max(TL.gt[k],1),0.8,1.25);
     if(TL.gn>4000){for(var k2=0;k2<3;k2++){TL.gt[k2]*=0.5;TL.gb[k2]*=0.5;}TL.gn*=0.5;}
   }catch(e){}
 }
-function tSpan(z){return 288/Math.pow(2,z);}
+function tSpan(z){return TL.span0/Math.pow(2,z);}
 function tKey(z,x,y){return z+"/"+x+"/"+y;}
 /* 视野里需要哪些瓦片：在屏幕上撒一组采样点，求与地球的交点 */
 function tileSelect(eye,vm,sx,sy){
@@ -1814,7 +1851,7 @@ function tileSelect(eye,vm,sx,sy){
   var f=(H*dpr)/(2*TANH),pxdeg=f/Math.max(dist-1,1e-3)*RAD;
   var baseDeg=(S.small?4096:8192)/360;
   if(TL.dead||!TL.on||pxdeg<baseDeg*1.15){TL.z=0;return {};}
-  var z=Math.ceil(Math.log(pxdeg/(512/288))/Math.LN2);z=clamp(z,TL.min,TL.max);
+  var z=Math.ceil(Math.log(pxdeg/(TL.px/TL.span0))/Math.LN2);z=clamp(z,TL.min,TL.max);
   var E=eye,cc=dot(E,E)-1,ed=norm(E),hits=[];
   for(var j=0;j<=10;j++)for(var i=0;i<=14;i++){
     var nx=i/14*2-1,ny=j/10*2-1;
@@ -1854,9 +1891,10 @@ function tileRequest(t){
   var k=tKey(t.z,t.x,t.y),c=TL.cache[k];
   if(c)return;
   c=TL.cache[k]={z:t.z,x:t.x,y:t.y,tex:null,st:1,used:TL.frame};TL.loading++;
-  var im=new Image();im.crossOrigin="anonymous";im.decoding="async";
-  im.onload=function(){TL.loading--;TL.uploads.push({c:c,im:im});};
-  im.onerror=function(){TL.loading--;c.st=3;TL.fail++;if(!TL.ok&&TL.fail>=6){TL.dead=true;}};
+  var im=new Image(),g=TL.gen;im.crossOrigin="anonymous";im.decoding="async";
+  /* 切换地球/月球后，之前发出的请求回来了也不再用 */
+  im.onload=function(){if(g!==TL.gen)return;TL.loading--;TL.uploads.push({c:c,im:im});};
+  im.onerror=function(){if(g!==TL.gen)return;TL.loading--;c.st=3;TL.fail++;if(!TL.ok&&TL.fail>=6){TL.dead=true;}};
   im.src=TL.url(t.z,t.y,t.x);
 }
 function tileUpload(){
@@ -1914,10 +1952,10 @@ function tileDraw(lightV){
   gl.bindBuffer(gl.ARRAY_BUFFER,TL.grid.vb);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,TL.grid.ib);
   gl.enableVertexAttribArray(U2.aG);gl.vertexAttribPointer(U2.aG,2,gl.FLOAT,false,0,0);
   gl.uniformMatrix4fv(U2.uVP,false,VPm);gl.uniform3fv(U2.uL,lightV);gl.uniform3fv(U2.uCam,eyeV);
-  gl.uniform2f(U2.uHT,S.htx*1.5,S.hty*1.5);gl.uniform1f(U2.uBump,EARTH_BUMP);gl.uniform1f(U2.uDayAll,S.dayK);
+  gl.uniform2f(U2.uHT,S.htx*1.5,S.hty*1.5);gl.uniform1f(U2.uBump,S.moon?MOON_BUMP:EARTH_BUMP);gl.uniform1f(U2.uDayAll,S.dayK);gl.uniform1f(U2.uMoon,S.moon?1:0);
   gl.uniform1f(U2.uDetail,smooth(1.6,3.6,zoomEff));
   gl.uniform1i(U2.uDay,0);gl.uniform1i(U2.uNight,1);gl.uniform1i(U2.uWater,2);gl.uniform1i(U2.uHeight,3);gl.uniform1i(U2.uTile,6);
-  gl.uniform1f(U2.uTileOn,1);gl.uniform3f(U2.uGain,TL.gain[0],TL.gain[1],TL.gain[2]);gl.uniform1i(U2.uLit,4);gl.uniform1f(U2.uLitOn,LIT.k);
+  gl.uniform1f(U2.uTileOn,1);gl.uniform3f(U2.uGain,TL.gain[0],TL.gain[1],TL.gain[2]);gl.uniform1i(U2.uLit,4);gl.uniform1f(U2.uLitOn,S.moon?0:LIT.k);
   gl.activeTexture(gl.TEXTURE6);
   for(var i=0;i<TL.draw.length;i++){
     var c=TL.draw[i],sp=tSpan(c.z),lon0=-180+c.x*sp,lat0=90-c.y*sp;
@@ -1930,12 +1968,12 @@ function tileDraw(lightV){
   gl.disableVertexAttribArray(U2.aG);
   gl.enable(gl.DEPTH_TEST);
 }
-var EARTH_BUMP=2.6;
+var EARTH_BUMP=2.6,MOON_BUMP=5.5;
 function initGL(){
   gl=glc.getContext("webgl",{antialias:true,alpha:true,premultipliedAlpha:true,powerPreference:"high-performance"})||glc.getContext("experimental-webgl");
   if(!gl)throw new Error("no webgl");
   prog=program(VS,FS);glow=program(GVS,GFS);
-  ["uVP","uDay","uNight","uWater","uHeight","uL","uCam","uHT","uDetail","uDayAll","uBump","uTileOn","uLit","uLitOn"].forEach(function(n){U[n]=gl.getUniformLocation(prog,n);});
+  ["uVP","uDay","uNight","uWater","uHeight","uL","uCam","uHT","uDetail","uDayAll","uBump","uTileOn","uLit","uLitOn","uMoon"].forEach(function(n){U[n]=gl.getUniformLocation(prog,n);});
   /* 足迹点亮用的遮罩（第 4 号纹理）：先放一张 1×1 的黑图，打开足迹时再画上去过的国家 */
   LIT.tex=gl.createTexture();gl.activeTexture(gl.TEXTURE4);gl.bindTexture(gl.TEXTURE_2D,LIT.tex);
   gl.texImage2D(gl.TEXTURE_2D,0,gl.LUMINANCE,1,1,0,gl.LUMINANCE,gl.UNSIGNED_BYTE,new Uint8Array([0]));
@@ -2055,6 +2093,17 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp
 function buildLabels(){
   var host=$("#labels"),html="";
   LABS=[];
+  if(S.moon){
+    MOON.forEach(function(m,i){
+      var nm=LANG==="en"?m.en:m.zh,site=m.k==="l";
+      LABS.push({k:"mn",mk:m.k,id:i,v:llv(m.lat,m.lon),name:nm,z:m.z,fs:m.k==="m"||m.k==="r"?(m.z<1?14:12.5):12});
+      html+='<button type="button" class="lab mn mn-'+m.k+'" data-i="'+i+'" data-moon="'+i+'">'+(site?'<i></i>':'')+'<span>'+esc(nm)+'</span></button>';
+    });
+    host.innerHTML=html;
+    var me=host.children;
+    for(var mi=0;mi<LABS.length;mi++){LABS[mi].el=me[mi];LABS[mi].on=false;}
+    return;
+  }
   commPins().forEach(function(q){
     LABS.push({k:"pin",id:q.id,lat:q.lat,lon:q.lon,v:llv(q.lat,q.lon),name:q.name,img:q.img,t:q.fp?1:(q.t||3),nw:q.name.length*(LANG==="en"?8.2:15)+6});
     html+='<button type="button" class="lab pin'+(q.fp?' fp':'')+'" data-i="'+(LABS.length-1)+'" data-pin="'+esc(q.id)+'" aria-label="'+esc(q.name)+'"><span class="ph"><img alt="" decoding="async"><b>'+esc(q.badge||"")+'</b></span><span class="pn">'+esc(q.name)+'</span></button>';
@@ -2140,7 +2189,15 @@ function updateLabels(VP,eye,d,z){
         x=(nx*.5+.5)*W;y=(.5-ny*.5)*H;
         if(x>-40&&x<W+40&&y>-30&&y<H+30){
           var w,h;
-          if(L.k==="country"){
+          if(L.k==="mn"){
+            /* 月面地名：着陆点是一个小圆点加名字（圆点对准位置），其余是居中的文字 */
+            if(z>=L.z&&fc>0.16){
+              var mw=L.name.length*(LANG==="en"?L.fs*0.58:L.fs+1.5)+12,site=L.mk==="l";
+              var mb=site?[x-7,y-10,x+mw+10,y+10]:[x-mw/2,y-10,x+mw/2,y+10],mok=true;
+              for(var mq=0;mq<placed.length;mq++){var mp=placed[mq];if(mb[0]<mp[2]&&mb[2]>mp[0]&&mb[1]<mp[3]&&mb[3]>mp[1]){mok=false;break;}}
+              if(mok){show=true;placed.push(mb);}
+            }
+          }else if(L.k==="country"){
             if(S.labels&&z>=L.z&&fc>0.22){
               var f=fs[L.tier];w=L.name.length*(LANG==="en"?f*0.6:f+2)+14;h=f+12;
               var b=[x-w/2,y-h/2,x+w/2,y+h/2],ok2=true;
@@ -2155,7 +2212,8 @@ function updateLabels(VP,eye,d,z){
     }
     if(show){
       L.el.style.transform="translate("+x.toFixed(1)+"px,"+y.toFixed(1)+"px)";
-      if(L.k!=="city")L.el.style.translate="-50% -50%";
+      if(L.k==="mn"&&L.mk==="l")L.el.style.translate="-6px -50%";
+      else if(L.k!=="city")L.el.style.translate="-50% -50%";
       else L.el.style.translate="-12px -50%";
     }
     if(show!==L.on){L.on=show;L.el.classList.toggle("on",show);L.el.tabIndex=show?0:-1;}
@@ -2213,28 +2271,34 @@ function render(now){
   LIT.k+=(LIT.t-LIT.k)*(1-Math.exp(-dta*(LIT.t>LIT.k?1.6:4)));if(Math.abs(LIT.t-LIT.k)<0.002)LIT.k=LIT.t;
   if(Math.abs((S.dayAll?1:0)-S.dayK)<0.002)S.dayK=S.dayAll?1:0;
   var lightV=slerp(sun,norm(eyeV),ease(S.dayK));
+  /* 月球：光从观察者的左上方斜着打过来，环形山和山脉的起伏最清楚；“全球白天”打开时改成正面平光 */
+  if(S.moon){var en=norm(eyeV);lightV=slerp(norm([en[0]*0.62-vm.s[0]*0.68+vm.u[0]*0.38,en[1]*0.62-vm.s[1]*0.68+vm.u[1]*0.38,en[2]*0.62-vm.s[2]*0.68+vm.u[2]*0.38]),en,ease(S.dayK));}
   /* 绘制 */
   var cw=glc.width,ch=glc.height;
   gl.viewport(0,0,cw,ch);gl.clearColor(0.012,0.016,0.03,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
   if(SKY.ok)drawSky(now,t,dta,spinD);
   if(!S.earthHide){
-  /* 大气光晕 */
+  /* 大气光晕（月球没有大气，不画） */
+  if(!S.moon){
   gl.disable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
   gl.useProgram(glow);gl.bindBuffer(gl.ARRAY_BUFFER,quad);gl.enableVertexAttribArray(UG.aQ);gl.vertexAttribPointer(UG.aQ,2,gl.FLOAT,false,0,0);
   gl.uniform3fv(UG.uCam,eyeV);gl.uniform3fv(UG.uRight,vm.s);gl.uniform3fv(UG.uUp,vm.u);gl.uniform3fv(UG.uFwd,vm.f);gl.uniform3fv(UG.uL,lightV);
   gl.uniform2f(UG.uShift,sx,sy);gl.uniform2f(UG.uRes,cw,ch);gl.uniform1f(UG.uTanY,TANH);gl.uniform1f(UG.uAsp,W/H);
   gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
   gl.disableVertexAttribArray(UG.aQ);
-  /* 地球 */
+  }
+  /* 地球或月球：底图和高程图每帧绑定，切换星球只是换两张贴图 */
+  gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,S.moon?S.tMoon:S.tDay);
+  gl.activeTexture(gl.TEXTURE3);gl.bindTexture(gl.TEXTURE_2D,S.moon?S.tMoonH:S.tHgt);
   gl.disable(gl.BLEND);gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);
   gl.useProgram(prog);gl.bindBuffer(gl.ARRAY_BUFFER,sphere.vb);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,sphere.ib);
   gl.enableVertexAttribArray(U.aPos);gl.vertexAttribPointer(U.aPos,3,gl.FLOAT,false,20,0);
   gl.enableVertexAttribArray(U.aUV);gl.vertexAttribPointer(U.aUV,2,gl.FLOAT,false,20,12);
   gl.uniformMatrix4fv(U.uVP,false,VPm);gl.uniform3fv(U.uL,lightV);gl.uniform3fv(U.uCam,eyeV);
-  gl.uniform2f(U.uHT,S.htx*1.5,S.hty*1.5);gl.uniform1f(U.uBump,EARTH_BUMP);gl.uniform1f(U.uDayAll,S.dayK);
+  gl.uniform2f(U.uHT,S.htx*1.5,S.hty*1.5);gl.uniform1f(U.uBump,S.moon?MOON_BUMP:EARTH_BUMP);gl.uniform1f(U.uDayAll,S.dayK);gl.uniform1f(U.uMoon,S.moon?1:0);
   gl.uniform1f(U.uDetail,smooth(1.6,3.6,zoomEff));
   gl.uniform1i(U.uDay,0);gl.uniform1i(U.uNight,1);gl.uniform1i(U.uWater,2);gl.uniform1i(U.uHeight,3);
-  gl.uniform1f(U.uTileOn,0);gl.uniform1i(U.uLit,4);gl.uniform1f(U.uLitOn,LIT.k);
+  gl.uniform1f(U.uTileOn,0);gl.uniform1i(U.uLit,4);gl.uniform1f(U.uLitOn,S.moon?0:LIT.k);
   gl.drawElements(gl.TRIANGLES,sphere.n,gl.UNSIGNED_SHORT,0);
   gl.disableVertexAttribArray(U.aPos);gl.disableVertexAttribArray(U.aUV);
   if(TL.prog){tileUpdate(now,vm,sx,sy);tileDraw(lightV);}
@@ -2244,6 +2308,130 @@ function render(now){
   updateHit(VPm,eyeV,dist,now);
   drawArcs(VPm,eyeV,now);
   requestAnimationFrame(render);
+}
+
+/* ---------- 月球 ---------- */
+/* 月面地名：k = m 月海 / c 环形山 / t 山脉 / r 区域 / l 着陆点；z = 放大到多少才显示；经度东正西负 */
+var MOON=[
+{k:"r",zh:"月球正面",en:"Near side",lat:2,lon:0,z:0,dz:"月球被地球“锁”住了，自转一圈和绕地球一圈的时间一样，所以永远是这一面朝着我们。大片暗色的月海都在这一面。",de:"The Moon is tidally locked: it turns once for every orbit, so this face always points at Earth. Most of the dark maria are here."},
+{k:"r",zh:"月球背面",en:"Far side",lat:8,lon:180,z:0,dz:"在地球上永远看不到的一面，1959 年苏联月球 3 号第一次拍到。这里几乎没有月海，布满密密麻麻的环形山。",de:"The face never seen from Earth, first photographed by Luna 3 in 1959. It has almost no maria and is crowded with craters."},
+{k:"m",zh:"风暴洋",en:"Oceanus Procellarum",lat:18.4,lon:-57.4,z:0,dz:"月球上最大的一片月海，南北长约 2500 公里。月海不是海，是几十亿年前涌出的玄武岩熔岩凝固成的暗色平原。",de:"The largest mare, about 2,500 km from north to south. Maria are not seas but dark plains of basalt lava that flooded out billions of years ago."},
+{k:"m",zh:"雨海",en:"Mare Imbrium",lat:32.8,lon:-15.6,z:0,dz:"一次巨大撞击留下的盆地，后来被熔岩填满，直径约 1100 公里，周围环绕着亚平宁、高加索等山脉。",de:"A giant impact basin later filled with lava, about 1,100 km across and ringed by the Apennine and Caucasus mountains."},
+{k:"m",zh:"澄海",en:"Mare Serenitatis",lat:28,lon:17.5,z:0,dz:"圆形的月海，直径约 670 公里。阿波罗 17 号降落在它东南边缘的山谷里。",de:"A round mare about 670 km across. Apollo 17 landed in a valley on its southeastern edge."},
+{k:"m",zh:"静海",en:"Mare Tranquillitatis",lat:8.5,lon:31.4,z:0,dz:"1969 年 7 月 20 日，阿波罗 11 号在这里着陆，人类第一次踏上月球。",de:"On 20 July 1969 Apollo 11 landed here, and humans walked on the Moon for the first time."},
+{k:"m",zh:"危海",en:"Mare Crisium",lat:17,lon:59.1,z:0,dz:"孤零零的椭圆形月海，在满月的右上方很容易认出来。",de:"An isolated oval mare, easy to spot near the upper right edge of the full Moon."},
+{k:"m",zh:"丰富海",en:"Mare Fecunditatis",lat:-7.8,lon:51.3,z:1.25,dz:"1970 年苏联月球 16 号在这里钻取月壤，第一次用无人探测器把月球样品带回地球。",de:"In 1970 Luna 16 drilled here and made the first robotic sample return from the Moon."},
+{k:"m",zh:"酒海",en:"Mare Nectaris",lat:-15.2,lon:35.5,z:1.25,dz:"一个小而圆的月海，直径约 340 公里，周围保留着多重环形山脊。",de:"A small round mare about 340 km across, still surrounded by multiple rings of ridges."},
+{k:"m",zh:"云海",en:"Mare Nubium",lat:-21.3,lon:-16.6,z:1.25,dz:"月球正面南部的月海，东侧有一条长约 110 公里的“直壁”断崖。",de:"A southern near-side mare; on its eastern side runs the Straight Wall, a fault scarp about 110 km long."},
+{k:"m",zh:"湿海",en:"Mare Humorum",lat:-24.4,lon:-38.6,z:1.25,dz:"圆形的小月海，北岸是被熔岩淹掉一半的伽桑狄环形山。",de:"A small round mare; the lava-flooded crater Gassendi sits on its northern shore."},
+{k:"m",zh:"冷海",en:"Mare Frigoris",lat:56,lon:1.4,z:1.25,dz:"横在雨海和澄海北面的一条狭长月海，东西长约 1500 公里。",de:"A long, narrow mare running about 1,500 km across the north, above Imbrium and Serenitatis."},
+{k:"m",zh:"汽海",en:"Mare Vaporum",lat:13.3,lon:3.6,z:1.8,dz:"月面正中附近的一小片月海。",de:"A small mare near the centre of the near side."},
+{k:"m",zh:"知海",en:"Mare Cognitum",lat:-10,lon:-23.1,z:1.8,dz:"1964 年美国徘徊者 7 号撞向这里，传回第一批月面近距离照片，这片月海因此得名“已知之海”。",de:"Ranger 7 crashed here in 1964 after sending the first close-up pictures of the surface, giving this ‘Known Sea’ its name."},
+{k:"m",zh:"东方海",en:"Mare Orientale",lat:-19.4,lon:-92.8,z:1.25,dz:"像靶心一样的三重环形盆地，外环直径约 930 公里，是月球上保存最完整的大型撞击盆地。",de:"A bullseye of three rings, the outermost about 930 km across: the best-preserved large impact basin on the Moon."},
+{k:"m",zh:"莫斯科海",en:"Mare Moscoviense",lat:27.3,lon:147.9,z:1.25,dz:"月球背面少有的月海之一，由苏联月球 3 号的照片命名。",de:"One of the few maria on the far side, named from the Luna 3 photographs."},
+{k:"m",zh:"史密斯海",en:"Mare Smythii",lat:1.3,lon:87.5,z:1.8,dz:"正好在月球东侧边缘的月海，从地球上只能斜着看到。",de:"A mare right on the eastern limb, seen only at a glancing angle from Earth."},
+{k:"r",zh:"南极-艾特肯盆地",en:"South Pole–Aitken basin",lat:-53,lon:-169,z:1.25,dz:"太阳系里已知最大、最古老的撞击盆地之一，直径约 2500 公里，深达 8 公里左右。嫦娥四号和嫦娥六号都降落在这里面。",de:"One of the largest and oldest known impact basins in the Solar System, about 2,500 km across and roughly 8 km deep. Chang’e 4 and Chang’e 6 both landed inside it."},
+{k:"r",zh:"北极",en:"North Pole",lat:89,lon:0,z:1.25,dz:"月球的自转轴几乎不倾斜，极区的一些坑底永远照不到太阳，温度低到零下两百多度。",de:"The Moon’s axis is barely tilted, so some crater floors near the poles never see sunlight and stay below −200 °C."},
+{k:"r",zh:"南极",en:"South Pole",lat:-89,lon:0,z:1.25,dz:"永久阴影坑里探测到了水冰的迹象，是各国计划建月球基地的首选地区。",de:"Signs of water ice have been detected in its permanently shadowed craters, making it the favoured region for future lunar bases."},
+{k:"t",zh:"亚平宁山脉",en:"Montes Apenninus",lat:18.9,lon:-3.7,z:1.8,dz:"雨海东南缘的山脉，长约 600 公里，最高峰比月海平原高出 5000 米左右。",de:"A 600 km range on the southeastern rim of Mare Imbrium, with peaks rising about 5,000 m above the plains."},
+{k:"m",zh:"虹湾",en:"Sinus Iridum",lat:44.1,lon:-31.5,z:1.8,dz:"雨海西北角一个半圆形的“海湾”，是被熔岩淹没了一半的大环形山。嫦娥三号降落在它东边不远处。",de:"A semicircular ‘bay’ on the northwest of Mare Imbrium: a large crater half drowned in lava. Chang’e 3 landed just to its east."},
+{k:"c",zh:"第谷",en:"Tycho",lat:-43.3,lon:-11.4,z:1.25,dz:"直径 85 公里，约 1 亿年前形成，很年轻。满月时它的亮色辐射纹能伸出一千多公里。",de:"85 km across and only about 100 million years old. At full Moon its bright rays stretch for more than 1,000 km."},
+{k:"c",zh:"哥白尼",en:"Copernicus",lat:9.6,lon:-20.1,z:1.25,dz:"直径 93 公里，阶梯状的坑壁和中央峰群非常清楚，被称为“月面君王”。",de:"93 km across, with terraced walls and a cluster of central peaks; nicknamed the ‘Monarch of the Moon’."},
+{k:"c",zh:"开普勒",en:"Kepler",lat:8.1,lon:-38,z:1.8,dz:"直径 30 公里的年轻环形山，周围有明亮的辐射纹。",de:"A young crater 30 km across, surrounded by bright rays."},
+{k:"c",zh:"阿里斯塔克",en:"Aristarchus",lat:23.7,lon:-47.4,z:1.8,dz:"月球上最亮的环形山之一，旁边蜿蜒着月球上最大的弯曲月谷——施洛特月谷。",de:"One of the brightest craters on the Moon, beside Schröter’s Valley, the largest sinuous rille."},
+{k:"c",zh:"柏拉图",en:"Plato",lat:51.6,lon:-9.4,z:1.8,dz:"直径约 100 公里，坑底被熔岩填平，像一面深色的镜子。",de:"About 100 km across, its floor flooded with lava so that it looks like a dark mirror."},
+{k:"c",zh:"克拉维斯",en:"Clavius",lat:-58.4,lon:-14.4,z:1.8,dz:"直径约 230 公里的古老大环形山，坑底排着一串由大到小的小环形山。2020 年在这里的向阳面探测到水分子。",de:"An ancient crater about 230 km across with a curving chain of smaller craters on its floor. Water molecules were detected on its sunlit surface in 2020."},
+{k:"c",zh:"托勒密",en:"Ptolemaeus",lat:-9.2,lon:-1.8,z:1.8,dz:"月面中央附近的大环形山，直径约 150 公里，坑底平坦。",de:"A large flat-floored crater about 150 km across, near the centre of the disc."},
+{k:"c",zh:"格里马尔迪",en:"Grimaldi",lat:-5.2,lon:-68.6,z:1.8,dz:"月球西缘的一个深色盆地，坑底是月面最暗的地方之一。",de:"A dark basin near the western limb; its floor is one of the darkest spots on the Moon."},
+{k:"c",zh:"朗格伦",en:"Langrenus",lat:-8.9,lon:60.9,z:1.8,dz:"丰富海东岸的环形山，直径约 130 公里，有明显的中央峰。",de:"A crater about 130 km across on the eastern shore of Mare Fecunditatis, with prominent central peaks."},
+{k:"c",zh:"西奥菲勒斯",en:"Theophilus",lat:-11.4,lon:26.4,z:1.8,dz:"直径约 100 公里，中央峰高出坑底约 1400 米，和旁边两座环形山连成一串。",de:"About 100 km across with central peaks some 1,400 m high, forming a chain with two neighbouring craters."},
+{k:"c",zh:"齐奥尔科夫斯基",en:"Tsiolkovskiy",lat:-20.4,lon:129.1,z:1.25,dz:"月球背面最显眼的环形山：深色的熔岩坑底中间立着一座亮色的中央峰。",de:"The most striking crater on the far side: a bright central peak rising from a dark lava floor."},
+{k:"c",zh:"冯·卡门",en:"Von Kármán",lat:-44.8,lon:175.9,z:1.8,dz:"直径约 180 公里。2019 年嫦娥四号降落在这里，完成人类第一次月球背面软着陆。",de:"About 180 km across. Chang’e 4 landed here in 2019, the first soft landing on the far side."},
+{k:"c",zh:"阿波罗环形山",en:"Apollo",lat:-36.1,lon:-151.8,z:1.8,dz:"月球背面的双环大盆地，直径约 540 公里，里面的小环形山用遇难航天员的名字命名。嫦娥六号在这里采样。",de:"A double-ringed basin about 540 km across on the far side; craters inside it are named for astronauts who died. Chang’e 6 collected samples here."},
+{k:"c",zh:"科罗廖夫",en:"Korolev",lat:-4,lon:-157.4,z:1.8,dz:"月球背面的大环形山，直径约 420 公里，以苏联火箭总设计师命名。",de:"A far-side crater about 420 km across, named for the Soviet chief rocket designer."},
+{k:"c",zh:"赫茨普龙",en:"Hertzsprung",lat:1.4,lon:-128.7,z:1.8,dz:"月球背面的巨大撞击盆地，直径约 570 公里。",de:"A huge impact basin on the far side, about 570 km across."},
+{k:"c",zh:"薛定谔",en:"Schrödinger",lat:-75,lon:132.4,z:1.8,dz:"靠近南极的双环盆地，直径约 320 公里，坑底有一条很长的裂谷。",de:"A double-ringed basin about 320 km across near the south pole, with a long rille on its floor."},
+{k:"c",zh:"沙克尔顿",en:"Shackleton",lat:-88.6,lon:20,z:2.4,dz:"几乎正好坐落在月球南极点上，坑底永远照不到阳光，坑沿却几乎一直有日照。",de:"Sitting almost exactly on the south pole: its floor is in permanent shadow while its rim is sunlit almost all the time."},
+{k:"l",zh:"阿波罗 11 号",en:"Apollo 11",lat:0.674,lon:23.473,z:1.0,w:"1969 年 7 月 20 日 · 美国",we:"20 July 1969 · USA",dz:"阿姆斯特朗和奥尔德林在静海着陆，人类第一次登上月球，停留了 21 个半小时。",de:"Armstrong and Aldrin landed in the Sea of Tranquility, the first humans on the Moon, and stayed for 21½ hours."},
+{k:"l",zh:"嫦娥四号",en:"Chang’e 4",lat:-45.44,lon:177.6,z:1.0,w:"2019 年 1 月 3 日 · 中国",we:"3 January 2019 · China",dz:"人类第一次在月球背面软着陆，玉兔二号月球车在冯·卡门环形山里行驶了多年。",de:"The first soft landing on the far side; the Yutu-2 rover went on to drive for years inside Von Kármán crater."},
+{k:"l",zh:"嫦娥六号",en:"Chang’e 6",lat:-41.64,lon:-153.99,z:1.0,w:"2024 年 6 月 2 日 · 中国",we:"2 June 2024 · China",dz:"人类第一次从月球背面采样返回，带回 1935.3 克月壤。",de:"The first sample return from the far side, bringing back 1,935.3 g of lunar material."},
+{k:"l",zh:"嫦娥三号",en:"Chang’e 3",lat:44.12,lon:-19.51,z:1.25,w:"2013 年 12 月 14 日 · 中国",we:"14 December 2013 · China",dz:"中国第一次月面软着陆，带着玉兔号月球车降落在雨海北部。",de:"China’s first soft landing, delivering the Yutu rover to northern Mare Imbrium."},
+{k:"l",zh:"嫦娥五号",en:"Chang’e 5",lat:43.06,lon:-51.92,z:1.25,w:"2020 年 12 月 1 日 · 中国",we:"1 December 2020 · China",dz:"在风暴洋北部采样，带回 1731 克月壤，是 44 年来人类第一次取回月球样品。",de:"Collected 1,731 g of samples in northern Oceanus Procellarum, the first lunar sample return in 44 years."},
+{k:"l",zh:"月球 9 号",en:"Luna 9",lat:7.08,lon:-64.37,z:1.25,w:"1966 年 2 月 3 日 · 苏联",we:"3 February 1966 · USSR",dz:"人类第一次在月球上软着陆，传回了第一张从月面拍摄的照片。",de:"The first soft landing on the Moon, sending back the first photographs taken from the surface."},
+{k:"l",zh:"月球 2 号",en:"Luna 2",lat:29.1,lon:0,z:1.8,w:"1959 年 9 月 14 日 · 苏联",we:"14 September 1959 · USSR",dz:"第一个到达月球的人造物体，撞在雨海东部。",de:"The first human-made object to reach the Moon, striking eastern Mare Imbrium."},
+{k:"l",zh:"勘测者 1 号",en:"Surveyor 1",lat:-2.47,lon:-43.34,z:1.8,w:"1966 年 6 月 2 日 · 美国",we:"2 June 1966 · USA",dz:"美国第一次月面软着陆，传回一万多张照片，为阿波罗登月探路。",de:"The first US soft landing; it returned more than 11,000 pictures and paved the way for Apollo."},
+{k:"l",zh:"阿波罗 12 号",en:"Apollo 12",lat:-3.012,lon:-23.422,z:1.8,w:"1969 年 11 月 19 日 · 美国",we:"19 November 1969 · USA",dz:"精确降落在勘测者 3 号探测器旁边，航天员走过去取回了它的部件。",de:"A pinpoint landing beside the Surveyor 3 probe; the crew walked over and brought parts of it home."},
+{k:"l",zh:"阿波罗 14 号",en:"Apollo 14",lat:-3.645,lon:-17.471,z:1.8,w:"1971 年 2 月 5 日 · 美国",we:"5 February 1971 · USA",dz:"降落在弗拉·毛罗高地，谢泼德在月面上打了两杆高尔夫球。",de:"Landed in the Fra Mauro highlands, where Alan Shepard hit two golf balls."},
+{k:"l",zh:"阿波罗 15 号",en:"Apollo 15",lat:26.132,lon:3.634,z:1.8,w:"1971 年 7 月 30 日 · 美国",we:"30 July 1971 · USA",dz:"降落在亚平宁山脉脚下的哈德利月谷旁，第一次在月面上开月球车。",de:"Landed beside Hadley Rille at the foot of the Apennines, with the first lunar rover."},
+{k:"l",zh:"阿波罗 16 号",en:"Apollo 16",lat:-8.973,lon:15.5,z:1.8,w:"1972 年 4 月 21 日 · 美国",we:"21 April 1972 · USA",dz:"唯一一次降落在月球高地的阿波罗任务，地点在笛卡尔高地。",de:"The only Apollo landing in the lunar highlands, at the Descartes site."},
+{k:"l",zh:"阿波罗 17 号",en:"Apollo 17",lat:20.191,lon:30.772,z:1.8,w:"1972 年 12 月 11 日 · 美国",we:"11 December 1972 · USA",dz:"最后一次载人登月，降落在陶拉斯-利特罗山谷。此后再没有人去过月球。",de:"The last crewed landing, in the Taurus–Littrow valley. No one has been back since."},
+{k:"l",zh:"月球 16 号",en:"Luna 16",lat:-0.51,lon:56.36,z:1.8,w:"1970 年 9 月 20 日 · 苏联",we:"20 September 1970 · USSR",dz:"第一次无人采样返回，从丰富海带回 101 克月壤。",de:"The first robotic sample return, bringing 101 g of soil from Mare Fecunditatis."},
+{k:"l",zh:"月球车 1 号",en:"Lunokhod 1",lat:38.24,lon:-35,z:1.8,w:"1970 年 11 月 17 日 · 苏联",we:"17 November 1970 · USSR",dz:"由月球 17 号送到雨海，是第一辆在另一个天体上行驶的遥控车，跑了约 10 公里。",de:"Delivered by Luna 17 to Mare Imbrium: the first remote-controlled rover on another world, covering about 10 km."},
+{k:"l",zh:"月船 3 号",en:"Chandrayaan-3",lat:-69.37,lon:32.32,z:1.8,w:"2023 年 8 月 23 日 · 印度",we:"23 August 2023 · India",dz:"印度第一次月面软着陆，也是第一次有探测器降落在月球南极附近的高纬度地区。",de:"India’s first soft landing, and the first by any probe at high latitude near the south pole."},
+{k:"l",zh:"SLIM",en:"SLIM",lat:-13.32,lon:25.25,z:1.8,w:"2024 年 1 月 20 日 · 日本",we:"20 January 2024 · Japan",dz:"日本第一次月面软着陆，落点离目标只有几十米，但着陆时头朝下翻倒了。",de:"Japan’s first soft landing, within tens of metres of its target, though it came to rest upside down."},
+{k:"l",zh:"奥德修斯",en:"Odysseus (IM-1)",lat:-80.13,lon:1.44,z:2.4,w:"2024 年 2 月 22 日 · 美国",we:"22 February 2024 · USA",dz:"第一艘在月球软着陆的商业飞船，由直觉机器公司建造，着陆后侧翻。",de:"The first commercial spacecraft to soft-land on the Moon, built by Intuitive Machines; it tipped onto its side."},
+{k:"l",zh:"蓝色幽灵",en:"Blue Ghost",lat:18.56,lon:61.81,z:1.8,w:"2025 年 3 月 2 日 · 美国",we:"2 March 2025 · USA",dz:"萤火虫航天公司的着陆器，在危海完成了一次完全成功的商业月面着陆。",de:"Firefly Aerospace’s lander made a fully successful commercial landing in Mare Crisium."}
+];
+MOON.sort(function(a,b){return a.z-b.z;});
+function moonLoad(){
+  if(S.moonP)return S.moonP;
+  var small=S.small;S.moonLoading=true;
+  S.moonP=Promise.all([
+    loadTex("tex/moon4k.jpg",0,4096,false,function(w,h,im){tileThumb(im);}).then(function(t){S.tMoon=t;}),
+    loadTex("tex/moonh4k.jpg",3,small?2048:4096,true).then(function(t){S.tMoonH=t;})
+  ]).then(function(){S.moonLoading=false;},function(e){S.moonLoading=false;S.moonP=null;throw e;});
+  return S.moonP;
+}
+/* 电脑上再换成 8K 的月面 */
+function moonUpgrade(){
+  var cn=navigator.connection||{};
+  if(S.small||S.moon8||cn.saveData||(gl.getParameter(gl.MAX_TEXTURE_SIZE)||0)<8192)return;
+  S.moon8=true;
+  loadTex("tex/moon8k.jpg",0,8192,false).then(function(t){var old=S.tMoon;S.tMoon=t;if(old&&old!==t)gl.deleteTexture(old);},function(){S.moon8=false;});
+}
+var moonBtn=$("#moonBtn");
+function moonUI(){
+  var on=!!S.moon,sp=moonBtn.querySelector("span"),tp=$("#tip");
+  document.body.classList.toggle("moon",on);
+  moonBtn.setAttribute("aria-pressed",on?"true":"false");
+  sp.setAttribute("data-i18n",on?"earthB":"moonB");sp.textContent=tr(on?"earthB":"moonB");
+  moonBtn.title=tr(on?"earthT":"moonT");
+  var k=on?(typeof touchUI!=="undefined"&&touchUI?"tipMoonTouch":"tipMoon"):(typeof touchUI!=="undefined"&&touchUI?"tipTouch":"tip");
+  tp.setAttribute("data-i18n",k);tp.textContent=tr(k);
+}
+function setBody(moon){
+  if(!!S.moon===!!moon||!S.ready)return;
+  if(moon&&!S.tMoon){
+    if(moonBtn.classList.contains("busy"))return;
+    moonBtn.classList.add("busy");if(typeof toast==="function")toast(tr("moonLoad"),6000);
+    moonLoad().then(function(){moonBtn.classList.remove("busy");var t=$("#toast");if(t)t.classList.remove("on");setBody(true);},
+      function(){moonBtn.classList.remove("busy");if(typeof toast==="function")toast(tr("moonErr"));});
+    return;
+  }
+  if(!sheet.hidden)closeSheet();
+  S.hit=null;S.fly=null;S.lonV=S.latV=0;
+  /* 各自记住离开时看的位置 */
+  var cur={lat:S.lat,lon:S.lon,z:S.zoomT};
+  if(moon){S.viewE=cur;var m=S.viewM||{lat:8,lon:-8,z:1};S.lat=m.lat;S.lon=m.lon;S.zoom=S.zoomT=m.z;}
+  else{S.viewM=cur;var e=S.viewE||{lat:22,lon:0,z:1};S.lat=e.lat;S.lon=e.lon;S.zoom=S.zoomT=e.z;}
+  S.moon=!!moon;
+  tileReset(S.moon);
+  moonUI();buildLabels();touch();
+  if(S.moon)setTimeout(moonUpgrade,900);
+}
+moonBtn.addEventListener("click",function(){setBody(!S.moon);});
+function moonHTML(m){
+  var en=LANG==="en",nm=en?m.en:m.zh,other=en?m.zh:m.en;
+  return barHTML(false)+
+    '<div class="sbody"><div class="shead"><p class="eyebrow">'+tr("mk_"+m.k)+'</p><h2 class="stitle" id="sTitle">'+esc(nm)+'</h2>'+
+    '<p class="mmeta">'+esc(other)+(m.w?' · '+esc(en?m.we:m.w):'')+'</p></div>'+
+    '<p class="mdesc">'+esc(en?m.de:m.dz)+'</p><p class="mmeta">'+esc(tr("moonImg"))+'</p></div>';
+}
+function openMoon(i){
+  var m=MOON[i];if(!m)return;
+  curId=null;curCountry=null;
+  flyTo(clamp(m.lat,-78,78),m.lon,Math.max(S.zoomT,m.k==="l"?2.4:1.9));
+  openSheet(moonHTML(m));
 }
 
 /* ---------- 星空 ---------- */
@@ -2447,7 +2635,8 @@ window.addEventListener("resize",resize);
 /* 地名点击 */
 $("#labels").addEventListener("click",function(e){
   if(S.moved)return;
-  var b=e.target.closest("[data-pin],[data-city]");if(!b)return;
+  var b=e.target.closest("[data-pin],[data-city],[data-moon]");if(!b)return;
+  if(b.hasAttribute("data-moon")){openMoon(+b.getAttribute("data-moon"));return;}
   if(b.hasAttribute("data-pin")){
     var pid=b.getAttribute("data-pin");
     if(REP.on)repJumpTo(pid);
@@ -5794,7 +5983,7 @@ function boot(){
     loadTex(TEX.day4||TEX.day,0,TEX.day4||small?4096:8192,false,function(w,h,im){tileThumb(im);}).then(function(t){S.tDay=t;return t;}),
     loadTex(TEX.night4||TEX.night,1,TEX.day4||small?4096:8192,true).then(function(t){S.tNight=t;return t;}),
     loadTex(TEX.water,2,small?2048:4096,"la"),
-    loadTex(TEX.height,3,small?2048:4096,true,function(w,h){S.htx=1/w;S.hty=1/h;}),
+    loadTex(TEX.height,3,small?2048:4096,true,function(w,h){S.htx=1/w;S.hty=1/h;}).then(function(t){S.tHgt=t;return t;}),
     /* 星空贴图没载入不影响地球显示：退回纯黑背景 */
     loadTex(small&&TEX.sky2?TEX.sky2:TEX.sky,5,small?2048:4096,false,null,true,"tex/sky4k.jpg").then(function(t){S.tSky=t;return t;},function(){S.tSky=null;skyRetry(0);return null;})
   ]).then(function(){
