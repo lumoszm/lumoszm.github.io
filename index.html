@@ -2541,11 +2541,12 @@ function setBody(moon){
   /* 转场：镜头从当前星球拉远，两个星球同时在画面里，平移过去，再推近（参考 Apple Watch 表盘切换） */
   var tgt={lat:S.lat,lon:S.lon,z:S.zoomT};
   S.lat=cur.lat;S.lon=cur.lon;S.zoom=S.zoomT=cur.z;
-  if(!reduced()){S.trans={t:0,dur:S.transDur||2.6,from:!!S.moon,to:!!moon,a:cur,b:tgt,dir:moon?1:-1};document.body.classList.add("trans");}
+  /* 用户要求去掉转场，直接切换；S.transDur 仅测试时保留 */
+  if(S.transDur&&!reduced()){S.trans={t:0,dur:S.transDur||2.6,from:!!S.moon,to:!!moon,a:cur,b:tgt,dir:moon?1:-1};document.body.classList.add("trans");}
   S.moon=!!moon;
   tileReset(S.moon);
   moonUI();
-  if(!S.trans){S.lat=tgt.lat;S.lon=tgt.lon;S.zoom=S.zoomT=tgt.z;buildLabels();}
+  if(!S.trans){S.lat=tgt.lat;S.lon=tgt.lon;S.zoom=S.zoomT=tgt.z;SKY.prevLon=S.lon;S.lastInteract=performance.now();buildLabels();}
   touch();
   if(S.moon){setTimeout(moonUpgrade,S.trans?2300:900);setTimeout(moonPhPreload,S.trans?4000:2500);}
 }
