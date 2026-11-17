@@ -179,7 +179,10 @@ body:not(.loading) #loading{opacity:0}
 #moonBtn{left:max(16px,env(safe-area-inset-left,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));width:46px;height:46px;padding:0;border:0;border-radius:50%;cursor:pointer;color:#e9edf2;
   display:grid;place-items:center;pointer-events:none;opacity:0;transition:opacity .8s 1s,transform .25s var(--ease),background-color .25s;
   background:rgba(20,28,44,.38);-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);box-shadow:0 0 0 .5px rgba(255,255,255,.16),0 6px 18px rgba(0,0,0,.3)}
-#moonBtn svg{grid-area:1/1;width:24px;height:24px;transition:opacity .45s ease,transform .6s var(--ease)}
+/* 真实轮廓：月球的高地实心、月海半透明；地球的大陆实心、海洋半透明（由 NASA 贴图生成） */
+#moonBtn .ic{grid-area:1/1;width:28px;height:28px;background:currentColor;-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat;transition:opacity .45s ease,transform .6s var(--ease)}
+#moonBtn .ic-moon{--m:url(data:image/png;base64,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)}
+#moonBtn .ic-earth{--m:url(data:image/png;base64,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)}
 #moonBtn .ic-earth{opacity:0;transform:scale(.4) rotate(-40deg)}
 #moonBtn[aria-pressed="true"] .ic-moon{opacity:0;transform:scale(.4) rotate(40deg)}
 #moonBtn[aria-pressed="true"] .ic-earth{opacity:1;transform:none}
@@ -188,7 +191,7 @@ body:not(.loading) #loading{opacity:0}
 #moonBtn:hover{background:rgba(40,52,76,.6)}
 
 #moonBtn.busy{pointer-events:none}
-#moonBtn.busy svg{animation:mbPulse 1.1s ease-in-out infinite}
+#moonBtn.busy .ic{animation:mbPulse 1.1s ease-in-out infinite}
 @keyframes mbPulse{50%{opacity:.35}}
 body.trans #labels,body.trans #hit{opacity:0!important;transition:opacity .2s}
 body.cityopen #moonBtn,body.catopen #moonBtn,body.fpon #moonBtn,body.repon #moonBtn,body.hpon #moonBtn{display:none}
@@ -1460,7 +1463,7 @@ body.cityopen .hp,body.catopen .hp{opacity:0;pointer-events:none}
 <button type="button" class="ui" id="start" data-i18n="start">点击地球以开始</button>
 <div id="loading" aria-live="polite" data-i18n="loading">正在载入地球…</div>
 
-<button type="button" class="ui" id="moonBtn" aria-pressed="false" aria-label="月球"><svg class="ic-moon" viewBox="0 0 24 24" aria-hidden="true"><defs><mask id="mkM"><rect width="24" height="24" fill="#fff"/><circle cx="9" cy="9" r="2.3" fill="#000"/><circle cx="15.2" cy="14.6" r="3" fill="#000"/><circle cx="8.6" cy="15.6" r="1.4" fill="#000"/><circle cx="15.4" cy="7.4" r="1.1" fill="#000"/></mask></defs><circle cx="12" cy="12" r="9" fill="currentColor" mask="url(#mkM)"/></svg><svg class="ic-earth" viewBox="0 0 24 24" aria-hidden="true"><defs><mask id="mkE"><rect width="24" height="24" fill="#fff"/><g fill="none" stroke="#000" stroke-width="1.5"><ellipse cx="12" cy="12" rx="3.9" ry="9"/><path d="M3.4 9h17.2M3.4 15h17.2"/></g></mask></defs><circle cx="12" cy="12" r="9" fill="currentColor" mask="url(#mkE)"/></svg><span class="sr" data-i18n="moonB">月球</span></button>
+<button type="button" class="ui" id="moonBtn" aria-pressed="false" aria-label="月球"><i class="ic ic-moon" aria-hidden="true"></i><i class="ic ic-earth" aria-hidden="true"></i><span class="sr" data-i18n="moonB">月球</span></button>
 <div class="ui" id="tip" data-i18n="tip">拖拽转动 · 滚轮缩放 · 点击地名进入</div>
 
 <div id="acct" class="glass" hidden role="dialog" aria-labelledby="acctH">
@@ -2293,16 +2296,7 @@ function render(now){
   gl.viewport(0,0,cw,ch);gl.clearColor(0.012,0.016,0.03,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
   if(SKY.ok)drawSky(now,t,dta,spinD);
   if(S.trans&&!S.earthHide){
-    var T=S.trans;T.t+=dta/T.dur;var tt=Math.min(T.t,1);
-    /* 三段：拉远（两个星球都缩小，另一个从侧面出现）→ 平移 → 推近 */
-    var out=smooth(0,0.38,tt),pan=smooth(0.22,0.78,tt),inn=smooth(0.6,1,tt);
-    var sA=T.from?0.18:0.36,sB=T.to?0.18:0.36,gap=Math.min(W*0.62,H*1.05)*T.dir;
-    var zA=Math.exp(lerp(Math.log(T.a.z),Math.log(sA),out)),zB=Math.exp(lerp(Math.log(sB),Math.log(T.b.z),inn));
-    var xA=-gap*pan-gap*0.9*inn,xB=gap*(1-pan)+gap*0.9*(1-out);
-    gl.disable(gl.DEPTH_TEST);
-    drawBodyAt(T.from,zA,xA,T.a.lat,T.a.lon+(spinD?0:0),now);
-    drawBodyAt(T.to,zB,xB,T.b.lat,T.b.lon,now);
-    if(T.t>=1)transEnd();
+    transFrame(now,dta);
     requestAnimationFrame(render);return;
   }
   if(!S.earthHide){
@@ -2338,22 +2332,66 @@ function render(now){
   requestAnimationFrame(render);
 }
 
-/* 转场时单独画一个星球：自己的相机（缩放、在屏幕上的水平位置、经纬度），不画地名和高清瓦片 */
-function drawBodyAt(moon,zoom,offX,lat,lon,now){
-  var W=S.W,H=S.H,L=layout(),R=L.R*zoom;
-  var tanA=R*2*TANH/H,sinA=tanA/Math.sqrt(1+tanA*tanA),dd=Math.max(1.12,1/sinA);
-  var ev=llv(lat,lon),eye=[ev[0]*dd,ev[1]*dd,ev[2]*dd];
-  var sx=((L.cx+offX)/W)*2-1,sy=1-(L.cy/H)*2;
-  if(Math.abs(sx)>1+2.2*R/W*2)return;
-  var vm=viewM(eye),VP=mul(persp(W/H,0.05,60,sx,sy),vm.m);
-  var en=norm(eye),lv;
-  if(moon)lv=slerp(norm([en[0]*0.62-vm.s[0]*0.68+vm.u[0]*0.38,en[1]*0.62-vm.s[1]*0.68+vm.u[1]*0.38,en[2]*0.62-vm.s[2]*0.68+vm.u[2]*0.38]),en,ease(S.dayK));
-  else{var sp=sunPos(Date.now()),sun=llv(sp.lat,wrap(sp.lon-S.spinAccum));lv=slerp(sun,en,ease(S.dayK));}
-  var cw=glc.width,ch=glc.height;
-  gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.disable(gl.CULL_FACE);
+/* ---------- 地球 ⇄ 月球 转场 ----------
+   真实的三维镜头：出发的星球在原点，目标星球放在镜头右前方（或左前方）。
+   1) 镜头沿视线后退；2) 原地转头，目标星球从画面一侧转进来；3) 对准后推近。
+   目标星球只绕竖直轴转过一个角度，让最后看到的那一面正好是切换后要看的那一面，所以结束时画面能无缝接上正常模式。 */
+function rotY(v,a){var c=Math.cos(a),s=Math.sin(a);return [c*v[0]-s*v[2],v[1],s*v[0]+c*v[2]];}
+function camDist(z){var L=layout(),R=L.R*z,tanA=R*2*TANH/S.H,sinA=tanA/Math.sqrt(1+tanA*tanA);return Math.max(1.12,1/sinA);}
+function viewAt(eye,tg){
+  var f=norm([tg[0]-eye[0],tg[1]-eye[1],tg[2]-eye[2]]),s=norm(cross(f,[0,1,0])),u=cross(s,f);
+  return {m:new Float32Array([s[0],u[0],-f[0],0,s[1],u[1],-f[1],0,s[2],u[2],-f[2],0,-dot(s,eye),-dot(u,eye),dot(f,eye),1]),s:s,u:u,f:f};
+}
+function slerpV(a,b,t){var d=clamp(dot(a,b),-1,1),w=Math.acos(d);if(w<1e-4)return norm([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t]);var sw=Math.sin(w),k1=Math.sin((1-t)*w)/sw,k2=Math.sin(t*w)/sw;return [a[0]*k1+b[0]*k2,a[1]*k1+b[1]*k2,a[2]*k1+b[2]*k2];}
+function transSetup(T){
+  var dA=camDist(T.a.z),dB=camDist(T.b.z),dirA=llv(T.a.lat,T.a.lon);
+  var e0=[dirA[0]*dA,dirA[1]*dA,dirA[2]*dA],v0=viewM(e0);
+  var rB=T.to?0.27:1/0.27;                       /* 目标星球相对出发星球的大小 */
+  var dP=Math.max(dA*2.1,4.2),P=[dirA[0]*dP,dirA[1]*dP,dirA[2]*dP];
+  var turn=72*RAD*T.dir,fw=norm([-P[0],-P[1],-P[2]]),side=v0.s;
+  var off=[Math.cos(Math.abs(turn))*fw[0]+Math.sin(turn)*side[0],Math.cos(Math.abs(turn))*fw[1]+Math.sin(turn)*side[1],Math.cos(Math.abs(turn))*fw[2]+Math.sin(turn)*side[2]];
+  var Dpm=Math.max(3.3*Math.max(1,rB),dB*rB*1.8),C=[P[0]+off[0]*Dpm,P[1]+off[1]*Dpm,P[2]+off[2]*Dpm];
+  /* 目标星球绕竖直轴转多少：让切换后要看的那一面朝向镜头来的方向 */
+  var vb=llv(T.b.lat,T.b.lon),h=[P[0]-C[0],0,P[2]-C[2]];
+  var yaw=Math.atan2(h[2],h[0])-Math.atan2(vb[2],vb[0]);
+  var eB=rotY([vb[0]*dB,vb[1]*dB,vb[2]*dB],yaw);eB=[C[0]+eB[0]*rB,C[1]+eB[1]*rB,C[2]+eB[2]*rB];
+  T.dA=dA;T.dP=dP;T.dirA=dirA;T.P=P;T.C=C;T.rB=rB;T.yaw=yaw;T.eB=eB;T.u2p=0;T.sign=T.dir;
+}
+function transFrame(now,dta){
+  var T=S.trans;if(!T.P)transSetup(T);
+  T.t+=dta/T.dur;var tt=Math.min(T.t,1);
+  var u1=smooth(0,0.34,tt),u2=smooth(0.26,0.68,tt),u3=ease(smooth(0.62,1,tt));
+  var d=lerp(T.dA,T.dP,u1),eye=[T.dirA[0]*d,T.dirA[1]*d,T.dirA[2]*d];
+  /* 推近：绕目标星球的球面插值（距离和方向分开插），不会中途比终点还近 */
+  if(u3>0){var C=T.C,r0=[eye[0]-C[0],eye[1]-C[1],eye[2]-C[2]],r1=[T.eB[0]-C[0],T.eB[1]-C[1],T.eB[2]-C[2]];
+    var l0=Math.hypot(r0[0],r0[1],r0[2]),l1=Math.hypot(r1[0],r1[1],r1[2]),dv=slerpV(norm(r0),norm(r1),u3),ll=Math.exp(lerp(Math.log(l0),Math.log(l1),u3));
+    eye=[C[0]+dv[0]*ll,C[1]+dv[1]*ll,C[2]+dv[2]*ll];}
+  var toA=norm([-eye[0],-eye[1],-eye[2]]),toB=norm([T.C[0]-eye[0],T.C[1]-eye[1],T.C[2]-eye[2]]);
+  var dir=slerpV(toA,toB,u2),vm=viewAt(eye,[eye[0]+dir[0],eye[1]+dir[1],eye[2]+dir[2]]);
+  /* 星空跟着镜头一起转 */
+  SKY.yawOff-=(u2-T.u2p)*72*T.sign*0.6;T.u2p=u2;
+  var L=layout(),W=S.W,H=S.H,sx=(L.cx/W)*2-1,sy=1-(L.cy/H)*2;
+  var VP=mul(persp(W/H,0.02,80,sx,sy),vm.m);
+  gl.viewport(0,0,glc.width,glc.height);
+  drawBodyW(T.from,[0,0,0],1,0,eye,vm,VP,sx,sy);
+  drawBodyW(T.to,T.C,T.rB,T.yaw,eye,vm,VP,sx,sy);
+  if(T.t>=1)transEnd();
+}
+/* 在世界坐标里画一个星球：中心 C、半径 r、绕竖直轴转 yaw。着色器按“原点处半径 1 的球”算，所以把镜头和光照换算到它自己的坐标里 */
+function drawBodyW(moon,C,r,yaw,eye,vm,VP,sx,sy){
+  var W=S.W,H=S.H,cw=glc.width,ch=glc.height;
+  var el=rotY([(eye[0]-C[0])/r,(eye[1]-C[1])/r,(eye[2]-C[2])/r],-yaw);
+  if(dot(el,el)<1.0001)return;
+  var c=Math.cos(yaw),s=Math.sin(yaw);
+  var Mm=new Float32Array([c*r,0,s*r,0, 0,r,0,0, -s*r,0,c*r,0, C[0],C[1],C[2],1]);
+  var VPm=mul(VP,Mm);
+  var R_=rotY(vm.s,-yaw),U_=rotY(vm.u,-yaw),F_=rotY(vm.f,-yaw),en=norm(el),lv;
+  if(moon)lv=slerp(norm([en[0]*0.62-R_[0]*0.68+U_[0]*0.38,en[1]*0.62-R_[1]*0.68+U_[1]*0.38,en[2]*0.62-R_[2]*0.68+U_[2]*0.38]),en,ease(S.dayK));
+  else{var sp=sunPos(Date.now()),sun=llv(sp.lat,wrap(sp.lon-S.spinAccum));lv=slerp(rotY(sun,-yaw),en,ease(S.dayK));}
+  gl.disable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
   if(!moon){
     gl.useProgram(glow);gl.bindBuffer(gl.ARRAY_BUFFER,quad);gl.enableVertexAttribArray(UG.aQ);gl.vertexAttribPointer(UG.aQ,2,gl.FLOAT,false,0,0);
-    gl.uniform3fv(UG.uCam,eye);gl.uniform3fv(UG.uRight,vm.s);gl.uniform3fv(UG.uUp,vm.u);gl.uniform3fv(UG.uFwd,vm.f);gl.uniform3fv(UG.uL,lv);
+    gl.uniform3fv(UG.uCam,el);gl.uniform3fv(UG.uRight,R_);gl.uniform3fv(UG.uUp,U_);gl.uniform3fv(UG.uFwd,F_);gl.uniform3fv(UG.uL,lv);
     gl.uniform2f(UG.uShift,sx,sy);gl.uniform2f(UG.uRes,cw,ch);gl.uniform1f(UG.uTanY,TANH);gl.uniform1f(UG.uAsp,W/H);
     gl.drawArrays(gl.TRIANGLE_STRIP,0,4);gl.disableVertexAttribArray(UG.aQ);
   }
@@ -2363,9 +2401,9 @@ function drawBodyAt(moon,zoom,offX,lat,lon,now){
   gl.useProgram(prog);gl.bindBuffer(gl.ARRAY_BUFFER,sphere.vb);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,sphere.ib);
   gl.enableVertexAttribArray(U.aPos);gl.vertexAttribPointer(U.aPos,3,gl.FLOAT,false,20,0);
   gl.enableVertexAttribArray(U.aUV);gl.vertexAttribPointer(U.aUV,2,gl.FLOAT,false,20,12);
-  gl.uniformMatrix4fv(U.uVP,false,VP);gl.uniform3fv(U.uL,lv);gl.uniform3fv(U.uCam,eye);
+  gl.uniformMatrix4fv(U.uVP,false,VPm);gl.uniform3fv(U.uL,lv);gl.uniform3fv(U.uCam,el);
   gl.uniform2f(U.uHT,S.htx*1.5,S.hty*1.5);gl.uniform1f(U.uBump,moon?MOON_BUMP:EARTH_BUMP);gl.uniform1f(U.uDayAll,S.dayK);gl.uniform1f(U.uMoon,moon?1:0);
-  gl.uniform1f(U.uDetail,smooth(1.6,3.6,zoom));
+  gl.uniform1f(U.uDetail,0);
   gl.uniform1i(U.uDay,0);gl.uniform1i(U.uNight,1);gl.uniform1i(U.uWater,2);gl.uniform1i(U.uHeight,3);
   gl.uniform1f(U.uTileOn,0);gl.uniform1i(U.uLit,4);gl.uniform1f(U.uLitOn,0);
   gl.drawElements(gl.TRIANGLES,sphere.n,gl.UNSIGNED_SHORT,0);
@@ -2489,7 +2527,7 @@ function setBody(moon){
   /* 转场：镜头从当前星球拉远，两个星球同时在画面里，平移过去，再推近（参考 Apple Watch 表盘切换） */
   var tgt={lat:S.lat,lon:S.lon,z:S.zoomT};
   S.lat=cur.lat;S.lon=cur.lon;S.zoom=S.zoomT=cur.z;
-  if(!reduced()){S.trans={t:0,dur:S.transDur||2.1,from:!!S.moon,to:!!moon,a:cur,b:tgt,dir:moon?1:-1};document.body.classList.add("trans");}
+  if(!reduced()){S.trans={t:0,dur:S.transDur||2.6,from:!!S.moon,to:!!moon,a:cur,b:tgt,dir:moon?1:-1};document.body.classList.add("trans");}
   S.moon=!!moon;
   tileReset(S.moon);
   moonUI();
@@ -2504,7 +2542,7 @@ function moonPhPreload(){
 }
 function transEnd(){
   var T=S.trans;S.trans=null;
-  S.lat=T.b.lat;S.lon=T.b.lon;S.zoom=S.zoomT=T.b.z;S.lastInteract=performance.now();
+  S.lat=T.b.lat;S.lon=T.b.lon;S.zoom=S.zoomT=T.b.z;S.lastInteract=performance.now();SKY.prevLon=S.lon;
   buildLabels();document.body.classList.remove("trans");
 }
 moonBtn.addEventListener("click",function(){setBody(!S.moon);});
