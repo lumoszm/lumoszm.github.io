@@ -1509,7 +1509,7 @@ body.cityopen .hp,body.catopen .hp{opacity:0;pointer-events:none}
 (function(){
 "use strict";
 
-var TEX={day:"tex/day8k.jpg",night:"tex/night8k.jpg",day4:"tex/day4k.jpg",night4:"tex/night4k.jpg",water:"tex/water4k.png",height:"tex/height4k.jpg",sky:"tex/skyb4k.jpg",sky8:"tex/skyb8k.jpg",land:"tex/land2k.png"};
+var TEX={day:"tex/day8k.jpg",night:"tex/night8k.jpg",day4:"tex/day4k.jpg",night4:"tex/night4k.jpg",water:"tex/water4k.png",height:"tex/height4k.jpg",sky:"tex/skyc4k.jpg",sky8:"tex/skyc8k.jpg",land:"tex/land2k.png"};
 
 /* ---------- 数据 ---------- */
 var CONT=[
@@ -2613,7 +2613,7 @@ function initSky(){
   SKY.U.aQ=gl.getAttribLocation(SKY.prog,"aQ");
   ["uSVP","uT","uDpr","uTw"].forEach(function(n){SKY.P[n]=gl.getUniformLocation(SKY.sp,n);});
   ["aP","aC","aS"].forEach(function(n){SKY.P[n]=gl.getAttribLocation(SKY.sp,n);});
-  var rnd=mulberry(20261017),N=S.small?6500:11000,a=new Float32Array(N*9),k=0;
+  var rnd=mulberry(20261017),N=S.small?1400:2200,a=new Float32Array(N*9),k=0;
   for(var i=0;i<N;i++){
     var l,b;
     if(rnd()<0.46){l=(rnd()<0.5?gauss(rnd)*48:rnd()*360-180);b=gauss(rnd)*(2.2+7.5*rnd());}

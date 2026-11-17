@@ -1,11 +1,11 @@
-/* ATLAS 离线缓存（版本 02839ff42c）
+/* ATLAS 离线缓存（版本 16c196e7e1）
    原则：网络不稳时（比如国内直连 GitHub），凡是以前成功取到过的东西都还能用。
    - 缓存只有一个，名字固定；发布新版本不清空旧内容，只在后台逐个更新
    - 网页和数据清单：先联网，几秒内没回来就先用上一次的
    - 地球贴图、程序库、图标、带版本号的数据：先用缓存，后台更新
    - 其他网站的请求（数据库、Unsplash 照片、地图瓦片）不经过这里 */
 var V = "atlas-static-1";
-var CORE = ["./", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "tex/day4k.jpg", "tex/night4k.jpg", "tex/water4k.png", "tex/height4k.jpg", "tex/skyb4k.jpg", "tex/land2k.png", "cities.json", "photos.json", "lib/catalog.json"];
+var CORE = ["./", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "tex/day4k.jpg", "tex/night4k.jpg", "tex/water4k.png", "tex/height4k.jpg", "tex/skyc4k.jpg", "tex/land2k.png", "cities.json", "photos.json", "lib/catalog.json"];
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(V).then(function (c) {
     /* 逐个取，哪个失败都不影响其他的 */
