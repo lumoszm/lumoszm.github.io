@@ -2348,8 +2348,10 @@ function transSetup(T){
   var e0=[dirA[0]*dA,dirA[1]*dA,dirA[2]*dA],v0=viewM(e0);
   var rB=T.to?0.27:1/0.27;                       /* 目标星球相对出发星球的大小 */
   var dP=Math.max(dA*2.1,4.2),P=[dirA[0]*dP,dirA[1]*dP,dirA[2]*dP];
-  var turn=72*RAD*T.dir,fw=norm([-P[0],-P[1],-P[2]]),side=v0.s;
-  var off=[Math.cos(Math.abs(turn))*fw[0]+Math.sin(turn)*side[0],Math.cos(Math.abs(turn))*fw[1]+Math.sin(turn)*side[1],Math.cos(Math.abs(turn))*fw[2]+Math.sin(turn)*side[2]];
+  /* 目标星球和当前星球在同一高度：镜头只需要水平转头（绕竖直轴），不抬头也不低头 */
+  var fw=norm([-P[0],-P[1],-P[2]]),hd=Math.atan2(fw[2],fw[0]),pt=Math.asin(clamp(fw[1],-1,1)),turn=72*RAD;
+  var off=[Math.cos(pt)*Math.cos(hd+turn),Math.sin(pt),Math.cos(pt)*Math.sin(hd+turn)];
+  if((dot(off,v0.s)>0?1:-1)!==T.dir){turn=-turn;off=[Math.cos(pt)*Math.cos(hd+turn),Math.sin(pt),Math.cos(pt)*Math.sin(hd+turn)];}
   var Dpm=Math.max(3.3*Math.max(1,rB),dB*rB*1.8),C=[P[0]+off[0]*Dpm,P[1]+off[1]*Dpm,P[2]+off[2]*Dpm];
   /* 目标星球绕竖直轴转多少：让切换后要看的那一面朝向镜头来的方向 */
   var vb=llv(T.b.lat,T.b.lon),h=[P[0]-C[0],0,P[2]-C[2]];
@@ -2367,7 +2369,11 @@ function transFrame(now,dta){
     var l0=Math.hypot(r0[0],r0[1],r0[2]),l1=Math.hypot(r1[0],r1[1],r1[2]),dv=slerpV(norm(r0),norm(r1),u3),ll=Math.exp(lerp(Math.log(l0),Math.log(l1),u3));
     eye=[C[0]+dv[0]*ll,C[1]+dv[1]*ll,C[2]+dv[2]*ll];}
   var toA=norm([-eye[0],-eye[1],-eye[2]]),toB=norm([T.C[0]-eye[0],T.C[1]-eye[1],T.C[2]-eye[2]]);
-  var dir=slerpV(toA,toB,u2),vm=viewAt(eye,[eye[0]+dir[0],eye[1]+dir[1],eye[2]+dir[2]]);
+  /* 水平转头：朝向角（绕竖直轴）和俯仰角分开插值 */
+  var hA=Math.atan2(toA[2],toA[0]),hB=Math.atan2(toB[2],toB[0]),pA=Math.asin(clamp(toA[1],-1,1)),pB=Math.asin(clamp(toB[1],-1,1));
+  var dh=hB-hA;while(dh>Math.PI)dh-=2*Math.PI;while(dh<-Math.PI)dh+=2*Math.PI;
+  var hh=hA+dh*u2,pp=lerp(pA,pB,u2),dir=[Math.cos(pp)*Math.cos(hh),Math.sin(pp),Math.cos(pp)*Math.sin(hh)];
+  var vm=viewAt(eye,[eye[0]+dir[0],eye[1]+dir[1],eye[2]+dir[2]]);
   /* 星空跟着镜头一起转 */
   SKY.yawOff-=(u2-T.u2p)*72*T.sign*0.6;T.u2p=u2;
   var L=layout(),W=S.W,H=S.H,sx=(L.cx/W)*2-1,sy=1-(L.cy/H)*2;
