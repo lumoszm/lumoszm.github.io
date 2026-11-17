@@ -1477,7 +1477,7 @@ body.cityopen .hp,body.catopen .hp{opacity:0;pointer-events:none}
     </div>
   </div>
   <div class="mlinks" id="acctLinks"></div>
-  <p class="acct-note"><span data-i18n="imgNote">地球影像来源：NASA（Blue Marble、Black Marble、GIBS）</span><br><span data-i18n="dataNote">地名数据：GeoNames、Wikidata、Natural Earth</span></p>
+  <p class="acct-note"><span data-i18n="imgNote">地球影像来源：NASA（Blue Marble、Black Marble、GIBS）；银河全景：ESO/S. Brunier</span><br><span data-i18n="dataNote">地名数据：GeoNames、Wikidata、Natural Earth</span></p>
 </div>
 
 <div id="fallback" hidden><div class="fbcard glass">
@@ -1509,7 +1509,7 @@ body.cityopen .hp,body.catopen .hp{opacity:0;pointer-events:none}
 (function(){
 "use strict";
 
-var TEX={day:"tex/day8k.jpg",night:"tex/night8k.jpg",day4:"tex/day4k.jpg",night4:"tex/night4k.jpg",water:"tex/water4k.png",height:"tex/height4k.jpg",sky:"tex/sky4k.jpg",sky2:"",sky8:"",land:"tex/land2k.png"};
+var TEX={day:"tex/day8k.jpg",night:"tex/night8k.jpg",day4:"tex/day4k.jpg",night4:"tex/night4k.jpg",water:"tex/water4k.png",height:"tex/height4k.jpg",sky:"tex/skyb4k.jpg",sky2:"tex/skyb2k.jpg",sky8:"tex/skyb8k.jpg",land:"tex/land2k.png"};
 
 /* ---------- 数据 ---------- */
 var CONT=[
@@ -1566,14 +1566,14 @@ var I18N={
       fbTitle:"这台设备打不开三维地球",fbText:"浏览器没有启用 WebGL。请换用最新版的 Chrome、Edge 或 Safari 再打开。",moonB:"月球",earthB:"地球",photoBy:"图片：",moonBusy:"载入中…",moonT:"去月球看看",earthT:"回到地球",moonLoad:"正在载入月球…",moonErr:"月球没有载入，请稍后再试",tipMoon:"拖拽转动 · 滚轮缩放 · 点击名字查看介绍",tipMoonTouch:"拖动转动 · 双指缩放 · 点击名字查看介绍",mk_m:"月海",mk_c:"环形山",mk_l:"着陆点",mk_r:"区域",mk_t:"山脉",moonImg:"月面影像：NASA / GSFC / 亚利桑那州立大学（LRO）",fbNetT:"地球没有载入完",fbNetP:"网络不稳定，地球贴图没有下载下来。检查一下网络后再试一次。",fbRetry:"重新载入",
       dayOn:"全球白天",dayOff:"昼夜",dayOnT:"让整个地球都处在白天",dayOffT:"恢复昼夜",
       close:"关闭",prev:"上一个",next:"下一个",fest:"节日",food:"美食",craft:"手艺",tipRow:"入乡随俗",fact:"你知道吗",
-      country:"国家",cities:"已收录的城市",pending:"介绍内容整理中。",back:"返回",backGlobe:"回到地球",photoSoon:"示意图 · 照片待添加",local:"当地",localTime:"当地时间",imgNote:"地球影像来源：NASA（Blue Marble、Black Marble、GIBS）",slide:"第 %s 张",about2:"介绍",searchPh:"搜索",searchAria:"搜索国家、城市或地点",clear:"清除",cancel:"取消",noRes:"没有找到相关地点",localDay:"当地时间，白天",localNight:"当地时间，夜晚",sep:"，",
+      country:"国家",cities:"已收录的城市",pending:"介绍内容整理中。",back:"返回",backGlobe:"回到地球",photoSoon:"示意图 · 照片待添加",local:"当地",localTime:"当地时间",imgNote:"地球影像来源：NASA（Blue Marble、Black Marble、GIBS）；银河全景：ESO/S. Brunier",slide:"第 %s 张",about2:"介绍",searchPh:"搜索",searchAria:"搜索国家、城市或地点",clear:"清除",cancel:"取消",noRes:"没有找到相关地点",localDay:"当地时间，白天",localNight:"当地时间，夜晚",sep:"，",
       soon:function(n){return n+"的板块还在筹备中。现在先收录了五座试点城市，再往后会按国家逐步补上。";}},
   en:{globe:"Rotatable, zoomable 3D globe",settings:"Settings",language:"Language",about:"ATLAS: turn the globe, pick a city, learn a local greeting, and discover its festivals, food and crafts.",
       start:"Click the globe to begin",startTouch:"Tap the globe to begin",loading:"Loading the Earth…",tip:"Drag to rotate · Scroll to zoom · Click a name to open",tipTouch:"Drag to rotate · Pinch to zoom · Tap a name to open",
       fbTitle:"This device can’t show the 3D globe",fbText:"WebGL isn’t available in this browser. Please try the latest Chrome, Edge or Safari.",moonB:"Moon",earthB:"Earth",photoBy:"Image: ",moonBusy:"Loading…",moonT:"Visit the Moon",earthT:"Back to Earth",moonLoad:"Loading the Moon…",moonErr:"The Moon didn’t load. Please try again later.",tipMoon:"Drag to rotate · Scroll to zoom · Click a name for details",tipMoonTouch:"Drag to rotate · Pinch to zoom · Tap a name for details",mk_m:"Mare",mk_c:"Crater",mk_l:"Landing site",mk_r:"Region",mk_t:"Mountains",moonImg:"Lunar imagery: NASA / GSFC / Arizona State University (LRO)",fbNetT:"The globe didn’t finish loading",fbNetP:"The connection dropped while downloading the globe. Check your network and try again.",fbRetry:"Reload",
       dayOn:"All daylight",dayOff:"Day & night",dayOnT:"Light up the whole globe",dayOffT:"Back to day and night",
       close:"Close",prev:"Previous",next:"Next",fest:"Festival",food:"Food",craft:"Craft",tipRow:"Etiquette",fact:"Did you know?",
-      country:"Country",cities:"Cities on ATLAS",pending:"Details for this city are on the way.",back:"Back",backGlobe:"Back to the globe",photoSoon:"Placeholder · photos coming soon",local:"Local",localTime:"Local time",imgNote:"Earth imagery: NASA (Blue Marble, Black Marble, GIBS)",slide:"Image %s",about2:"About",searchPh:"Search",searchAria:"Search countries, cities or places",clear:"Clear",cancel:"Cancel",noRes:"No matching places",localDay:"Local time, daytime",localNight:"Local time, night",sep:", ",
+      country:"Country",cities:"Cities on ATLAS",pending:"Details for this city are on the way.",back:"Back",backGlobe:"Back to the globe",photoSoon:"Placeholder · photos coming soon",local:"Local",localTime:"Local time",imgNote:"Earth imagery: NASA (Blue Marble, Black Marble, GIBS); Milky Way: ESO/S. Brunier",slide:"Image %s",about2:"About",searchPh:"Search",searchAria:"Search countries, cities or places",clear:"Clear",cancel:"Cancel",noRes:"No matching places",localDay:"Local time, daytime",localNight:"Local time, night",sep:", ",
       soon:function(n){return "The "+n+" section is still in the works. ATLAS starts with five pilot cities, and more countries will be added over time.";}}
 };
 var CONT_EN={asia:"Asia",europe:"Europe",africa:"Africa",america:"Americas",oceania:"Oceania"};
@@ -6128,7 +6128,7 @@ function boot(){
     loadTex(TEX.water,2,small?2048:4096,"la"),
     loadTex(TEX.height,3,small?2048:4096,true,function(w,h){S.htx=1/w;S.hty=1/h;}).then(function(t){S.tHgt=t;return t;}),
     /* 星空贴图没载入不影响地球显示：退回纯黑背景 */
-    loadTex(small&&TEX.sky2?TEX.sky2:TEX.sky,5,small?2048:4096,false,null,true,"tex/sky4k.jpg").then(function(t){S.tSky=t;return t;},function(){S.tSky=null;skyRetry(0);return null;})
+    loadTex(TEX.sky,5,4096,false,null,true,"tex/sky4k.jpg").then(function(t){S.tSky=t;return t;},function(){S.tSky=null;skyRetry(0);return null;})
   ]).then(function(){
     S.ready=true;document.body.classList.remove("loading");
     S.last=performance.now();requestAnimationFrame(render);
@@ -6142,7 +6142,7 @@ function skyRetry(n){
   if(n>=3)return;
   setTimeout(function(){
     if(S.tSky)return;
-    loadTex(TEX.sky,5,S.small?2048:4096,false,null,true,"tex/sky4k.jpg").then(function(t){S.tSky=t;},function(){skyRetry(n+1);});
+    loadTex(TEX.sky,5,4096,false,null,true,"tex/sky4k.jpg").then(function(t){S.tSky=t;},function(){skyRetry(n+1);});
   },[10000,30000,90000][n]);
 }
 function showFallback(net){
@@ -6168,7 +6168,7 @@ boot();
 if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="127.0.0.1")&&!/[?&]nosw\b/.test(location.search)){
   window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});
 }
-if(/[?&]debug\b/.test(location.search)){window.__atlas={S:S,CV:CV,SL:SL,TL:TL,C:C,CVC:CVC,UP:UP,LB:LB,LABS:function(){return LABS;},openPlace:function(i){openPlace(i);},refreshPins:function(){refreshPins();},docOpen:function(k){docOpen(k,true);},MOON:MOON,openMoon:function(i){openMoon(i);}};var mt=/[?&]tiles=([^&]+)/.exec(location.search);if(mt)TL.src=decodeURIComponent(mt[1]);}
+if(/[?&]debug\b/.test(location.search)){window.__atlas={S:S,CV:CV,SL:SL,TL:TL,C:C,CVC:CVC,UP:UP,LB:LB,LABS:function(){return LABS;},openPlace:function(i){openPlace(i);},refreshPins:function(){refreshPins();},docOpen:function(k){docOpen(k,true);},MOON:MOON,openMoon:function(i){openMoon(i);},loadSky:function(u){return loadTex(u,5,8192,false,null,true).then(function(t){S.tSky=t;});}};var mt=/[?&]tiles=([^&]+)/.exec(location.search);if(mt)TL.src=decodeURIComponent(mt[1]);}
 })();
 </script>
 
